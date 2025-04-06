@@ -1,0 +1,232 @@
+import { createBrowserRouter } from "react-router-dom";
+import Layout from "./Layouts/Layout";
+import Home from "./Pages/User/Home";
+import About from "./Pages/User/About";
+import Menu from "./Pages/User/Menu";
+import Reservation from "./Pages/User/Reservation";
+import Contact from "./Pages/User/Contact";
+import Products from "./Pages/User/Products";
+import Blogs from "./Pages/User/Blogs";
+import Blog from "./Pages/User/Blog";
+import Jobs from "./Pages/User/Jobs";
+import Partnership from "./Pages/User/Partnership";
+import UserLayout from "./Layouts/UserLayout";
+import EditProfile from "./Pages/UserProfile/EditProfile";
+import Liked from "./Pages/UserProfile/Liked";
+import OrderHistories from "./Pages/UserProfile/OrderHistories";
+import OrderDetails from "./Pages/UserProfile/OrderDetails";
+import ReservationHistories from "./Pages/UserProfile/ReservationHistories";
+import Register from "./Components/Auth/Register";
+import Login from "./Components/Auth/Login";
+import AdminLayout from "./Layouts/AdminLayout";
+import Dashboard from "./Pages/Admin/Dashboard";
+import MenuList from "./Pages/Admin/MenuList";
+import MenuGrid from "./Pages/Admin/MenuGrid";
+import Category from "./Pages/Admin/Category";
+import ProductsList from "./Pages/Admin/ProductsList";
+import ProductsGrid from "./Pages/Admin/ProductsGrid";
+import ProductCreate from "./Pages/Admin/ProductCreate";
+import AdminOrderHistories from "./Pages/Admin/AdminOrderHistories";
+import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails";
+import ReservationList from "./Pages/Admin/ReservationsList";
+import ReservationCalendar from "./Pages/Admin/ReservationCalendar";
+import UsersList from "./Pages/Admin/UsersList";
+import BlogsList from "./Pages/Admin/BlogsList";
+import BlogsCreate from "./Pages/Admin/BlogsCreate";
+import ReviewsList from "./Pages/Admin/ReviewsList";
+import ContactsList from "./Pages/Admin/ContactsList";
+import ContactMessage from "./Pages/Admin/ContactMessage";
+import JobApplications from "./Pages/Admin/JobApplications";
+import JobCreate from "./Pages/Admin/JobCreate";
+import PartnershipApplications from "./Pages/Admin/PartnershipApplications";
+import Setting from "./Pages/Admin/Setting";
+import AdminProfile from "./Pages/Admin/AdminProfile";
+import Checkout from "./Pages/User/Checkout";
+import CreateMenu from "./Pages/Admin/CreateMenu";
+
+const routes = createBrowserRouter([
+    {
+        path: "/",
+        element: <Layout />,
+        children: [
+            {
+                path: "/",
+                element: <Home />,
+            },
+            {
+                path: "/products",
+                element: <Products />,
+            },
+            {
+                path: "/menu",
+                element: <Menu />,
+            },
+            {
+                path: "/reservation",
+                element: <Reservation />,
+            },
+            {
+                path: "/contact",
+                element: <Contact />,
+            },
+            {
+                path: "/checkout",
+                element: <Checkout />,
+            },
+            {
+                path: "/about",
+                element: <About />,
+            },
+            {
+                path: "/blogs",
+                element: <Blogs />,
+            },
+            {
+                path: "/blog",
+                element: <Blog />,
+            },
+            {
+                path: "/jobs",
+                element: <Jobs />,
+            },
+            {
+                path: "/partnerships",
+                element: <Partnership />,
+            },
+        ],
+    },
+    {
+        path: "/user",
+        element: <UserLayout />,
+        children: [
+            {
+                path: "/user",
+                element: <EditProfile />,
+            },
+            {
+                path: "/user/liked",
+                element: <Liked />,
+            },
+            {
+                path: "/user/orders",
+                element: <OrderHistories />,
+            },
+            {
+                path: "/user/order",
+                element: <OrderDetails />,
+            },
+            {
+                path: "/user/reservations",
+                element: <ReservationHistories />,
+            },
+        ],
+    },
+    {
+        path: "/register",
+        element: <Register />,
+    },
+    {
+        path: "/login",
+        element: <Login />,
+    },
+    {
+        path: "/admin",
+        element: <AdminLayout />,
+        children: [
+            {
+                path: "/admin",
+                element: <Dashboard />,
+            },
+            {
+                path: "/admin/menu",
+                element: <MenuList />,
+            },
+            {
+                path: "/admin/menu/grid",
+                element: <MenuGrid />,
+            },
+            {
+                path: "/admin/menu/create",
+                element: <CreateMenu />,
+            },
+            {
+                path: "/admin/category",
+                element: <Category />,
+            },
+            {
+                path: "/admin/products",
+                element: <ProductsList />,
+            },
+            {
+                path: "/admin/products/grid",
+                element: <ProductsGrid />,
+            },
+            {
+                path: "/admin/products/create",
+                element: <ProductCreate />,
+            },
+            {
+                path: "/admin/orders",
+                element: <AdminOrderHistories />,
+            },
+            {
+                path: "/admin/order",
+                element: <AdminOrderDetails />,
+            },
+            {
+                path: "/admin/reservation",
+                element: <ReservationList />,
+            },
+            {
+                path: "/admin/reservation/calendar",
+                element: <ReservationCalendar />,
+            },
+            {
+                path: "/admin/users",
+                element: <UsersList />,
+            },
+            {
+                path: "/admin/blogs",
+                element: <BlogsList />,
+            },
+            {
+                path: "/admin/blogs/create",
+                element: <BlogsCreate />,
+            },
+            {
+                path: "/admin/reviews",
+                element: <ReviewsList />,
+            },
+            {
+                path: "/admin/contact",
+                element: <ContactsList />,
+            },
+            {
+                path: "/admin/contact/id",
+                element: <ContactMessage />,
+            },
+            {
+                path: "/admin/jobs",
+                element: <JobApplications />,
+            },
+            {
+                path: "/admin/jobs/create",
+                element: <JobCreate />,
+            },
+            {
+                path: "/admin/partnership",
+                element: <PartnershipApplications />,
+            },
+            {
+                path: "/admin/settings",
+                element: <Setting />,
+            },
+            {
+                path: "/admin/profile",
+                element: <AdminProfile />,
+            },
+        ],
+    },
+]);
+
+export default routes;
