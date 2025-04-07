@@ -31,4 +31,5 @@ Route::get('/{any}', function () {
     return view('app');
 })->where('any', '^(?!api).*');
 
+Route::get('/api/menus', [MenuController::class, 'index']);
 Route::post("/api/menu/create", [MenuController::class, 'store']);
