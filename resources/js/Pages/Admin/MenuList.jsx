@@ -51,10 +51,12 @@ export default function MenuList() {
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="mx-2 md:mx-4 my-8"
+            className="mx-2 md:mx-4 py-8"
         >
             <div className="flex justify-between md:items-center">
-                <h1 className="md:text-lg font-medium">34 Menu Items Found</h1>
+                <h1 className="md:text-lg font-medium">
+                    {menus.length} Menu Items Found
+                </h1>
                 <div className="flex flex-col md:flex-row items-end gap-3">
                     <div className="flex gap-2 order-2 md:order-1">
                         <Link

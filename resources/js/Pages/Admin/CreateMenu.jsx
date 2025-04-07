@@ -47,7 +47,7 @@ export default function CreateMenu() {
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
-    // change after writing create category feature
+    // change to dynamic data after writing create category feature
     const categoryStyles = {
         all: "text-gray-700 bg-gray-200",
         curries: "text-red-700 bg-red-200",
