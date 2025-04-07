@@ -11,8 +11,36 @@ import { Heart, Star, ShoppingCart } from "lucide-react";
 import Mohinga from "../../../images/Mohinga.png";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function Favorite() {
+    let [menus, setMenus] = useState([]);
+
+    let getMenus = async () => {
+        let res = await axios.get("/api/menus");
+        let data = res.data;
+        setMenus(data.menus);
+    };
+    const featuredMenus = menus.filter((menu) => menu.featured);
+
+    // change to dynamic data after writing create category feature
+    const categoryStyles = {
+        all: "text-gray-700 bg-gray-200",
+        curries: "text-red-700 bg-red-200",
+        noodles: "text-yellow-800 bg-yellow-200",
+        salads: "text-green-800 bg-green-200",
+        soups: "text-blue-800 bg-blue-200",
+        "side-dishes": "text-pink-800 bg-pink-200",
+        "snacks-street-foods": "text-orange-800 bg-orange-200",
+        "chefs-favorite": "text-purple-800 bg-purple-200",
+        desserts: "text-rose-800 bg-rose-200",
+        "drinks-beverages": "text-teal-800 bg-teal-200",
+    };
+
+    useEffect(() => {
+        getMenus();
+    }, []);
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -47,398 +75,92 @@ export default function Favorite() {
                     className="w-[95%] mx-auto"
                 >
                     <CarouselContent>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
+                        {featuredMenus.map((menu) => (
+                            <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                                <div className="p-1 mt-10">
+                                    <Card className="relative bg-white border h-[250px] border-gray-400 shadow-lg rounded-lg">
+                                        <div className="absolute -top-10 mr-3 right-0 flex justify-end">
+                                            <img
+                                                src={`/storage/${menu.image}`}
+                                                alt={menu.title}
+                                                className="w-[140px] h-[140px] object-cover rounded-full border-4 border-white shadow-md"
+                                            />
+                                        </div>
 
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
-                                                    />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
-                                                    </span>
+                                        <CardContent className="pt-5 px-6">
+                                            <div className="flex items-center justify-between mb-3">
+                                                <div className="flex gap-4">
+                                                    <a
+                                                        href="#"
+                                                        className="text-gray-500 hover:text-accentRed"
+                                                    >
+                                                        <Heart size={20} />
+                                                    </a>
+                                                    <div className="flex items-center gap-1 text-gray-600">
+                                                        <Star
+                                                            size={20}
+                                                            fill="currentColor"
+                                                            className="text-accentYellow"
+                                                        />
+                                                        <span className="text-sm font-medium">
+                                                            4.5
+                                                        </span>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
-
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
-                                                    />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
+                                            <div className="flex gap-2 mt-12">
+                                                <h3 className="text-lg font-semibold">
+                                                    {menu.title}
+                                                </h3>
+                                                <Link to="">
+                                                    <span
+                                                        className={`p-1 text-[10px] rounded-md ${
+                                                            categoryStyles[
+                                                                menu.category
+                                                            ] ||
+                                                            categoryStyles[
+                                                                "snacks-street-foods"
+                                                            ]
+                                                        }`}
+                                                    >
+                                                        {menu.category}
                                                     </span>
-                                                </div>
+                                                </Link>
                                             </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
-
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
+                                            <p className="text-[13px] text-gray-600 mt-2 line-clamp-3">
+                                                {menu.desc}
+                                            </p>
+                                            <div className="flex items-center justify-between mt-6">
+                                                {menu.promotion ? (
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-red-600 font-semibold">
+                                                            {(
+                                                                menu.price -
+                                                                (menu.price *
+                                                                    menu.promotion) /
+                                                                    100
+                                                            ).toFixed(2)}{" "}
+                                                            $
+                                                        </span>
+                                                        <span className="line-through text-sm text-gray-500">
+                                                            {menu.price} $
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span>{menu.price} $</span>
+                                                )}
+                                                <button>
+                                                    <ShoppingCart
+                                                        size={24}
+                                                        className="text-accentRed"
                                                     />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
-                                                    </span>
-                                                </div>
+                                                </button>
                                             </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
-
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
-                                                    />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
-
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
-                                                    />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
-
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
-                                                    />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
-                        <CarouselItem className="md:basis-1/2 lg:basis-1/3">
-                            <div className="p-1 mt-10">
-                                <Card className="relative bg-white border border-gray-400 shadow-lg rounded-lg">
-                                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={Mohinga}
-                                            alt="Mohinga"
-                                            className="w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
-                                    </div>
-
-                                    <CardContent className="pt-5 px-6">
-                                        <div className="flex items-center justify-between mb-3">
-                                            <div className="flex gap-4">
-                                                <a
-                                                    href="#"
-                                                    className="text-gray-500 hover:text-accentRed"
-                                                >
-                                                    <Heart size={20} />
-                                                </a>
-                                                <div className="flex items-center gap-1 text-gray-600">
-                                                    <Star
-                                                        size={20}
-                                                        fill="currentColor"
-                                                        className="text-accentYellow"
-                                                    />
-                                                    <span className="text-sm font-medium">
-                                                        4.5
-                                                    </span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <h3 className="text-lg mt-12 font-semibold">
-                                            Mohinga
-                                        </h3>
-                                        <p className="text-[13px] text-gray-600 mt-2">
-                                            a popular Burmese dish featuring
-                                            rice noodles in a flavorful fish
-                                            broth, garnished with herbs, lime,
-                                            and crispy fritters.
-                                        </p>
-                                        <div className="flex items-center justify-between mt-6">
-                                            <span className="text-lg font-bold text-gray-800">
-                                                6.12 $
-                                            </span>
-                                            <button>
-                                                <ShoppingCart
-                                                    size={24}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </CarouselItem>
+                                        </CardContent>
+                                    </Card>
+                                </div>
+                            </CarouselItem>
+                        ))}
                     </CarouselContent>
                     <CarouselPrevious className="hidden md:inline-flex" />
                     <CarouselNext className="hidden md:inline-flex" />
