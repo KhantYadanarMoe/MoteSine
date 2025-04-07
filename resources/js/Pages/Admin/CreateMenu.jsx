@@ -15,7 +15,7 @@ import { Textarea } from "../../Components/ui/textarea";
 import { Label } from "../../Components/ui/label";
 import DatePicker from "@/Components/DatePicker";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { format } from "date-fns";
 import {
@@ -46,6 +46,25 @@ export default function CreateMenu() {
     const [errors, setErrors] = useState({});
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // change after writing create category feature
+    const categoryStyles = {
+        all: "text-gray-700 bg-gray-200",
+        curries: "text-red-700 bg-red-200",
+        noodles: "text-yellow-800 bg-yellow-200",
+        salads: "text-green-800 bg-green-200",
+        soups: "text-blue-800 bg-blue-200",
+        "side-dishes": "text-pink-800 bg-pink-200",
+        "snacks-street-foods": "text-orange-800 bg-orange-200",
+        "chefs-favorite": "text-purple-800 bg-purple-200",
+        desserts: "text-rose-800 bg-rose-200",
+        "drinks-beverages": "text-teal-800 bg-teal-200",
+    };
+
+    const getDiscountedPrice = (price, promo) => {
+        if (!promo || isNaN(promo)) return price;
+        return (price - (price * promo) / 100).toFixed(2);
+    };
 
     const navigate = useNavigate();
 
@@ -129,7 +148,7 @@ export default function CreateMenu() {
             whileInView={{ visibility: "visible", opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="mx-2 md:mx-4 my-8 relative lg:flex gap-3"
+            className="mx-2 md:mx-4 py-8 relative lg:flex gap-3"
         >
             <div className="w-full lg:w-[70%]">
                 <h1 className="text-lg font-medium">Create Menu</h1>
@@ -501,17 +520,49 @@ export default function CreateMenu() {
                                     </div>
                                 </div>
                             </div>
-                            <h3 className="mt-8 font-semibold">
-                                {form.title || "Mohinga"}
-                            </h3>
+
+                            <div className="flex gap-2 mt-12">
+                                <h3 className="font-semibold">
+                                    {form.title || "Mohinga"}
+                                </h3>
+                                <Link to="">
+                                    <span
+                                        className={`p-1 text-[10px] rounded-md ${
+                                            categoryStyles[form.category] ||
+                                            categoryStyles[
+                                                "snacks-street-foods"
+                                            ]
+                                        }`}
+                                    >
+                                        {form.category ||
+                                            "Snacks & Street Foods"}
+                                    </span>
+                                </Link>
+                            </div>
                             <p className="text-[11px] text-gray-600 mt-2">
                                 {form.desc ||
                                     "a popular Burmese dish featuring rice noodles in a flavorful fish broth, garnished with herbs, lime, and crispy fritters."}
                             </p>
                             <div className="flex items-center justify-between mt-6">
-                                <span className="font-bold text-gray-800">
-                                    {form.price || 6.12} $
-                                </span>
+                                {form.promotion ? (
+                                    <div className="flex items-center gap-2">
+                                        <span className="line-through text-sm text-gray-500">
+                                            {form.price || 6.12} $
+                                        </span>
+                                        <span className="font-bold text-red-600">
+                                            {getDiscountedPrice(
+                                                form.price || 6.12,
+                                                form.promotion
+                                            )}{" "}
+                                            $
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <span className="font-bold text-gray-800">
+                                        {form.price || 6.12} $
+                                    </span>
+                                )}
+
                                 <button>
                                     <ShoppingCart
                                         size={24}
