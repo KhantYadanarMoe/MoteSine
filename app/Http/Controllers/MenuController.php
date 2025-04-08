@@ -4,12 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Helpers\ErrorJsonChanger;
 use App\Models\Menu;
 
 class MenuController extends Controller
 {
-    use ErrorJsonChanger;
     public function store(){
         $validator = Validator::make(request()->all(), [
             "title" => ["required"],
@@ -27,7 +25,6 @@ class MenuController extends Controller
 
         if ($validator->fails()) {
             return response()->json([
-                // 'message' => 'The given data was invalid.',
                 'errors' => $validator->errors()->messages()
             ], 422);
         }
@@ -36,10 +33,10 @@ class MenuController extends Controller
         if (request()->hasFile('image')) {
             $image = request()->file('image');
             $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('menus', $imageName, 'public'); // saved in storage/app/public/products
+            $imagePath = $image->storeAs('menus', $imageName, 'public'); 
         }
 
-        $product = Menu::create([
+        $menus = Menu::create([
             'title' => request('title'),
             'category' => request('category'),
             'desc' => request('desc'),
@@ -53,8 +50,8 @@ class MenuController extends Controller
         ]);
 
         return response()->json([
-            'message' => 'Product created successfully.',
-            'product' => $product,
+            'message' => 'Menu created successfully.',
+            'menus' => $menus,
             'image_url' => $imagePath ? asset('storage/' . $imagePath) : null
         ]);
     }

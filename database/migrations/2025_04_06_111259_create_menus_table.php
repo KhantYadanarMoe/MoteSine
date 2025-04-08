@@ -17,12 +17,12 @@ return new class extends Migration
             $table->string('category');
             $table->text('desc');  
             $table->decimal('price', 8, 2);
-            $table->integer('promotion')->nullable();  // Allow promotion to be nullable
-            $table->date('startDate')->nullable();  // Allow startDate to be nullable
-            $table->date('endDate')->nullable();  // Allow endDate to be nullable
-            $table->boolean('featured')->nullable();  // Allow featured to be nullable
-            $table->boolean('visibility')->nullable();  // Allow visibility to be nullable
-            $table->string('image')->nullable();  // Store image path
+            $table->integer('promotion')->nullable();  
+            $table->date('startDate')->nullable();  
+            $table->date('endDate')->nullable();  
+            $table->boolean('featured')->nullable();  
+            $table->boolean('visibility')->nullable();  
+            $table->string('image')->nullable();  
             $table->timestamps();
         });
     }

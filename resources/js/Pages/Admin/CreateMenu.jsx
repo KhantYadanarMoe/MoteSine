@@ -31,6 +31,7 @@ import {
 } from "../../Components/ui/alert-dialog";
 
 export default function CreateMenu() {
+    // form data to store before sending to backend
     const [images, setImages] = useState([]);
     const [form, setForm] = useState({
         title: "",
@@ -43,8 +44,10 @@ export default function CreateMenu() {
         featured: false,
         visibility: true,
     });
+    // errors store state
     const [errors, setErrors] = useState({});
 
+    // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // change to dynamic data after writing create category feature
@@ -61,6 +64,7 @@ export default function CreateMenu() {
         "drinks-beverages": "text-teal-800 bg-teal-200",
     };
 
+    // calculating discounts
     const getDiscountedPrice = (price, promo) => {
         if (!promo || isNaN(promo)) return price;
         return (price - (price * promo) / 100).toFixed(2);
@@ -68,6 +72,7 @@ export default function CreateMenu() {
 
     const navigate = useNavigate();
 
+    // Handle HTML inputs
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setForm((prevState) => ({
@@ -76,6 +81,15 @@ export default function CreateMenu() {
         }));
     };
 
+    // Handle other custom components' inputs
+    const handleCustomChange = (name, value) => {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    // Handle image input
     const uploadImg = (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -130,11 +144,11 @@ export default function CreateMenu() {
                 },
             });
 
-            if (res.data.message === "Product created successfully.") {
+            if (res.data.message === "Menu created successfully.") {
                 navigate("/admin/menu");
             }
         } catch (error) {
-            console.error("Error creating product:", error);
+            console.error("Error creating menu:", error);
 
             if (error.response && error.response.status === 422) {
                 setIsDialogOpen(false);
@@ -235,10 +249,7 @@ export default function CreateMenu() {
                                 <Select
                                     value={form.category}
                                     onValueChange={(value) =>
-                                        setForm({
-                                            ...form,
-                                            category: value,
-                                        })
+                                        handleCustomChange("category", value)
                                     }
                                 >
                                     <SelectTrigger
@@ -294,13 +305,8 @@ export default function CreateMenu() {
                                 <Textarea
                                     type="text"
                                     name="desc"
-                                    value={form.description}
-                                    onChange={(e) =>
-                                        setForm({
-                                            ...form,
-                                            desc: e.target.value,
-                                        })
-                                    }
+                                    value={form.desc}
+                                    onChange={handleInputChange}
                                     placeholder="Enter your desc"
                                     className="w-full px-2 py-2 mt-2 text-sm border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-crimson focus:border-crimson text-gray-700"
                                 ></Textarea>
@@ -358,10 +364,7 @@ export default function CreateMenu() {
                                     name="startDate"
                                     selectedDate={form.startDate}
                                     onDateChange={(date) =>
-                                        setForm({
-                                            ...form,
-                                            startDate: date, // No need for formatDate()
-                                        })
+                                        handleCustomChange("startDate", date)
                                     }
                                     placeholder="Select your start date"
                                     className="border-gray-500"
@@ -379,10 +382,7 @@ export default function CreateMenu() {
                                     name="endDate"
                                     selectedDate={form.endDate}
                                     onDateChange={(date) =>
-                                        setForm({
-                                            ...form,
-                                            endDate: date, // No need for formatDate()
-                                        })
+                                        handleCustomChange("endDate", date)
                                     }
                                     placeholder="Select your end date"
                                     className="mt-1 border-gray-500"
@@ -406,10 +406,7 @@ export default function CreateMenu() {
                                     name="featured"
                                     checked={form.featured}
                                     onCheckedChange={(checked) =>
-                                        setForm({
-                                            ...form,
-                                            featured: checked,
-                                        })
+                                        handleCustomChange("featured", checked)
                                     }
                                 />
                                 {errors.featured && (
@@ -427,10 +424,10 @@ export default function CreateMenu() {
                                     name="visibility"
                                     checked={form.visibility}
                                     onCheckedChange={(checked) =>
-                                        setForm({
-                                            ...form,
-                                            visibility: checked,
-                                        })
+                                        handleCustomChange(
+                                            "visibility",
+                                            checked
+                                        )
                                     }
                                 />
                                 {errors.visibility && (
