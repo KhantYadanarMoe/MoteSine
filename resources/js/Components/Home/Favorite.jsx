@@ -15,13 +15,17 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function Favorite() {
+    // state to store menus
     let [menus, setMenus] = useState([]);
 
+    // fetch data that send from backend
     let getMenus = async () => {
         let res = await axios.get("/api/menus");
         let data = res.data;
         setMenus(data.menus);
     };
+
+    // check featured (1 or 0) to show only featured menu
     const featuredMenus = menus.filter((menu) => menu.featured);
 
     // change to dynamic data after writing create category feature
@@ -38,9 +42,11 @@ export default function Favorite() {
         "drinks-beverages": "text-teal-800 bg-teal-200",
     };
 
+    // call data fetching function in useEffect to run when user enter the page
     useEffect(() => {
         getMenus();
     }, []);
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}

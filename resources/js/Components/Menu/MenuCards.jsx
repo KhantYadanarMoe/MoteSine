@@ -15,10 +15,14 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export default function MenuCards() {
+    // state to store menus
     let [menus, setMenus] = useState([]);
+    // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
     const rowsPerPage = 6;
 
+    // fetch data that send from backend
     let getMenus = async () => {
         let res = await axios.get("/api/menus");
         let data = res.data;
@@ -39,17 +43,21 @@ export default function MenuCards() {
         "drinks-beverages": "text-teal-800 bg-teal-200",
     };
 
+    // call data fetching function in useEffect to run when user enter the page
     useEffect(() => {
         getMenus();
     }, []);
 
+    // calculate the last items, first items and set menus to show
     const indexOfLastMenu = currentPage * rowsPerPage;
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
     const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
 
+    // function for pagination button
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
