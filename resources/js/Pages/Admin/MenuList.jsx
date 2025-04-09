@@ -18,29 +18,35 @@ import { Checkbox } from "../../Components/ui/checkbox";
 import { Switch } from "../../Components/ui/switch";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import Mohinga from "../../../images/Mohinga.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
 export default function MenuList() {
+    // state to store menus
     let [menus, setMenus] = useState([]);
+    // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
     const rowsPerPage = 10;
 
+    // fetch data that send from backend
     let getMenus = async () => {
         let res = await axios.get("/api/menus");
         let data = res.data;
         setMenus(data.menus);
     };
 
+    // call data fetching function in useEffect to run when user enter the page
     useEffect(() => {
         getMenus();
     }, []);
 
+    // calculate the last items, first items and set menus to show
     const indexOfLastMenu = currentPage * rowsPerPage;
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
     const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
 
+    // function for pagination button
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };

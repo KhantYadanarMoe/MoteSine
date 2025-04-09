@@ -32,7 +32,7 @@ import {
 
 export default function CreateMenu() {
     // form data to store before sending to backend
-    const [images, setImages] = useState([]);
+    const [image, setImage] = useState(null);
     const [form, setForm] = useState({
         title: "",
         price: "",
@@ -44,7 +44,7 @@ export default function CreateMenu() {
         featured: false,
         visibility: true,
     });
-    // errors store state
+    // store errors state
     const [errors, setErrors] = useState({});
 
     // use state to check dialog open or not and control
@@ -70,6 +70,7 @@ export default function CreateMenu() {
         return (price - (price * promo) / 100).toFixed(2);
     };
 
+    // prepare to move another route/page after sending data
     const navigate = useNavigate();
 
     // Handle HTML inputs
@@ -93,20 +94,24 @@ export default function CreateMenu() {
     const uploadImg = (e) => {
         const file = e.target.files[0];
         if (file) {
-            setImages([file]);
+            setImage(file);
         }
     };
 
+    // form submit function
     const submit = async (e) => {
         e.preventDefault();
 
+        // url and method to use in sending data using axios
         let url = "/api/menu/create";
         let method = "post";
 
+        // create new object to store form data to send
         let formData = new FormData();
 
         console.log("Form Data before submitting:", form);
 
+        // store state data in object
         formData.append("title", form.title);
         formData.append("category", form.category);
         formData.append("desc", form.desc);
@@ -129,14 +134,16 @@ export default function CreateMenu() {
 
         console.log("Form data after appending:", formData);
 
-        images.forEach((image) => {
+        if (image) {
             formData.append("image", image);
-        });
+        }
 
         try {
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
                 .getAttribute("content");
+
+            // send data
             const res = await axios[method](url, formData, {
                 headers: {
                     "X-CSRF-TOKEN": csrfToken,
@@ -144,12 +151,14 @@ export default function CreateMenu() {
                 },
             });
 
+            // success condition
             if (res.data.message === "Menu created successfully.") {
                 navigate("/admin/menu");
             }
         } catch (error) {
             console.error("Error creating menu:", error);
 
+            // failed condition
             if (error.response && error.response.status === 422) {
                 setIsDialogOpen(false);
                 setErrors(error.response.data.errors);
@@ -175,7 +184,7 @@ export default function CreateMenu() {
                                 e.preventDefault();
                                 const file = e.dataTransfer.files[0];
                                 if (file && file.type.startsWith("image/")) {
-                                    setImages([file]);
+                                    setImage(file);
                                 }
                             }}
                         >
@@ -206,17 +215,21 @@ export default function CreateMenu() {
                                 <p className="mt-4 text-sm">
                                     or drag and drop an image
                                 </p>
-                                {images[0] && (
+                                {image && (
                                     <div className="mt-4">
                                         <img
-                                            src={URL.createObjectURL(images[0])}
+                                            src={
+                                                image
+                                                    ? URL.createObjectURL(image)
+                                                    : ""
+                                            }
                                             alt="Preview"
                                             className="max-w-[130px] h-auto rounded-lg"
                                         />
                                     </div>
                                 )}
                             </div>
-                            {errors.image && (
+                            {errors.image?.[0] && (
                                 <p className="text-red-500 mt-1 text-sm">
                                     {errors.image[0]}
                                 </p>
@@ -260,7 +273,6 @@ export default function CreateMenu() {
                                         <span>
                                             {form.category || "Select Category"}
                                         </span>{" "}
-                                        {/* Show selected category */}
                                     </SelectTrigger>
 
                                     <SelectContent className="w-96 max-h-60">
@@ -481,15 +493,15 @@ export default function CreateMenu() {
                 <div className="mx-auto p-1 mt-16">
                     <div className="py-3 relative bg-white border border-gray-400 shadow-lg rounded-lg">
                         <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                            {images.length > 0 ? (
+                            {image ? (
                                 <img
-                                    src={URL.createObjectURL(images[0])}
+                                    src={URL.createObjectURL(image)}
                                     alt="Live Preview"
                                     className="w-[130px] h-[130px] object-cover rounded-full border-4 border-white shadow-md"
                                 />
                             ) : (
                                 <img
-                                    src={Mohinga} // Default image
+                                    src={Mohinga}
                                     alt="Mohinga"
                                     className="w-[130px] object-cover rounded-full border-4 border-white shadow-md"
                                 />
