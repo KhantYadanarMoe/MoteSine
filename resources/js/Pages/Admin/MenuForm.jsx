@@ -14,8 +14,8 @@ import { motion } from "framer-motion";
 import { Textarea } from "../../Components/ui/textarea";
 import { Label } from "../../Components/ui/label";
 import DatePicker from "@/Components/DatePicker";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { format } from "date-fns";
 import {
@@ -29,10 +29,25 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
+import { fromJSON } from "postcss";
 
-export default function CreateMenu() {
+export default function MenuForm() {
+    // take id for edit feature
+    let { id } = useParams();
+    // state to check the page is create page or edit page
+    let [isEdit, setIsEdit] = useState(false);
+
+    // check the id is exist or not (number or undefined)
+    useEffect(() => {
+        console.log(id);
+        setIsEdit(!!id);
+    }, [id]);
+
     // form data to store before sending to backend
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState(null); //for new image upload
+    const [imageUrl, setImageUrl] = useState(null); // for displaying the existing image
+
+    // prepare state to store form data
     const [form, setForm] = useState({
         title: "",
         price: "",
@@ -49,6 +64,47 @@ export default function CreateMenu() {
 
     // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // state to store detail of the menu related to ID
+    let [menuDetail, setMenuDetails] = useState(null);
+
+    // fetch data to show prev data in input fields
+    let getDetails = async (id) => {
+        let res = await fetch("http://localhost:8000/api/menu/" + id);
+        let data = await res.json();
+        setMenuDetails(data.menu);
+    };
+
+    // call data fetching function depend on id changes
+    useEffect(() => {
+        getDetails(id);
+    }, [id]);
+
+    // add prev data sent from backend in the form state
+    useEffect(() => {
+        if (menuDetail) {
+            console.log(menuDetail);
+            setImageUrl(menuDetail.image);
+            // Convert the backend date string to a Date object
+            const startDate = menuDetail.startDate
+                ? new Date(menuDetail.startDate)
+                : null;
+            const endDate = menuDetail.endDate
+                ? new Date(menuDetail.endDate)
+                : null;
+            setForm({
+                title: menuDetail.title,
+                category: menuDetail.category,
+                desc: menuDetail.desc,
+                price: menuDetail.price,
+                promotion: menuDetail.promotion,
+                startDate: startDate,
+                endDate: endDate,
+                featured: menuDetail.featured,
+                visibility: menuDetail.visibility,
+            });
+        }
+    }, [menuDetail]);
 
     // change to dynamic data after writing create category feature
     const categoryStyles = {
@@ -103,7 +159,7 @@ export default function CreateMenu() {
         e.preventDefault();
 
         // url and method to use in sending data using axios
-        let url = "/api/menu/create";
+        let url = isEdit ? "/api/menu/" + id : "/api/menu/create";
         let method = "post";
 
         // create new object to store form data to send
@@ -138,6 +194,10 @@ export default function CreateMenu() {
             formData.append("image", image);
         }
 
+        if (isEdit) {
+            formData.append("_method", "PUT");
+        }
+
         try {
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
@@ -152,7 +212,10 @@ export default function CreateMenu() {
             });
 
             // success condition
-            if (res.data.message === "Menu created successfully.") {
+            if (
+                res.data.message === "Menu created successfully." ||
+                res.data.message === "Menu updated successfully."
+            ) {
                 navigate("/admin/menu");
             }
         } catch (error) {
@@ -165,6 +228,7 @@ export default function CreateMenu() {
             }
         }
     };
+
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}
@@ -174,7 +238,9 @@ export default function CreateMenu() {
             className="mx-2 md:mx-4 py-8 relative lg:flex gap-3"
         >
             <div className="w-full lg:w-[70%]">
-                <h1 className="text-lg font-medium">Create Menu</h1>
+                <h1 className="text-lg font-medium">
+                    {isEdit ? "Edit" : "Create"} Menu
+                </h1>
                 <form action="" className="mt-6 md:px-3">
                     <div className="flex justify-center mt-8 px-4 py-6 border border-gray-300 bg-white shadow-lg rounded-md">
                         <div
@@ -215,6 +281,15 @@ export default function CreateMenu() {
                                 <p className="mt-4 text-sm">
                                     or drag and drop an image
                                 </p>
+                                {imageUrl && !image && (
+                                    <div className="mt-4">
+                                        <img
+                                            src={`/storage/${imageUrl}`}
+                                            alt="Existing Preview"
+                                            className="max-w-[130px] h-auto rounded-lg"
+                                        />
+                                    </div>
+                                )}
                                 {image && (
                                     <div className="mt-4">
                                         <img
@@ -358,6 +433,7 @@ export default function CreateMenu() {
                                 <Input
                                     id="promotion"
                                     name="promotion"
+                                    value={form.promotion}
                                     onChange={handleInputChange}
                                     type="text"
                                     placeholder="Enter promotion"
@@ -463,7 +539,7 @@ export default function CreateMenu() {
                                     className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
                                     onClick={() => setIsDialogOpen(true)}
                                 >
-                                    Create
+                                    {isEdit ? "Update" : "Create"}
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -495,13 +571,19 @@ export default function CreateMenu() {
                         <div className="absolute -top-10 mr-3 right-0 flex justify-end">
                             {image ? (
                                 <img
-                                    src={URL.createObjectURL(image)}
+                                    src={URL.createObjectURL(image)} // For create feature, use uploaded image
                                     alt="Live Preview"
+                                    className="w-[130px] h-[130px] object-cover rounded-full border-4 border-white shadow-md"
+                                />
+                            ) : isEdit && imageUrl ? ( // If editing and imageUrl is available, use the menu image
+                                <img
+                                    src={`/storage/${imageUrl}`} // imageUrl is the path to the image stored in the database
+                                    alt="Menu Image"
                                     className="w-[130px] h-[130px] object-cover rounded-full border-4 border-white shadow-md"
                                 />
                             ) : (
                                 <img
-                                    src={Mohinga}
+                                    src={Mohinga} // Default image when no image is uploaded or available
                                     alt="Mohinga"
                                     className="w-[130px] object-cover rounded-full border-4 border-white shadow-md"
                                 />

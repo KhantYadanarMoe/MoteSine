@@ -175,7 +175,11 @@ export default function MenuList() {
                                             className="w-40"
                                         >
                                             <DropdownMenuItem className="text-accentYellow">
-                                                Edit
+                                                <Link
+                                                    to={`/admin/menu/${menu.id}/edit`}
+                                                >
+                                                    Edit
+                                                </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Delete

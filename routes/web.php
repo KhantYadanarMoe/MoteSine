@@ -33,3 +33,5 @@ Route::get('/{any}', function () {
 
 Route::get('/api/menus', [MenuController::class, 'index']);
 Route::post("/api/menu/create", [MenuController::class, 'store']);
+Route::get('/api/menu/{id}', [MenuController::class, 'show']);  
+Route::put('/api/menu/{menu}', [MenuController::class, 'update']);

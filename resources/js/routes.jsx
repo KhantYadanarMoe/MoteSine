@@ -42,7 +42,7 @@ import PartnershipApplications from "./Pages/Admin/PartnershipApplications";
 import Setting from "./Pages/Admin/Setting";
 import AdminProfile from "./Pages/Admin/AdminProfile";
 import Checkout from "./Pages/User/Checkout";
-import CreateMenu from "./Pages/Admin/CreateMenu";
+import MenuForm from "./Pages/Admin/MenuForm";
 
 const routes = createBrowserRouter([
     {
@@ -147,7 +147,11 @@ const routes = createBrowserRouter([
             },
             {
                 path: "/admin/menu/create",
-                element: <CreateMenu />,
+                element: <MenuForm />,
+            },
+            {
+                path: "/admin/menu/:id/edit",
+                element: <MenuForm />,
             },
             {
                 path: "/admin/category",
