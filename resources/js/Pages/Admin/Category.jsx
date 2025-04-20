@@ -28,8 +28,67 @@ import {
 import { Input } from "../../Components/ui/input";
 import { Label } from "../../Components/ui/label";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import axios from "axios";
 
 export default function Category() {
+    // prepare state to store form data
+    const [form, setForm] = useState({
+        category: "",
+    });
+    // store errors state
+    const [errors, setErrors] = useState({});
+
+    const submit = async (e) => {
+        e.preventDefault();
+
+        // url and method to use in sending data using axios
+        let url = "/api/category/create";
+        let method = "post";
+
+        // create new object to store form data to send
+        let formData = new FormData();
+
+        console.log("Form Data before submitting:", form);
+
+        // store state data in object
+        formData.append("category", form.category);
+
+        console.log("Form data after appending:", formData);
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            // send data
+            const res = await axios[method](url, formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // success condition
+            if (res.data.message === "Category created successfully.") {
+                setForm({ category: "" });
+                setErrors({});
+
+                // ✅ Close dialog
+                setOpen(false);
+                navigate("/admin/category");
+            }
+        } catch (error) {
+            console.error("Error creating category:", error);
+
+            // failed condition
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            }
+        }
+    };
+
+    const [open, setOpen] = useState(false);
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -40,7 +99,7 @@ export default function Category() {
         >
             <div className="flex justify-between md:items-center">
                 <h1 className="md:text-lg font-medium">12 Categories Found</h1>
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button
                             variant="default"
@@ -62,11 +121,26 @@ export default function Category() {
                             </Label>
                             <Input
                                 id="category"
+                                name="category"
+                                value={form.category}
+                                onChange={(e) =>
+                                    setForm({
+                                        ...form,
+                                        category: e.target.value,
+                                    })
+                                }
                                 className="col-span-3 mt-1 border-gray-500"
                             />
+                            {errors.category && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.category[0]}
+                                </p>
+                            )}
                         </div>
                         <DialogFooter>
-                            <Button type="submit">Save changes</Button>
+                            <Button type="submit" onClick={submit}>
+                                Save changes
+                            </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>

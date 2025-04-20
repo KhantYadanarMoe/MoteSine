@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -36,3 +37,5 @@ Route::post("/api/menu/create", [MenuController::class, 'store']);
 Route::get('/api/menu/{id}', [MenuController::class, 'show']);  
 Route::put('/api/menu/{menu}', [MenuController::class, 'update']);
 Route::delete('/api/menu/{menu}', [MenuController::class, 'delete']);
+
+Route::post("/api/category/create", [CategoryController::class, 'store']);
