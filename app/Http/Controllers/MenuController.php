@@ -73,18 +73,17 @@ class MenuController extends Controller
     }
 
 
-    public function show($id)
-{
-    $menu = Menu::find($id); // Find menu by ID
+    public function show($id){
+        $menu = Menu::find($id); // Find menu by ID
 
-    // Check if menu exists
-    if ($menu) {
-        return response()->json(['menu' => $menu]);
-    } else {
-        // If menu not found, return a 404 with a message
-        return response()->json(['message' => 'Menu not found'], 404);
+        // Check if menu exists
+        if ($menu) {
+            return response()->json(['menu' => $menu]);
+        } else {
+            // If menu not found, return a 404 with a message
+            return response()->json(['message' => 'Menu not found'], 404);
+        }
     }
-}
 
     public function update(Menu $menu){
         $validator = Validator::make(request()->all(), [
@@ -139,4 +138,10 @@ class MenuController extends Controller
         ]);
     }
 
+    public function delete(Menu $menu){
+        $menu->delete();
+        return response()->json([
+            'message' => 'Menu deleted successful!'
+        ]);
+    }
 }
