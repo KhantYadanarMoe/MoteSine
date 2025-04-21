@@ -27,6 +27,17 @@ import {
 } from "../../Components/ui/dialog";
 import { Input } from "../../Components/ui/input";
 import { Label } from "../../Components/ui/label";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -124,6 +135,27 @@ export default function Category() {
     };
 
     dayjs.extend(relativeTime);
+
+    let deleteCategory = async (id) => {
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            let res = await axios.delete("/api/category/" + id, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setCategories((prev) =>
+                prev.filter((category) => category.id !== id)
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    };
 
     return (
         <motion.div
@@ -256,8 +288,42 @@ export default function Category() {
                                                     </DialogFooter>
                                                 </DialogContent>
                                             </Dialog>
-                                            <DropdownMenuItem className="text-accentRed">
-                                                Delete
+                                            <DropdownMenuItem asChild>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                            Delete
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you sure you
+                                                                want to delete
+                                                                this menu?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    deleteCategory(
+                                                                        category.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

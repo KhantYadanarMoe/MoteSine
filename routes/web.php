@@ -40,3 +40,4 @@ Route::delete('/api/menu/{menu}', [MenuController::class, 'delete']);
 
 Route::get('/api/categories', [CategoryController::class, 'index']);
 Route::post("/api/category/create", [CategoryController::class, 'store']);
+Route::delete('/api/category/{category}', [CategoryController::class, 'delete']);

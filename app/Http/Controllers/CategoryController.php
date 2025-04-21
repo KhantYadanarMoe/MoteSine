@@ -34,13 +34,19 @@ class CategoryController extends Controller
     }
 
     public function index(){
-
         // take data from backend database
         $categories = Category::latest()->get();
 
         // send data to frontend
         return response()->json([
             'categories' => $categories
+        ]);
+    }
+
+    public function delete(Category $category){
+        $category->delete();
+        return response()->json([
+            'message' => 'Category deleted successful!'
         ]);
     }
 }
