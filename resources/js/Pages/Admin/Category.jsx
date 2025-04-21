@@ -54,6 +54,9 @@ export default function Category() {
     // state to store categories
     let [categories, setCategories] = useState([]);
 
+    // state to store detail of the category related to ID
+    let [categoryDetail, setCategoryDetails] = useState(null);
+
     const submit = async (e) => {
         e.preventDefault();
 
@@ -157,6 +160,31 @@ export default function Category() {
         }
     };
 
+    const [editId, setEditId] = useState(null);
+
+    // fetch data to show prev data in input fields
+    let getDetails = async (id) => {
+        let res = await fetch("http://localhost:8000/api/category/" + id);
+        let data = await res.json();
+        setCategoryDetails(data.category);
+    };
+
+    // call data fetching function depend on id changes
+    useEffect(() => {
+        if (editId !== null) {
+            getDetails(editId);
+        }
+    }, [editId]);
+
+    // add prev data sent from backend in the form state
+    useEffect(() => {
+        if (categoryDetail) {
+            setForm({
+                category: categoryDetail.category,
+            });
+        }
+    }, [categoryDetail]);
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -251,7 +279,12 @@ export default function Category() {
                                             align="end"
                                             className="w-40"
                                         >
-                                            <Dialog>
+                                            <Dialog
+                                                onOpenChange={(isOpen) =>
+                                                    isOpen &&
+                                                    setEditId(category.id)
+                                                }
+                                            >
                                                 <DialogTrigger asChild>
                                                     <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
                                                         Edit
@@ -276,7 +309,17 @@ export default function Category() {
                                                         </Label>
                                                         <Input
                                                             id="category"
-                                                            defaultValue="Snacks & Street Food"
+                                                            value={
+                                                                form.category
+                                                            }
+                                                            onChange={(e) =>
+                                                                setForm({
+                                                                    ...form,
+                                                                    category:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            }
                                                             className="col-span-3 mt-1 border-gray-500"
                                                         />
                                                     </div>
@@ -284,10 +327,19 @@ export default function Category() {
                                                         <Button variant="secondary">
                                                             Cancel
                                                         </Button>
-                                                        <Button>Update</Button>
+                                                        <Button
+                                                            onClick={() =>
+                                                                handleUpdate(
+                                                                    editId
+                                                                )
+                                                            }
+                                                        >
+                                                            Update
+                                                        </Button>
                                                     </DialogFooter>
                                                 </DialogContent>
                                             </Dialog>
+
                                             <DropdownMenuItem asChild>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
