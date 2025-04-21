@@ -28,8 +28,10 @@ import {
 import { Input } from "../../Components/ui/input";
 import { Label } from "../../Components/ui/label";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
+import relativeTime from "dayjs/plugin/relativeTime";
 
 export default function Category() {
     // prepare state to store form data
@@ -38,6 +40,8 @@ export default function Category() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+    // state to store categories
+    let [categories, setCategories] = useState([]);
 
     const submit = async (e) => {
         e.preventDefault();
@@ -76,7 +80,7 @@ export default function Category() {
 
                 // ✅ Close dialog
                 setOpen(false);
-                navigate("/admin/category");
+                await getCategories();
             }
         } catch (error) {
             console.error("Error creating category:", error);
@@ -89,6 +93,38 @@ export default function Category() {
     };
 
     const [open, setOpen] = useState(false);
+
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 10;
+
+    let getCategories = async () => {
+        let res = await axios.get("/api/categories");
+        let data = res.data;
+        setCategories(data.categories);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getCategories();
+    }, []);
+
+    // calculate the last items, first items and set menus to show
+    const indexOfLastCategory = currentPage * rowsPerPage;
+    const indexOfFirstCategory = indexOfLastCategory - rowsPerPage;
+    const currentCategories = categories.slice(
+        indexOfFirstCategory,
+        indexOfLastCategory
+    );
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
+    dayjs.extend(relativeTime);
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -150,641 +186,89 @@ export default function Category() {
                     <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">
                         <li className="basis-[5%]">ID</li>
                         <li className="basis-[35%]">Category</li>
-                        <li className="basis-[20%]">Availability</li>
+                        <li className="basis-[15%]">Availability</li>
                         <li className="basis-[18%] pl-2">Related Menu</li>
-                        <li className="basis-[17%]">Created at</li>
+                        <li className="basis-[22%]">Created at</li>
                         <li className="basis-[5%]"></li>
                     </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[5%]">1</li>
-                        <li className="basis-[35%]">Snacks & Street Food</li>
-                        <li className="basis-[20%]">
-                            <Switch />
-                        </li>
-                        <li className="basis-[18%] pl-2">23</li>
-                        <li className="basis-[17%]">April 23, 2024</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                Edit
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Edit Category
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Update the category name
-                                                    below.
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <div className="flex flex-col gap-4 py-4">
-                                                <Label
-                                                    htmlFor="category"
-                                                    className="text-left"
-                                                >
-                                                    Category Name
-                                                </Label>
-                                                <Input
-                                                    id="category"
-                                                    defaultValue="Snacks & Street Food"
-                                                    className="col-span-3 mt-1 border-gray-500"
-                                                />
-                                            </div>
-                                            <DialogFooter>
-                                                <Button variant="secondary">
-                                                    Cancel
-                                                </Button>
-                                                <Button>Update</Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
+                    {currentCategories.length > 0 ? (
+                        currentCategories.map((category) => (
+                            <ul
+                                key={category.id}
+                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                            >
+                                <li className="basis-[5%]">{category.id}</li>
+                                <li className="basis-[35%]">
+                                    {category.category}
+                                </li>
+                                <li className="basis-[15%]">
+                                    <Switch />
+                                </li>
+                                <li className="basis-[18%] pl-2">23</li>
+                                <li className="basis-[22%]">
+                                    {dayjs(category.created_at).fromNow()}
+                                </li>
+                                <li className="basis-[5%]">
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
+                                                        Edit
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>
+                                                            Edit Category
+                                                        </DialogTitle>
+                                                        <DialogDescription>
+                                                            Update the category
+                                                            name below.
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <div className="flex flex-col gap-4 py-4">
+                                                        <Label
+                                                            htmlFor="category"
+                                                            className="text-left"
+                                                        >
+                                                            Category Name
+                                                        </Label>
+                                                        <Input
+                                                            id="category"
+                                                            defaultValue="Snacks & Street Food"
+                                                            className="col-span-3 mt-1 border-gray-500"
+                                                        />
+                                                    </div>
+                                                    <DialogFooter>
+                                                        <Button variant="secondary">
+                                                            Cancel
+                                                        </Button>
+                                                        <Button>Update</Button>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
             </div>
             <div className="mt-8 flex">
@@ -792,22 +276,47 @@ export default function Category() {
                     <Pagination className="text-accentRed">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        categories.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem></PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(
+                                            categories.length / rowsPerPage
+                                        )
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>

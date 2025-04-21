@@ -38,4 +38,5 @@ Route::get('/api/menu/{id}', [MenuController::class, 'show']);
 Route::put('/api/menu/{menu}', [MenuController::class, 'update']);
 Route::delete('/api/menu/{menu}', [MenuController::class, 'delete']);
 
+Route::get('/api/categories', [CategoryController::class, 'index']);
 Route::post("/api/category/create", [CategoryController::class, 'store']);
