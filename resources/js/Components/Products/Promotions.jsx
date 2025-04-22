@@ -59,7 +59,7 @@ export default function Promotions() {
                         }}
                     >
                         <CarouselContent>
-                            {products.map((product, index) => (
+                            {products.map((product) => (
                                 <CarouselItem
                                     key={product.id}
                                     className="basis-[85%] md:basis-[75%] lg:basis-1/2"
@@ -86,7 +86,7 @@ export default function Promotions() {
                                         </div>
                                         <img
                                             src={`/storage/${product.image}`}
-                                            alt={product.title}
+                                            alt={product.name}
                                             className="w-36 md:w-28 xl:w-28 h-auto object-cover mx-auto my-3"
                                         />
                                         <div className="flex justify-between items-center my-3">

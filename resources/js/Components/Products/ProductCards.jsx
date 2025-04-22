@@ -11,8 +11,46 @@ import {
 } from "@/components/ui/pagination";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function ProductCards() {
+    // state to store products
+    let [products, setProducts] = useState([]);
+
+    // fetch data that send from backend
+    let getProducts = async () => {
+        let res = await axios.get("/api/products");
+        let data = res.data;
+        let promotionProducts = data.products.filter(
+            (product) => !product.promotion
+        );
+
+        setProducts(promotionProducts);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getProducts();
+    }, []);
+
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 9;
+
+    // calculate the last items, first items and set products to show
+    const indexOfLastProduct = currentPage * rowsPerPage;
+    const indexOfFirstProduct = indexOfLastProduct - rowsPerPage;
+    const currentProducts = products.slice(
+        indexOfFirstProduct,
+        indexOfLastProduct
+    );
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
     return (
         <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -53,250 +91,97 @@ export default function ProductCards() {
                 </div>
 
                 <div className="my-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-[97%] xl:w-[93%] mx-auto">
-                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl">
-                        <div className="flex justify-between">
-                            <a href="">
-                                <Heart size={16} className="text-accentRed" />
-                            </a>
-                            <a
-                                href=""
-                                className="text-sm flex items-center gap-1 text-accentYellow"
-                            >
-                                <Star
-                                    size={16}
-                                    fill="currentColor"
-                                    className="text-accentYellow"
-                                />{" "}
-                                4.3
-                            </a>
-                        </div>
-                        <img
-                            src={Product}
-                            alt=""
-                            className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
-                        />
-                        <div className="flex justify-between items-center my-3">
-                            <div>
-                                <h1 className="font-medium mb-1">
-                                    Eain Chat Mote Hti
-                                </h1>
-                                <p className="text-sm font-medium">6.12 $</p>
+                    {products.map((product) => (
+                        <div
+                            key={product.id}
+                            className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl"
+                        >
+                            <div className="flex justify-between">
+                                <a href="">
+                                    <Heart
+                                        size={16}
+                                        className="text-accentRed"
+                                    />
+                                </a>
+                                <a
+                                    href=""
+                                    className="text-sm flex items-center gap-1 text-accentYellow"
+                                >
+                                    <Star
+                                        size={16}
+                                        fill="currentColor"
+                                        className="text-accentYellow"
+                                    />{" "}
+                                    {product.rating}
+                                </a>
                             </div>
-                            <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
-                                <ShoppingCart
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </button>
-                        </div>
-                    </div>
-                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl">
-                        <div className="flex justify-between">
-                            <a href="">
-                                <Heart size={16} className="text-accentRed" />
-                            </a>
-                            <a
-                                href=""
-                                className="text-sm flex items-center gap-1 text-accentYellow"
-                            >
-                                <Star
-                                    size={16}
-                                    fill="currentColor"
-                                    className="text-accentYellow"
-                                />{" "}
-                                4.3
-                            </a>
-                        </div>
-                        <img
-                            src={Product}
-                            alt=""
-                            className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
-                        />
-                        <div className="flex justify-between items-center my-3">
-                            <div>
-                                <h1 className="font-medium mb-1">
-                                    Eain Chat Mote Hti
-                                </h1>
-                                <p className="text-sm font-medium">6.12 $</p>
+                            <img
+                                src={`/storage/${product.image}`}
+                                alt={product.name}
+                                className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
+                            />
+                            <div className="flex justify-between items-center my-3">
+                                <div>
+                                    <h1 className="font-medium mb-1">
+                                        {product.name}
+                                    </h1>
+                                    <p className="text-sm font-medium">
+                                        {product.price} $
+                                    </p>
+                                </div>
+                                <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
+                                    <ShoppingCart
+                                        size={16}
+                                        className="text-white"
+                                    />
+                                </button>
                             </div>
-                            <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
-                                <ShoppingCart
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </button>
                         </div>
-                    </div>
-                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl">
-                        <div className="flex justify-between">
-                            <a href="">
-                                <Heart size={16} className="text-accentRed" />
-                            </a>
-                            <a
-                                href=""
-                                className="text-sm flex items-center gap-1 text-accentYellow"
-                            >
-                                <Star
-                                    size={16}
-                                    fill="currentColor"
-                                    className="text-accentYellow"
-                                />{" "}
-                                4.3
-                            </a>
-                        </div>
-                        <img
-                            src={Product}
-                            alt=""
-                            className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
-                        />
-                        <div className="flex justify-between items-center my-3">
-                            <div>
-                                <h1 className="font-medium mb-1">
-                                    Eain Chat Mote Hti
-                                </h1>
-                                <p className="text-sm font-medium">6.12 $</p>
-                            </div>
-                            <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
-                                <ShoppingCart
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </button>
-                        </div>
-                    </div>
-                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl">
-                        <div className="flex justify-between">
-                            <a href="">
-                                <Heart size={16} className="text-accentRed" />
-                            </a>
-                            <a
-                                href=""
-                                className="text-sm flex items-center gap-1 text-accentYellow"
-                            >
-                                <Star
-                                    size={16}
-                                    fill="currentColor"
-                                    className="text-accentYellow"
-                                />{" "}
-                                4.3
-                            </a>
-                        </div>
-                        <img
-                            src={Product}
-                            alt=""
-                            className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
-                        />
-                        <div className="flex justify-between items-center my-3">
-                            <div>
-                                <h1 className="font-medium mb-1">
-                                    Eain Chat Mote Hti
-                                </h1>
-                                <p className="text-sm font-medium">6.12 $</p>
-                            </div>
-                            <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
-                                <ShoppingCart
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </button>
-                        </div>
-                    </div>
-                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl">
-                        <div className="flex justify-between">
-                            <a href="">
-                                <Heart size={16} className="text-accentRed" />
-                            </a>
-                            <a
-                                href=""
-                                className="text-sm flex items-center gap-1 text-accentYellow"
-                            >
-                                <Star
-                                    size={16}
-                                    fill="currentColor"
-                                    className="text-accentYellow"
-                                />{" "}
-                                4.3
-                            </a>
-                        </div>
-                        <img
-                            src={Product}
-                            alt=""
-                            className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
-                        />
-                        <div className="flex justify-between items-center my-3">
-                            <div>
-                                <h1 className="font-medium mb-1">
-                                    Eain Chat Mote Hti
-                                </h1>
-                                <p className="text-sm font-medium">6.12 $</p>
-                            </div>
-                            <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
-                                <ShoppingCart
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </button>
-                        </div>
-                    </div>
-                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl">
-                        <div className="flex justify-between">
-                            <a href="">
-                                <Heart size={16} className="text-accentRed" />
-                            </a>
-                            <a
-                                href=""
-                                className="text-sm flex items-center gap-1 text-accentYellow"
-                            >
-                                <Star
-                                    size={16}
-                                    fill="currentColor"
-                                    className="text-accentYellow"
-                                />{" "}
-                                4.3
-                            </a>
-                        </div>
-                        <img
-                            src={Product}
-                            alt=""
-                            className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
-                        />
-                        <div className="flex justify-between items-center my-3">
-                            <div>
-                                <h1 className="font-medium mb-1">
-                                    Eain Chat Mote Hti
-                                </h1>
-                                <p className="text-sm font-medium">6.12 $</p>
-                            </div>
-                            <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
-                                <ShoppingCart
-                                    size={16}
-                                    className="text-white"
-                                />
-                            </button>
-                        </div>
-                    </div>
+                    ))}
                 </div>
-
                 <div className="mt-4">
                     <Pagination>
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        products.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(products.length / rowsPerPage)
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
