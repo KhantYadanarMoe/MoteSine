@@ -25,7 +25,7 @@ import MenuGrid from "./Pages/Admin/MenuGrid";
 import Category from "./Pages/Admin/Category";
 import ProductsList from "./Pages/Admin/ProductsList";
 import ProductsGrid from "./Pages/Admin/ProductsGrid";
-import ProductCreate from "./Pages/Admin/ProductCreate";
+import ProductForm from "./Pages/Admin/ProductForm";
 import AdminOrderHistories from "./Pages/Admin/AdminOrderHistories";
 import AdminOrderDetails from "./Pages/Admin/AdminOrderDetails";
 import ReservationList from "./Pages/Admin/ReservationsList";
@@ -167,7 +167,7 @@ const routes = createBrowserRouter([
             },
             {
                 path: "/admin/products/create",
-                element: <ProductCreate />,
+                element: <ProductForm />,
             },
             {
                 path: "/admin/orders",

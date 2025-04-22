@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -43,3 +44,5 @@ Route::post("/api/category/create", [CategoryController::class, 'store']);
 Route::get('/api/category/{id}', [CategoryController::class, 'show']);
 Route::put('/api/category/{category}', [CategoryController::class, 'update']);
 Route::delete('/api/category/{category}', [CategoryController::class, 'delete']);
+
+Route::post("/api/product/create", [ProductsController::class, 'store']);
