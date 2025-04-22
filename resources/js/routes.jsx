@@ -170,6 +170,10 @@ const routes = createBrowserRouter([
                 element: <ProductForm />,
             },
             {
+                path: "/admin/product/:id/edit",
+                element: <ProductForm />,
+            },
+            {
                 path: "/admin/orders",
                 element: <AdminOrderHistories />,
             },

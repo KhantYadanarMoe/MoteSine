@@ -177,7 +177,11 @@ export default function ProductsList() {
                                             className="w-40"
                                         >
                                             <DropdownMenuItem className="text-accentYellow">
-                                                Edit
+                                                <Link
+                                                    to={`/admin/product/${product.id}/edit`}
+                                                >
+                                                    Edit
+                                                </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Delete

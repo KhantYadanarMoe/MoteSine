@@ -15,9 +15,9 @@ import {
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Label } from "@/Components/ui/label";
 import DatePicker from "@/Components/DatePicker";
 import axios from "axios";
@@ -42,12 +42,64 @@ export default function ProductForm() {
     // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+    // take id for edit feature
+    let { id } = useParams();
+    // state to check the page is create page or edit page
+    let [isEdit, setIsEdit] = useState(false);
+
+    // check the id is exist or not (number or undefined)
+    useEffect(() => {
+        console.log(id);
+        setIsEdit(!!id);
+    }, [id]);
+
+    const [imageUrl, setImageUrl] = useState(null); // for displaying the existing image
+
+    // state to store detail of the product related to ID
+    let [productDetail, setProductDetails] = useState(null);
+
+    // fetch data to show prev data in input fields
+    let getDetails = async (id) => {
+        let res = await fetch("http://localhost:8000/api/product/" + id);
+        let data = await res.json();
+        setProductDetails(data.product);
+    };
+
+    // call data fetching function depend on id changes
+    useEffect(() => {
+        getDetails(id);
+    }, [id]);
+
+    useEffect(() => {
+        if (productDetail) {
+            setImageUrl(productDetail.image);
+            // Convert the backend date string to a Date object
+            const startDate = productDetail.startDate
+                ? new Date(productDetail.startDate)
+                : null;
+            const endDate = productDetail.endDate
+                ? new Date(productDetail.endDate)
+                : null;
+            setForm({
+                name: productDetail.name,
+                price: productDetail.price,
+                rating: productDetail.rating,
+                stock: productDetail.stock,
+                promotion: productDetail.promotion,
+                startDate: startDate,
+                endDate: endDate,
+                featured: productDetail.featured,
+                visibility: productDetail.visibility,
+            });
+        }
+    }, [productDetail]);
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
 
         // url and method to use in sending data using axios
-        let url = "/api/product/create";
+        let url = isEdit ? "/api/product/" + id : "/api/product/create";
         let method = "post";
 
         // create new object to store form data to send
@@ -81,6 +133,10 @@ export default function ProductForm() {
             formData.append("image", image);
         }
 
+        if (isEdit) {
+            formData.append("_method", "PUT");
+        }
+
         try {
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
@@ -95,7 +151,10 @@ export default function ProductForm() {
             });
 
             // success condition
-            if (res.data.message === "Product created successfully.") {
+            if (
+                res.data.message === "Product created successfully." ||
+                res.data.message === "Product updated successfully."
+            ) {
                 navigate("/admin/products");
             }
         } catch (error) {
@@ -152,7 +211,9 @@ export default function ProductForm() {
             className="mx-2 md:mx-4 my-8 relative lg:flex gap-3"
         >
             <div className="w-full lg:w-[70%]">
-                <h1 className="text-lg font-medium">Create Product</h1>
+                <h1 className="text-lg font-medium">
+                    {isEdit ? "Edit" : "Create"} Product
+                </h1>
                 <form action="" className="mt-6 md:px-3">
                     <div className="flex justify-center mt-8 px-4 py-6 border border-gray-300 bg-white shadow-lg rounded-md">
                         <div
@@ -192,6 +253,15 @@ export default function ProductForm() {
                                 <p className="mt-4 text-sm">
                                     or drag and drop an image
                                 </p>
+                                {imageUrl && !image && (
+                                    <div className="mt-4">
+                                        <img
+                                            src={`/storage/${imageUrl}`}
+                                            alt="Existing Preview"
+                                            className="max-w-[130px] h-auto rounded-lg"
+                                        />
+                                    </div>
+                                )}
                                 {image && (
                                     <div className="mt-4">
                                         <img
@@ -381,7 +451,7 @@ export default function ProductForm() {
                                     className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
                                     onClick={() => setIsDialogOpen(true)}
                                 >
-                                    Create
+                                    {isEdit ? "Update" : "Create"}
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -432,10 +502,16 @@ export default function ProductForm() {
                             alt="Live Preview"
                             className="w-auto h-36 object-cover mx-auto my-3"
                         />
+                    ) : isEdit && imageUrl ? ( // If editing and imageUrl is available, use the menu image
+                        <img
+                            src={`/storage/${imageUrl}`} // imageUrl is the path to the image stored in the database
+                            alt="Menu Image"
+                            className="w-auto h-36 object-cover mx-auto my-3"
+                        />
                     ) : (
                         <img
-                            src={Product}
-                            alt=""
+                            src={Product} // Default image when no image is uploaded or available
+                            alt="product"
                             className="w-auto h-36 object-cover mx-auto my-3"
                         />
                     )}
