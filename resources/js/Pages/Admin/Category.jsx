@@ -49,30 +49,48 @@ export default function Category() {
     const [form, setForm] = useState({
         category: "",
     });
+
     // store errors state
     const [errors, setErrors] = useState({});
-    // state to store categories
+
+    // state to control create category dialog box
+    const [open, setOpen] = useState(false);
+
+    // state to store categories to show all of the categories data
     let [categories, setCategories] = useState([]);
+
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
 
     // state to store detail of the category related to ID
     let [categoryDetail, setCategoryDetails] = useState(null);
 
+    // state to store id to use in edit feature
+    const [editId, setEditId] = useState(null);
+
+    // state to control edit category dialog
+    const [editDialogOpen, setEditDialogOpen] = useState(false);
+
     const submit = async (e) => {
         e.preventDefault();
 
+        const isEditing = editId !== null;
+
         // url and method to use in sending data using axios
-        let url = "/api/category/create";
+        let url = isEditing
+            ? `/api/category/${editId}`
+            : "/api/category/create";
         let method = "post";
 
         // create new object to store form data to send
         let formData = new FormData();
 
-        console.log("Form Data before submitting:", form);
-
         // store state data in object
         formData.append("category", form.category);
 
-        console.log("Form data after appending:", formData);
+        if (isEditing) {
+            formData.append("_method", "PUT");
+        }
 
         try {
             const csrfToken = document
@@ -88,13 +106,20 @@ export default function Category() {
             });
 
             // success condition
-            if (res.data.message === "Category created successfully.") {
+            if (
+                res.data.message === "Category created successfully." ||
+                res.data.message === "Category updated successfully."
+            ) {
                 setForm({ category: "" });
                 setErrors({});
-
-                // ✅ Close dialog
-                setOpen(false);
                 await getCategories();
+
+                if (isEditing) {
+                    setEditDialogOpen(false);
+                    setEditId(null);
+                } else {
+                    setOpen(false);
+                }
             }
         } catch (error) {
             console.error("Error creating category:", error);
@@ -106,13 +131,7 @@ export default function Category() {
         }
     };
 
-    const [open, setOpen] = useState(false);
-
-    // state for pagination
-    const [currentPage, setCurrentPage] = useState(1);
-    // rows to show in a page
-    const rowsPerPage = 10;
-
+    // function to fetch all of the categories data
     let getCategories = async () => {
         let res = await axios.get("/api/categories");
         let data = res.data;
@@ -123,6 +142,9 @@ export default function Category() {
     useEffect(() => {
         getCategories();
     }, []);
+
+    // rows to show in a page
+    const rowsPerPage = 10;
 
     // calculate the last items, first items and set menus to show
     const indexOfLastCategory = currentPage * rowsPerPage;
@@ -137,30 +159,8 @@ export default function Category() {
         setCurrentPage(page);
     };
 
+    // setting format for created_at date
     dayjs.extend(relativeTime);
-
-    let deleteCategory = async (id) => {
-        try {
-            const csrfToken = document
-                .querySelector('meta[name="csrf-token"]')
-                .getAttribute("content");
-
-            let res = await axios.delete("/api/category/" + id, {
-                headers: {
-                    "X-CSRF-TOKEN": csrfToken,
-                    "Content-Type": "multipart/form-data",
-                },
-            });
-
-            setCategories((prev) =>
-                prev.filter((category) => category.id !== id)
-            );
-        } catch (e) {
-            console.log(e);
-        }
-    };
-
-    const [editId, setEditId] = useState(null);
 
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
@@ -185,6 +185,28 @@ export default function Category() {
         }
     }, [categoryDetail]);
 
+    // delete function
+    let deleteCategory = async (id) => {
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            let res = await axios.delete("/api/category/" + id, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setCategories((prev) =>
+                prev.filter((category) => category.id !== id)
+            );
+        } catch (e) {
+            console.log(e);
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -194,7 +216,9 @@ export default function Category() {
             className="mx-2 md:mx-4 my-8"
         >
             <div className="flex justify-between md:items-center">
-                <h1 className="md:text-lg font-medium">12 Categories Found</h1>
+                <h1 className="md:text-lg font-medium">
+                    {categories.length} Categories Found
+                </h1>
                 <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button
@@ -280,10 +304,19 @@ export default function Category() {
                                             className="w-40"
                                         >
                                             <Dialog
-                                                onOpenChange={(isOpen) =>
-                                                    isOpen &&
-                                                    setEditId(category.id)
-                                                }
+                                                open={editDialogOpen}
+                                                onOpenChange={(isOpen) => {
+                                                    setEditDialogOpen(isOpen);
+                                                    if (isOpen) {
+                                                        setEditId(category.id);
+                                                    } else {
+                                                        setEditId(null);
+                                                        setErrors({});
+                                                        setForm({
+                                                            category: "",
+                                                        }); // reset when dialog closes
+                                                    }
+                                                }}
                                             >
                                                 <DialogTrigger asChild>
                                                     <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
@@ -328,11 +361,7 @@ export default function Category() {
                                                             Cancel
                                                         </Button>
                                                         <Button
-                                                            onClick={() =>
-                                                                handleUpdate(
-                                                                    editId
-                                                                )
-                                                            }
+                                                            onClick={submit}
                                                         >
                                                             Update
                                                         </Button>
