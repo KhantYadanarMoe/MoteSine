@@ -133,18 +133,24 @@ export default function ProductsGrid() {
                                         {product.name}
                                     </h1>
                                     <p className="font-medium">
-                                        <span className="text-red-600 font-semibold">
-                                            {(
-                                                product.price -
-                                                (product.price *
-                                                    product.promotion) /
-                                                    100
-                                            ).toFixed(2)}{" "}
-                                            $
-                                        </span>
-                                        <span className="line-through ml-1 text-sm text-gray-500">
-                                            {product.price} $
-                                        </span>
+                                        {product.promotion ? (
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-red-600 font-semibold">
+                                                    {(
+                                                        product.price -
+                                                        (product.price *
+                                                            product.promotion) /
+                                                            100
+                                                    ).toFixed(2)}{" "}
+                                                    $
+                                                </span>
+                                                <span className="line-through text-sm text-gray-500">
+                                                    {product.price} $
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <span>{product.price} $</span>
+                                        )}
                                     </p>
                                 </div>
                                 <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
