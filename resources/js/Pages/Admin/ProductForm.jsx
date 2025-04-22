@@ -208,7 +208,7 @@ export default function ProductForm() {
             whileInView={{ visibility: "visible", opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="mx-2 md:mx-4 my-8 relative lg:flex gap-3"
+            className="mx-2 md:mx-4 py-8 relative lg:flex gap-3"
         >
             <div className="w-full lg:w-[70%]">
                 <h1 className="text-lg font-medium">
