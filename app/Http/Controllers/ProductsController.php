@@ -57,4 +57,14 @@ class ProductsController extends Controller
             'image_url' => $imagePath ? asset('storage/' . $imagePath) : null
         ]);
     }
+
+    public function index(){
+        // take data from backend database
+        $products = Product::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'products' => $products
+        ]);
+    }
 }

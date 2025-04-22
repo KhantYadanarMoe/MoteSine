@@ -137,6 +137,12 @@ export default function ProductForm() {
         }
     };
 
+    // calculating discounts
+    const getDiscountedPrice = (price, promo) => {
+        if (!promo || isNaN(promo)) return price;
+        return (price - (price * promo) / 100).toFixed(2);
+    };
+
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}
@@ -417,20 +423,47 @@ export default function ProductForm() {
                                 fill="currentColor"
                                 className="text-accentYellow"
                             />{" "}
-                            4.3
+                            {form.rating || 4.3}
                         </a>
                     </div>
-                    <img
-                        src={Product}
-                        alt=""
-                        className="w-40 md:w-28 xl:w-24 h-auto object-cover mx-auto my-3"
-                    />
+                    {image ? (
+                        <img
+                            src={URL.createObjectURL(image)} // For create feature, use uploaded image
+                            alt="Live Preview"
+                            className="w-auto h-36 object-cover mx-auto my-3"
+                        />
+                    ) : (
+                        <img
+                            src={Product}
+                            alt=""
+                            className="w-auto h-36 object-cover mx-auto my-3"
+                        />
+                    )}
                     <div className="flex justify-between items-center my-3">
                         <div>
                             <h1 className="text-sm font-medium mb-1">
-                                Eain Chat Mote Hti
+                                {form.name || "Eain Chat Mote Hti"}
                             </h1>
-                            <p className="text-xs font-medium">6.12 $</p>
+                            <p className="text-sm font-medium">
+                                {form.promotion ? (
+                                    <div className="flex items-center gap-2">
+                                        <span className="line-through text-sm text-gray-500">
+                                            {form.price || 6.12} $
+                                        </span>
+                                        <span className="font-bold text-red-600">
+                                            {getDiscountedPrice(
+                                                form.price || 6.12,
+                                                form.promotion
+                                            )}{" "}
+                                            $
+                                        </span>
+                                    </div>
+                                ) : (
+                                    <span className="font-bold text-gray-800">
+                                        {form.price || 6.12} $
+                                    </span>
+                                )}
+                            </p>
                         </div>
                         <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
                             <ShoppingCart size={16} className="text-white" />

@@ -45,4 +45,5 @@ Route::get('/api/category/{id}', [CategoryController::class, 'show']);
 Route::put('/api/category/{category}', [CategoryController::class, 'update']);
 Route::delete('/api/category/{category}', [CategoryController::class, 'delete']);
 
+Route::get('/api/products', [ProductsController::class, 'index']);
 Route::post("/api/product/create", [ProductsController::class, 'store']);
