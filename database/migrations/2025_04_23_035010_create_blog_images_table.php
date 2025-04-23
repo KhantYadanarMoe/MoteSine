@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('blog_images', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
-        $table->text('paragraph');
-            $table->boolean('visibility')->nullable();  
+            $table->foreignId('blog_id')->constrained()->onDelete('cascade'); // Foreign key to blog
+        $table->string('url'); // Store image URL
             $table->timestamps();
         });
     }
@@ -25,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('blog_images');
     }
 };
