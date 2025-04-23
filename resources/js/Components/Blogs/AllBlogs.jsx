@@ -12,8 +12,39 @@ import {
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Input } from "../ui/input";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function AllBlogs() {
+    // state to store blogs
+    let [blogs, setBlogs] = useState([]);
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 6;
+
+    // fetch data that send from backend
+    let getBlogs = async () => {
+        let res = await axios.get("/api/blogs");
+        let data = res.data;
+        setBlogs(data.blogs);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getBlogs();
+    }, []);
+
+    // calculate the last items, first items and set blogs to show
+    const indexOfLastBlog = currentPage * rowsPerPage;
+    const indexOfFirstBlog = indexOfLastBlog - rowsPerPage;
+    const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     return (
         <motion.div
             initial={{ y: 100, opacity: 0 }}
@@ -48,321 +79,111 @@ export default function AllBlogs() {
                     </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    <div className="mb-5">
-                        <div className="xl:w-[97%] mx-auto">
-                            <img
-                                src={Blog2}
-                                alt=""
-                                className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
-                            />
-                            <div className="mt-3">
-                                <h1 className="text-lg font-medium">
-                                    Where we take our ingredients & how we
-                                    prepare to cook
-                                </h1>
-                                <p className="text-gray-700 mt-2 text-sm">
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Optio, modi accusamus
-                                    ratione dolorem inventore sapiente?
-                                </p>
-                                <div className="flex gap-5 mt-4">
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <CalendarFold
-                                            size={16}
-                                            className="text-gray-800"
+                    {currentBlogs.length > 0 ? (
+                        currentBlogs.map((blog) => (
+                            <div className="mb-5">
+                                <div className="xl:w-[97%] mx-auto">
+                                    {blog.blog_images?.length > 0 && (
+                                        <img
+                                            src={`/storage/${blog.blog_images[0].url}`}
+                                            alt="Cover"
+                                            className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
                                         />
-                                        <p className="text-gray-800">
-                                            20 Jan 2025
+                                    )}
+                                    <div className="mt-3">
+                                        <h1 className="text-lg font-medium">
+                                            {blog.title}
+                                        </h1>
+                                        <p className="text-gray-700 mt-2 text-sm">
+                                            {blog.paragraph
+                                                ?.split(" ")
+                                                .slice(0, 18)
+                                                .join(" ") + "..."}
                                         </p>
-                                    </div>
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <Clock
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            3 mins read
-                                        </p>
-                                    </div>
-                                </div>
-                                <Link to="/blog">
-                                    <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
-                                        Read More{" "}
-                                        <ArrowRight
-                                            size={16}
-                                            className=" -mb-1"
-                                        />
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mb-5">
-                        <div className="xl:w-[97%] mx-auto">
-                            <img
-                                src={Blog2}
-                                alt=""
-                                className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
-                            />
-                            <div className="mt-3">
-                                <h1 className="text-lg font-medium">
-                                    Where we take our ingredients & how we
-                                    prepare to cook
-                                </h1>
-                                <p className="text-gray-700 mt-2 text-sm">
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Optio, modi accusamus
-                                    ratione dolorem inventore sapiente?
-                                </p>
-                                <div className="flex gap-5 mt-4">
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <CalendarFold
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            20 Jan 2025
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <Clock
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            3 mins read
-                                        </p>
+                                        <div className="flex gap-5 mt-4">
+                                            <div className="flex gap-1 items-center text-sm">
+                                                <CalendarFold
+                                                    size={16}
+                                                    className="text-gray-800"
+                                                />
+                                                <p className="text-gray-800">
+                                                    {new Date(
+                                                        blog.created_at
+                                                    ).toLocaleDateString()}
+                                                </p>
+                                            </div>
+                                            <div className="flex gap-1 items-center text-sm">
+                                                <Clock
+                                                    size={16}
+                                                    className="text-gray-800"
+                                                />
+                                                <p className="text-gray-800">
+                                                    3 mins read
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <Link to="/blog">
+                                            <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
+                                                Read More{" "}
+                                                <ArrowRight
+                                                    size={16}
+                                                    className=" -mb-1"
+                                                />
+                                            </button>
+                                        </Link>
                                     </div>
                                 </div>
-                                <Link to="/blog">
-                                    <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
-                                        Read More{" "}
-                                        <ArrowRight
-                                            size={16}
-                                            className=" -mb-1"
-                                        />
-                                    </button>
-                                </Link>
                             </div>
-                        </div>
-                    </div>
-                    <div className="mb-5">
-                        <div className="xl:w-[97%] mx-auto">
-                            <img
-                                src={Blog2}
-                                alt=""
-                                className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
-                            />
-                            <div className="mt-3">
-                                <h1 className="text-lg font-medium">
-                                    Where we take our ingredients & how we
-                                    prepare to cook
-                                </h1>
-                                <p className="text-gray-700 mt-2 text-sm">
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Optio, modi accusamus
-                                    ratione dolorem inventore sapiente?
-                                </p>
-                                <div className="flex gap-5 mt-4">
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <CalendarFold
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            20 Jan 2025
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <Clock
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            3 mins read
-                                        </p>
-                                    </div>
-                                </div>
-                                <Link to="/blog">
-                                    <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
-                                        Read More{" "}
-                                        <ArrowRight
-                                            size={16}
-                                            className=" -mb-1"
-                                        />
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mb-5">
-                        <div className="xl:w-[97%] mx-auto">
-                            <img
-                                src={Blog2}
-                                alt=""
-                                className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
-                            />
-                            <div className="mt-3">
-                                <h1 className="text-lg font-medium">
-                                    Where we take our ingredients & how we
-                                    prepare to cook
-                                </h1>
-                                <p className="text-gray-700 mt-2 text-sm">
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Optio, modi accusamus
-                                    ratione dolorem inventore sapiente?
-                                </p>
-                                <div className="flex gap-5 mt-4">
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <CalendarFold
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            20 Jan 2025
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <Clock
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            3 mins read
-                                        </p>
-                                    </div>
-                                </div>
-                                <Link to="/blog">
-                                    <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
-                                        Read More{" "}
-                                        <ArrowRight
-                                            size={16}
-                                            className=" -mb-1"
-                                        />
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mb-5">
-                        <div className="xl:w-[97%] mx-auto">
-                            <img
-                                src={Blog2}
-                                alt=""
-                                className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
-                            />
-                            <div className="mt-3">
-                                <h1 className="text-lg font-medium">
-                                    Where we take our ingredients & how we
-                                    prepare to cook
-                                </h1>
-                                <p className="text-gray-700 mt-2 text-sm">
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Optio, modi accusamus
-                                    ratione dolorem inventore sapiente?
-                                </p>
-                                <div className="flex gap-5 mt-4">
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <CalendarFold
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            20 Jan 2025
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <Clock
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            3 mins read
-                                        </p>
-                                    </div>
-                                </div>
-                                <Link to="/blog">
-                                    <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
-                                        Read More{" "}
-                                        <ArrowRight
-                                            size={16}
-                                            className=" -mb-1"
-                                        />
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mb-5">
-                        <div className="xl:w-[97%] mx-auto">
-                            <img
-                                src={Blog2}
-                                alt=""
-                                className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
-                            />
-                            <div className="mt-3">
-                                <h1 className="text-lg font-medium">
-                                    Where we take our ingredients & how we
-                                    prepare to cook
-                                </h1>
-                                <p className="text-gray-700 mt-2 text-sm">
-                                    Lorem ipsum, dolor sit amet consectetur
-                                    adipisicing elit. Optio, modi accusamus
-                                    ratione dolorem inventore sapiente?
-                                </p>
-                                <div className="flex gap-5 mt-4">
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <CalendarFold
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            20 Jan 2025
-                                        </p>
-                                    </div>
-                                    <div className="flex gap-1 items-center text-sm">
-                                        <Clock
-                                            size={16}
-                                            className="text-gray-800"
-                                        />
-                                        <p className="text-gray-800">
-                                            3 mins read
-                                        </p>
-                                    </div>
-                                </div>
-                                <Link to="/blog">
-                                    <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
-                                        Read More{" "}
-                                        <ArrowRight
-                                            size={16}
-                                            className=" -mb-1"
-                                        />
-                                    </button>
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
                 <div className="mt-4">
                     <Pagination>
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        blogs.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(blogs.length / rowsPerPage)
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
