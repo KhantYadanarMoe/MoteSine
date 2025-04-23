@@ -131,4 +131,11 @@ class BlogController extends Controller
         'image_urls' => array_map(fn($path) => asset('storage/' . $path), $imagePaths)  // Return image URLs
     ]);
     }
+
+    public function delete(Blog $blog){
+        $blog->delete();
+        return response()->json([
+            'message' => 'Blog deleted successful!'
+        ]);
+    }
 }
