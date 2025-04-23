@@ -59,4 +59,13 @@ class BlogController extends Controller
         ]);
     }
     
+    public function index(){
+        // take data from backend database
+        $blogs = Blog::with('blogImages')->latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'blogs' => $blogs
+        ]);
+    }
 }
