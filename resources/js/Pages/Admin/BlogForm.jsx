@@ -176,6 +176,22 @@ export default function BlogForm() {
                                 <p className="mt-4 text-sm">
                                     or drag and drop an image
                                 </p>
+                                {images.length > 0 && (
+                                    <div className="mt-4 flex gap-4">
+                                        {images
+                                            .slice(0, 3)
+                                            .map((image, index) => (
+                                                <img
+                                                    key={index}
+                                                    src={URL.createObjectURL(
+                                                        image
+                                                    )}
+                                                    alt={`Preview ${index + 1}`}
+                                                    className="max-w-[130px] max-h-[130px] rounded-lg"
+                                                />
+                                            ))}
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -281,20 +297,32 @@ export default function BlogForm() {
             <div className="lg:w-[30%] lg:max-w-[295px] xl:max-w-[290px] hidden lg:block fixed right-4">
                 <div className="mb-5">
                     <div className="xl:w-[97%] mx-auto">
-                        <img
-                            src={Blog2}
-                            alt=""
-                            className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
-                        />
+                        {images.length > 0 ? (
+                            <img
+                                src={URL.createObjectURL(images[0])} // For the first uploaded image
+                                alt="Live Preview"
+                                className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
+                            />
+                        ) : (
+                            <img
+                                src={Blog2}
+                                alt=""
+                                className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
+                            />
+                        )}
                         <div className="mt-3">
                             <h1 className="text-base font-medium">
-                                Where we take our ingredients & how we prepare
-                                to cook
+                                {form.title ||
+                                    "Where we take our ingredients & how we prepare to cook"}
                             </h1>
                             <p className="text-gray-700 mt-2 text-xs">
-                                Lorem ipsum, dolor sit amet consectetur
-                                adipisicing elit. Optio, modi accusamus ratione
-                                dolorem inventore sapiente?
+                                {(
+                                    form.paragraph ||
+                                    "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio, modi accusamus ratione dolorem inventore sapiente?"
+                                )
+                                    .split(" ")
+                                    .slice(0, 18)
+                                    .join(" ") + "..."}
                             </p>
                             <div className="flex gap-5 mt-4">
                                 <div className="flex gap-1 items-center text-sm">
