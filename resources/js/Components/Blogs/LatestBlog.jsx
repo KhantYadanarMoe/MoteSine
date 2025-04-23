@@ -2,8 +2,25 @@ import Blog from "../../../images/cooking.jpg";
 import { CalendarFold, Clock, ArrowRight, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function LatestBlog() {
+    // state to store blogs
+    let [blog, setBlog] = useState([]);
+
+    // fetch data that send from backend
+    let getBlogs = async () => {
+        let res = await axios.get("/api/blogs");
+        let data = res.data;
+        setBlog(data.blogs[0]);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getBlogs();
+    }, []);
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -13,26 +30,28 @@ export default function LatestBlog() {
         >
             <div className="block md:flex gap-3 lg:gap-0 my-6">
                 <div className="md:w-1/2">
-                    <img
-                        src={Blog}
-                        alt=""
-                        className="w-[100%] lg:w-[90%] mx-auto h-52 md:h-64 lg:h-80 object-cover rounded-sm"
-                    />
+                    {blog.blog_images?.length > 0 && (
+                        <img
+                            src={`/storage/${blog.blog_images[0].url}`}
+                            alt="Cover"
+                            className="w-[97%] h-52 md:h-64 lg:h-72 xl:h-80 object-cover rounded-md"
+                        />
+                    )}
                 </div>
                 <div className="md:w-1/2 flex flex-col justify-end py-3">
                     <h1 className="text-xl lg:text-2xl font-medium mb-3">
-                        How we choose and cook our daily's special menu
+                        {blog.title}
                     </h1>
                     <p className="text-gray-700 text-xs lg:text-sm">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Sed dolores, similique hic est atque porro iste
-                        explicabo corrupti esse sint quibusdam numquam? Iste
-                        quo, ex veniam velit in exercitationem saepe.
+                        {blog.paragraph?.split(" ").slice(0, 45).join(" ") +
+                            "..."}
                     </p>
                     <div className="flex gap-5 mt-4">
                         <div className="flex gap-1 items-center text-sm lg:text-base">
                             <CalendarFold size={20} className="text-gray-800" />
-                            <p className="text-gray-800">20 Jan 2025</p>
+                            <p className="text-gray-800">
+                                {new Date(blog.created_at).toLocaleDateString()}
+                            </p>
                         </div>
                         <div className="flex gap-1 items-center text-sm lg:text-base">
                             <Clock size={20} className="text-gray-800" />
