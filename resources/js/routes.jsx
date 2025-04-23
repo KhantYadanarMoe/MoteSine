@@ -32,7 +32,7 @@ import ReservationList from "./Pages/Admin/ReservationsList";
 import ReservationCalendar from "./Pages/Admin/ReservationCalendar";
 import UsersList from "./Pages/Admin/UsersList";
 import BlogsList from "./Pages/Admin/BlogsList";
-import BlogsCreate from "./Pages/Admin/BlogsCreate";
+import BlogForm from "./Pages/Admin/BlogForm";
 import ReviewsList from "./Pages/Admin/ReviewsList";
 import ContactsList from "./Pages/Admin/ContactsList";
 import ContactMessage from "./Pages/Admin/ContactMessage";
@@ -199,7 +199,7 @@ const routes = createBrowserRouter([
             },
             {
                 path: "/admin/blogs/create",
-                element: <BlogsCreate />,
+                element: <BlogForm />,
             },
             {
                 path: "/admin/reviews",

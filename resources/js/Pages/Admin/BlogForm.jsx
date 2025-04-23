@@ -6,7 +6,7 @@ import { Input } from "../../Components/ui/input";
 import { Textarea } from "../../Components/ui/textarea";
 import { motion } from "framer-motion";
 
-export default function BlogsCreate() {
+export default function BlogForm() {
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}
@@ -41,6 +41,7 @@ export default function BlogsCreate() {
                                 </label>
                                 <Input
                                     id="image-upload"
+                                    name="image"
                                     type="file"
                                     accept="image/*"
                                     //   onChange={handleImageChange}
@@ -60,15 +61,18 @@ export default function BlogsCreate() {
                                 <label htmlFor="title">Title</label>
                                 <Input
                                     id="title"
+                                    name="title"
                                     type="text"
                                     placeholder="Enter your title"
                                     className="mt-1 border-gray-500"
                                 />
                             </div>
                             <div className="mt-3">
-                                <label htmlFor="body">Paragraph</label>
+                                <label htmlFor="paragraph">Paragraph</label>
                                 <Textarea
                                     type="text"
+                                    name="paragraph"
+                                    id="paragraph"
                                     placeholder="Write your blog here..."
                                     className="mt-1 border-gray-500"
                                 ></Textarea>
@@ -80,7 +84,11 @@ export default function BlogsCreate() {
                         <h1 className="font-medium">Actions</h1>
                         <div className="mt-3 flex flex-col gap-2">
                             <label htmlFor="Visibility">Publish or Draft</label>
-                            <Switch id="visibility" defaultChecked />
+                            <Switch
+                                id="visibility"
+                                name="visibility"
+                                defaultChecked
+                            />
                         </div>
                     </div>
 

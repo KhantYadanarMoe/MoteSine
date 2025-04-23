@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductsController;
@@ -50,3 +51,5 @@ Route::post("/api/product/create", [ProductsController::class, 'store']);
 Route::get('/api/product/{id}', [ProductsController::class, 'show']);
 Route::put('/api/product/{product}', [ProductsController::class, 'update']);
 Route::delete('/api/product/{product}', [ProductsController::class, 'delete']);
+
+Route::post("/api/blog/create", [BlogController::class, 'store']);
