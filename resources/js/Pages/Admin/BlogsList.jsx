@@ -151,7 +151,11 @@ export default function BlogsList() {
                                                 </DropdownMenuItem>
                                             </Link>
                                             <DropdownMenuItem className="text-accentYellow">
-                                                Edit
+                                                <Link
+                                                    to={`/admin/blogs/${blog.id}/edit`}
+                                                >
+                                                    Edit
+                                                </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Delete

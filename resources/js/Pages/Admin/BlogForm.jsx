@@ -16,10 +16,10 @@ import {
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Label } from "@/Components/ui/label";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function BlogForm() {
     const [images, setImages] = useState([]); //for new image upload
@@ -35,6 +35,19 @@ export default function BlogForm() {
 
     // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // take id for edit feature
+    let { id } = useParams();
+    // state to check the page is create page or edit page
+    let [isEdit, setIsEdit] = useState(false);
+
+    // check the id is exist or not (number or undefined)
+    useEffect(() => {
+        console.log(id);
+        setIsEdit(!!id);
+    }, [id]);
+
+    const [imageUrls, setImageUrls] = useState([]);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -64,12 +77,41 @@ export default function BlogForm() {
         }
     };
 
+    // state to store detail of the blog related to ID
+    let [blogDetail, setBlogDetails] = useState(null);
+
+    // fetch data to show prev data in input fields
+    let getDetails = async (id) => {
+        let res = await fetch("http://localhost:8000/api/blog/" + id);
+        let data = await res.json();
+        setBlogDetails(data.blog);
+    };
+
+    // call data fetching function depend on id changes
+    useEffect(() => {
+        getDetails(id);
+    }, [id]);
+
+    // add prev data sent from backend in the form state
+    useEffect(() => {
+        if (blogDetail) {
+            console.log(blogDetail);
+            setImageUrls(blogDetail.blog_images?.map((img) => img.url) || []);
+
+            setForm({
+                title: blogDetail.title,
+                paragraph: blogDetail.paragraph,
+                visibility: blogDetail.visibility,
+            });
+        }
+    }, [blogDetail]);
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
 
         // url and method to use in sending data using axios
-        let url = "/api/blog/create";
+        let url = isEdit ? "/api/blog/" + id : "/api/blog/create";
         let method = "post";
 
         // create new object to store form data to send
@@ -89,6 +131,10 @@ export default function BlogForm() {
             formData.append("images[]", image);
         });
 
+        if (isEdit) {
+            formData.append("_method", "PUT");
+        }
+
         try {
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
@@ -103,7 +149,10 @@ export default function BlogForm() {
             });
 
             // success condition
-            if (res.data.message === "Blog created successfully.") {
+            if (
+                res.data.message === "Blog created successfully." ||
+                res.data.message === "Blog updated successfully."
+            ) {
                 navigate("/admin/blogs");
             }
         } catch (error) {
@@ -125,7 +174,9 @@ export default function BlogForm() {
             className="mx-2 md:mx-4 my-8 relative lg:flex gap-3"
         >
             <div className="w-full lg:w-[70%]">
-                <h1 className="text-lg font-medium">Create Blog</h1>
+                <h1 className="text-lg font-medium">
+                    {isEdit ? "Edit" : "Create"} Blog
+                </h1>
                 <p className="text-gray-800 text-sm mt-2">
                     You can add 3 images per blog.
                 </p>
@@ -176,6 +227,24 @@ export default function BlogForm() {
                                 <p className="mt-4 text-sm">
                                     or drag and drop an image
                                 </p>
+                                {imageUrls.length > 0 &&
+                                    images.length === 0 && (
+                                        <div className="mt-4 flex gap-4">
+                                            {imageUrls
+                                                .slice(0, 3)
+                                                .map((url, index) => (
+                                                    <img
+                                                        key={index}
+                                                        src={`/storage/${url}`} // directly use the URL
+                                                        alt={`Existing Preview ${
+                                                            index + 1
+                                                        }`}
+                                                        className="max-w-[130px] max-h-[130px] rounded-lg"
+                                                    />
+                                                ))}
+                                        </div>
+                                    )}
+
                                 {images.length > 0 && (
                                     <div className="mt-4 flex gap-4">
                                         {images
@@ -268,7 +337,7 @@ export default function BlogForm() {
                                     className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
                                     onClick={() => setIsDialogOpen(true)}
                                 >
-                                    Create
+                                    {isEdit ? "Update" : "Create"}
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>
@@ -299,17 +368,24 @@ export default function BlogForm() {
                     <div className="xl:w-[97%] mx-auto">
                         {images.length > 0 ? (
                             <img
-                                src={URL.createObjectURL(images[0])} // For the first uploaded image
+                                src={URL.createObjectURL(images[0])}
                                 alt="Live Preview"
+                                className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
+                            />
+                        ) : isEdit && imageUrls.length > 0 ? (
+                            <img
+                                src={`/storage/${imageUrls[0]}`}
+                                alt="Cover Preview"
                                 className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
                             />
                         ) : (
                             <img
                                 src={Blog2}
-                                alt=""
+                                alt="Default Preview"
                                 className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
                             />
                         )}
+
                         <div className="mt-3">
                             <h1 className="text-base font-medium">
                                 {form.title ||

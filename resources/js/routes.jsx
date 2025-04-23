@@ -202,6 +202,10 @@ const routes = createBrowserRouter([
                 element: <BlogForm />,
             },
             {
+                path: "/admin/blogs/:id/edit",
+                element: <BlogForm />,
+            },
+            {
                 path: "/admin/reviews",
                 element: <ReviewsList />,
             },
