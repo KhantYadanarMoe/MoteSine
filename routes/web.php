@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
@@ -57,3 +58,5 @@ Route::post("/api/blog/create", [BlogController::class, 'store']);
 Route::get('/api/blog/{id}', [BlogController::class, 'show']);
 Route::put('/api/blog/{blog}', [BlogController::class, 'update']);
 Route::delete('/api/blog/{blog}', [BlogController::class, 'delete']);
+
+Route::post("/api/job/create", [JobController::class, 'store']);
