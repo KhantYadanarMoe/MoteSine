@@ -1,4 +1,5 @@
 import { Ellipsis, Plus, Clipboard } from "lucide-react";
+import { Button } from "@/Components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -14,9 +15,19 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "../../Components/ui/pagination";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
-import { Button } from "../../Components/ui/button";
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -49,6 +60,25 @@ export default function JobPosts() {
     // function for pagination button
     const handlePageChange = (page) => {
         setCurrentPage(page);
+    };
+
+    let deleteJob = async (id) => {
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            let res = await axios.delete("/api/job/" + id, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setJobs((prev) => prev.filter((job) => job.id !== id));
+        } catch (e) {
+            console.log(e);
+        }
     };
     return (
         <motion.div
@@ -120,8 +150,42 @@ export default function JobPosts() {
                                                     Edit
                                                 </Link>
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-accentRed">
-                                                Delete
+                                            <DropdownMenuItem asChild>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                            Delete
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you sure you
+                                                                want to delete
+                                                                this menu?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    deleteJob(
+                                                                        job.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

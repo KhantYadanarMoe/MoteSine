@@ -92,4 +92,11 @@ class JobController extends Controller
             'job' => $job
         ]);
     }
+
+    public function delete(JobPost $job){
+        $job->delete();
+        return response()->json([
+            'message' => 'Job post deleted successful!'
+        ]);
+    }
 }

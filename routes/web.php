@@ -63,3 +63,4 @@ Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);
 Route::get('/api/job/{id}', [JobController::class, 'show']);
 Route::put('/api/job/{job}', [JobController::class, 'update']);
+Route::delete('/api/job/{job}', [JobController::class, 'delete']);
