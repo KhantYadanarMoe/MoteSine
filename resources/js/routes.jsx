@@ -37,7 +37,7 @@ import ReviewsList from "./Pages/Admin/ReviewsList";
 import ContactsList from "./Pages/Admin/ContactsList";
 import ContactMessage from "./Pages/Admin/ContactMessage";
 import JobApplications from "./Pages/Admin/JobApplications";
-import JobCreate from "./Pages/Admin/JobCreate";
+import JobPostForm from "./Pages/Admin/JobPostForm";
 import PartnershipApplications from "./Pages/Admin/PartnershipApplications";
 import Setting from "./Pages/Admin/Setting";
 import AdminProfile from "./Pages/Admin/AdminProfile";
@@ -228,7 +228,7 @@ const routes = createBrowserRouter([
             },
             {
                 path: "/admin/jobs/create",
-                element: <JobCreate />,
+                element: <JobPostForm />,
             },
             {
                 path: "/admin/partnership",

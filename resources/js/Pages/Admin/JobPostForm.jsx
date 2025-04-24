@@ -24,7 +24,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-export default function JobCreate() {
+export default function JobPostForm() {
     // prepare state to store form data
     const [form, setForm] = useState({
         title: "",
