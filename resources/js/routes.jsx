@@ -43,6 +43,7 @@ import Setting from "./Pages/Admin/Setting";
 import AdminProfile from "./Pages/Admin/AdminProfile";
 import Checkout from "./Pages/User/Checkout";
 import MenuForm from "./Pages/Admin/MenuForm";
+import JobPosts from "./Pages/Admin/JobPosts";
 
 const routes = createBrowserRouter([
     {
@@ -219,6 +220,10 @@ const routes = createBrowserRouter([
             },
             {
                 path: "/admin/jobs",
+                element: <JobPosts />,
+            },
+            {
+                path: "/admin/jobs/applications",
                 element: <JobApplications />,
             },
             {

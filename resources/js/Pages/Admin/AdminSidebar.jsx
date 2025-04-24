@@ -11,7 +11,7 @@ import {
     AppWindowMac,
     MessageSquare,
     Send,
-    Clipboard,
+    NotepadText,
     Handshake,
     Search,
     Menu,
@@ -103,7 +103,7 @@ export default function AdminSidebar() {
                     </Link>
                     <Link to="/admin/jobs">
                         <li className="flex gap-3 px-7 py-3 hover:text-accentRed hover:bg-white border-l-4 border-l-white hover:border-l-accentRed duration-300">
-                            <Clipboard size={20} /> Job Applications
+                            <NotepadText size={20} /> Job Posts
                         </li>
                     </Link>
                     <Link to="/admin/partnership">
