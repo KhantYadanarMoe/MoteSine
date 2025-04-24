@@ -231,6 +231,10 @@ const routes = createBrowserRouter([
                 element: <JobPostForm />,
             },
             {
+                path: "/admin/jobs/:id/edit",
+                element: <JobPostForm />,
+            },
+            {
                 path: "/admin/partnership",
                 element: <PartnershipApplications />,
             },

@@ -20,11 +20,22 @@ import {
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 export default function JobPostForm() {
+    // take id for edit feature
+    let { id } = useParams();
+    // state to check the page is create page or edit page
+    let [isEdit, setIsEdit] = useState(false);
+
+    // check the id is exist or not (number or undefined)
+    useEffect(() => {
+        console.log(id);
+        setIsEdit(!!id);
+    }, [id]);
+
     // prepare state to store form data
     const [form, setForm] = useState({
         title: "",
@@ -58,12 +69,41 @@ export default function JobPostForm() {
         }));
     };
 
+    // state to store detail of the job related to ID
+    let [jobDetails, setJobDetails] = useState(null);
+
+    // fetch data to show prev data in input fields
+    let getDetails = async (id) => {
+        let res = await fetch("http://localhost:8000/api/job/" + id);
+        let data = await res.json();
+        setJobDetails(data.job);
+    };
+
+    // call data fetching function depend on id changes
+    useEffect(() => {
+        getDetails(id);
+    }, [id]);
+
+    // add prev data sent from backend in the form state
+    useEffect(() => {
+        if (jobDetails) {
+            console.log(jobDetails);
+
+            setForm({
+                title: jobDetails.title,
+                desc: jobDetails.desc,
+                salary: jobDetails.salary,
+                type: jobDetails.type,
+            });
+        }
+    }, [jobDetails]);
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
 
         // url and method to use in sending data using axios
-        let url = "/api/job/create";
+        let url = isEdit ? "/api/job/" + id : "/api/job/create";
         let method = "post";
 
         // create new object to store form data to send
@@ -79,6 +119,10 @@ export default function JobPostForm() {
 
         console.log("Form data after appending:", formData);
 
+        if (isEdit) {
+            formData.append("_method", "PUT");
+        }
+
         try {
             const csrfToken = document
                 .querySelector('meta[name="csrf-token"]')
@@ -93,7 +137,10 @@ export default function JobPostForm() {
             });
 
             // success condition
-            if (res.data.message === "Job post created successfully.") {
+            if (
+                res.data.message === "Job post created successfully." ||
+                res.data.message === "Job post updated successfully."
+            ) {
                 navigate("/admin/jobs");
             }
         } catch (error) {
@@ -112,10 +159,12 @@ export default function JobPostForm() {
             whileInView={{ visibility: "visible", opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="mx-2 md:mx-4 my-8 relative lg:flex gap-3"
+            className="mx-2 md:mx-4 py-8 relative lg:flex gap-3"
         >
             <div className="w-full lg:w-[70%]">
-                <h1 className="text-lg font-medium">Create Job Post</h1>
+                <h1 className="text-lg font-medium">
+                    {isEdit ? "Edit" : "Create"} Job Post
+                </h1>
                 <form action="" className="mt-6 md:px-3">
                     <div className="mt-5 px-4 py-6 border border-gray-300 bg-white  shadow-lg rounded-md">
                         <h2 className="font-medium">Job Information</h2>
@@ -223,7 +272,7 @@ export default function JobPostForm() {
                                     className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
                                     onClick={() => setIsDialogOpen(true)}
                                 >
-                                    Create Post
+                                    {isEdit ? "Update" : "Create"} Post
                                 </Button>
                             </AlertDialogTrigger>
                             <AlertDialogContent>

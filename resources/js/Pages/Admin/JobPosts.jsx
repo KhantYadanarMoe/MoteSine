@@ -114,7 +114,11 @@ export default function JobPosts() {
                                             className="w-40"
                                         >
                                             <DropdownMenuItem className="text-accentYellow">
-                                                Edit
+                                                <Link
+                                                    to={`/admin/jobs/${job.id}/edit`}
+                                                >
+                                                    Edit
+                                                </Link>
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Delete
