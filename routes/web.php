@@ -59,4 +59,5 @@ Route::get('/api/blog/{id}', [BlogController::class, 'show']);
 Route::put('/api/blog/{blog}', [BlogController::class, 'update']);
 Route::delete('/api/blog/{blog}', [BlogController::class, 'delete']);
 
+Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);

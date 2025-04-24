@@ -17,8 +17,39 @@ import {
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "../../Components/ui/button";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 export default function JobPosts() {
+    // state to store jobs
+    let [jobs, setJobs] = useState([]);
+
+    // fetch data that send from backend
+    let getJobs = async () => {
+        let res = await axios.get("/api/jobs");
+        let data = res.data;
+        setJobs(data.jobs);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getJobs();
+    }, []);
+
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 10;
+
+    // calculate the last items, first items and set jobs to show
+    const indexOfLastJob = currentPage * rowsPerPage;
+    const indexOfFirstJob = indexOfLastJob - rowsPerPage;
+    const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -58,38 +89,46 @@ export default function JobPosts() {
                         <li className="basis-[18%]">Type</li>
                         <li className="basis-[5%]"></li>
                     </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[21%]">Chef</li>
-                        <li className="basis-[10%]">30 $</li>
-                        <li className="basis-[42%] text-xs pr-4">
-                            Lorem ipsum dolor sit amet consectetur adipisicing
-                            elit. Omnis ipsam cupiditate, voluptate rem quod
-                            molestiae necessitatibus quas iusto ex, voluptatum
-                            consequuntur minima sapiente sed vel facilis ea.
-                        </li>
-                        <li className="basis-[18%]">Part Time</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
+                    {currentJobs.length > 0 ? (
+                        currentJobs.map((job) => (
+                            <ul
+                                key={job.id}
+                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                            >
+                                <li className="basis-[4%]">{job.id}</li>
+                                <li className="basis-[21%]">{job.title}</li>
+                                <li className="basis-[10%]">{job.salary} $</li>
+                                <li className="basis-[42%] text-xs pr-4">
+                                    {job.desc}
+                                </li>
+                                <li className="basis-[18%]">{job.type}</li>
+                                <li className="basis-[5%]">
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <DropdownMenuItem className="text-accentYellow">
+                                                Edit
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
             </div>
             <div className="mt-8 flex">
@@ -97,22 +136,45 @@ export default function JobPosts() {
                     <Pagination className="text-accentREbg-accentRed">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        jobs.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem></PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(jobs.length / rowsPerPage)
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>

@@ -39,4 +39,15 @@ class JobController extends Controller
             'jobs' => $jobs,
         ]);
     }
+
+    public function index(){
+
+        // take data from backend database
+        $jobs = JobPost::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'jobs' => $jobs
+        ]);
+    }
 }
