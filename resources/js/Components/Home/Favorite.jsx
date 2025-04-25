@@ -22,7 +22,8 @@ export default function Favorite() {
     let getMenus = async () => {
         let res = await axios.get("/api/menus");
         let data = res.data;
-        setMenus(data.menus);
+        const visibleMenus = data.menus.filter((menu) => menu.visibility === 1);
+        setMenus(visibleMenus);
     };
 
     // check featured (1 or 0) to show only featured menu

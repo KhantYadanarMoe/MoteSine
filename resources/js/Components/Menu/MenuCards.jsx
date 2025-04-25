@@ -26,7 +26,8 @@ export default function MenuCards() {
     let getMenus = async () => {
         let res = await axios.get("/api/menus");
         let data = res.data;
-        setMenus(data.menus);
+        const visibleMenus = data.menus.filter((menu) => menu.visibility === 1);
+        setMenus(visibleMenus);
     };
 
     // change to dynamic data after writing create category feature
