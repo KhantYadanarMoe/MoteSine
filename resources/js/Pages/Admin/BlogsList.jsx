@@ -50,8 +50,6 @@ export default function BlogsList() {
         getBlogs();
     }, []);
 
-    console.log(blogs);
-
     // calculate the last items, first items and set blogs to show
     const indexOfLastBlog = currentPage * rowsPerPage;
     const indexOfFirstBlog = indexOfLastBlog - rowsPerPage;

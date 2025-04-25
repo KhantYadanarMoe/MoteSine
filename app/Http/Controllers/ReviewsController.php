@@ -38,4 +38,14 @@ class ReviewsController extends Controller
             'reviews' => $reviews,
         ]);
     }
+
+    public function index(){
+        // take data from backend database
+        $reviews = Review::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'reviews' => $reviews
+        ]);
+    }
 }
