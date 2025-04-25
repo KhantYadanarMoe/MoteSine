@@ -20,7 +20,7 @@ export default function Promotions() {
         let res = await axios.get("/api/products");
         let data = res.data;
         let promotionProducts = data.products.filter(
-            (product) => product.promotion
+            (product) => product.promotion && product.visibility === 1
         );
 
         setProducts(promotionProducts);
