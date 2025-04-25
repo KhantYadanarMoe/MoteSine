@@ -27,7 +27,8 @@ export default function AllBlogs() {
     let getBlogs = async () => {
         let res = await axios.get("/api/blogs");
         let data = res.data;
-        setBlogs(data.blogs);
+        const visibleBlogs = data.blogs.filter((blog) => blog.visibility === 1);
+        setBlogs(visibleBlogs);
     };
 
     // call data fetching function in useEffect to run when user enter the page

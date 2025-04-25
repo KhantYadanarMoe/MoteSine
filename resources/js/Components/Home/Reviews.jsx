@@ -1,8 +1,3 @@
-import At1 from "../../../images/at-1.jpg";
-import At2 from "../../../images/at-2.jpg";
-import At3 from "../../../images/at-3.jpg";
-import At4 from "../../../images/at-4.jpg";
-import At5 from "../../../images/at-5.jpg";
 import {
     Carousel,
     CarouselContent,
