@@ -165,6 +165,7 @@ export default function BlogForm() {
             }
         }
     };
+
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}

@@ -44,6 +44,7 @@ import AdminProfile from "./Pages/Admin/AdminProfile";
 import Checkout from "./Pages/User/Checkout";
 import MenuForm from "./Pages/Admin/MenuForm";
 import JobPosts from "./Pages/Admin/JobPosts";
+import Reviews from "./Pages/User/Reviews";
 
 const routes = createBrowserRouter([
     {
@@ -73,6 +74,10 @@ const routes = createBrowserRouter([
             {
                 path: "/checkout",
                 element: <Checkout />,
+            },
+            {
+                path: "/reviews",
+                element: <Reviews />,
             },
             {
                 path: "/about",
