@@ -103,6 +103,21 @@ export default function ReviewsList() {
         return stars;
     };
 
+    const [visibility, setVisibility] = useState({});
+
+    useEffect(() => {
+        const stored = JSON.parse(
+            localStorage.getItem("reviewVisibility") || "{}"
+        );
+        setVisibility(stored);
+    }, []);
+
+    const toggleVisibility = (id, checked) => {
+        const updated = { ...visibility, [id]: checked };
+        setVisibility(updated);
+        localStorage.setItem("reviewVisibility", JSON.stringify(updated));
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -149,7 +164,12 @@ export default function ReviewsList() {
                                         .join(" ") + "..."}
                                 </li>
                                 <li className="basis-[15%]">
-                                    <Switch id="visibility" />
+                                    <Switch
+                                        checked={visibility[review.id] || false}
+                                        onCheckedChange={(checked) =>
+                                            toggleVisibility(review.id, checked)
+                                        }
+                                    />
                                 </li>
                                 <li className="basis-[5%]">
                                     <DropdownMenu modal={false}>
