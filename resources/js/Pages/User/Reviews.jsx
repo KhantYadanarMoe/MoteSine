@@ -8,6 +8,7 @@ import { Textarea } from "../../Components/ui/textarea";
 import { motion } from "framer-motion";
 import { Label } from "@/Components/ui/label";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Reviews() {
     const [rating, setRating] = useState(0);
@@ -31,6 +32,61 @@ export default function Reviews() {
             ...prevState,
             [name]: value,
         }));
+    };
+
+    // form submit function
+    const submit = async (e) => {
+        e.preventDefault();
+
+        // url and method to use in sending data using axios
+        let url = "/api/review/create";
+        let method = "post";
+
+        // create new object to store form data to send
+        let formData = new FormData();
+
+        console.log("Form Data before submitting:", form);
+
+        // store state data in object
+        formData.append("rating", rating);
+        formData.append("name", form.name);
+        formData.append("phone", form.phone);
+        formData.append("review", form.review);
+
+        console.log("Form data after appending:", formData);
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            // send data
+            const res = await axios[method](url, formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // success condition
+            if (res.data.message === "Review sent successfully.") {
+                setForm({
+                    name: "",
+                    phone: "",
+                    review: "",
+                });
+                setRating(0);
+                navigate("/reviews");
+            }
+        } catch (error) {
+            console.error("Error sending review:", error);
+
+            // failed condition
+            if (error.response && error.response.status === 422) {
+                setIsDialogOpen(false);
+                setErrors(error.response.data.errors);
+            }
+        }
     };
 
     return (
@@ -95,42 +151,58 @@ export default function Reviews() {
                         <Input
                             id="name"
                             name="name"
-                            // value={form.name}
-                            // onChange={handleInputChange}
+                            value={form.name}
+                            onChange={handleInputChange}
                             type="text"
                             placeholder="Enter your name"
                             className="mt-1 border-gray-500"
                         />
+                        {errors.name && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {errors.name[0]}
+                            </p>
+                        )}
                     </div>
                     <div className="mt-3">
                         <Label htmlFor="phone">Phone</Label>
                         <Input
                             id="phone"
                             name="phone"
-                            // value={form.phone}
-                            // onChange={handleInputChange}
+                            value={form.phone}
+                            onChange={handleInputChange}
                             type="text"
                             placeholder="Enter your phone"
                             className="mt-1 border-gray-500"
                         />
+                        {errors.phone && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {errors.phone[0]}
+                            </p>
+                        )}
                     </div>
                     <div className="mt-3">
                         <Label htmlFor="review">Message</Label>
                         <Textarea
                             id="review"
                             name="review"
-                            // value={form.review}
-                            // onChange={handleInputChange}
+                            value={form.review}
+                            onChange={handleInputChange}
                             type="text"
                             placeholder="Enter your review"
                             className="mt-1 border-gray-500"
                         ></Textarea>
+                        {errors.review && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {errors.review[0]}
+                            </p>
+                        )}
                     </div>
                     <div className="mt-5 flex justify-end">
                         <Button
                             type="button"
                             variant="default"
                             className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                            onClick={submit}
                         >
                             Send Reviews
                         </Button>

@@ -6,6 +6,7 @@ use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReviewsController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -59,7 +60,7 @@ Route::get('/api/blog/{id}', [BlogController::class, 'show']);
 Route::put('/api/blog/{blog}', [BlogController::class, 'update']);
 Route::delete('/api/blog/{blog}', [BlogController::class, 'delete']);
 
-Route::post("/api/review/create", [JobController::class, 'send']);
+Route::post("/api/review/create", [ReviewsController::class, 'send']);
 
 Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);

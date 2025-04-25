@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
+            $table->float('rating', 2, 1); // Example: 4.5, 3.8
+            $table->string('name');
+            $table->string('phone');
+            $table->text('review');
             $table->timestamps();
         });
     }
