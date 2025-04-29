@@ -3,8 +3,85 @@ import { PhoneCall, Mail, MapPin } from "lucide-react";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { Label } from "../ui/label";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function ContactForm() {
+    // prepare state to store form data
+    const [form, setForm] = useState({
+        name: "",
+        phone: "",
+        email: "",
+        message: "",
+    });
+
+    // prepare to move another route/page after sending data
+    const navigate = useNavigate();
+
+    // Handle HTML inputs
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    // form submit function
+    const submit = async (e) => {
+        e.preventDefault();
+
+        // url and method to use in sending data using axios
+        let url = "/contact/send";
+        let method = "post";
+
+        // create new object to store form data to send
+        let formData = new FormData();
+
+        console.log("Form Data before submitting:", form);
+
+        // store state data in object
+        formData.append("name", form.name);
+        formData.append("phone", form.phone);
+        formData.append("email", form.email);
+        formData.append("message", form.message);
+
+        console.log("Form data after appending:", formData);
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            // send data
+            const res = await axios[method](url, formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // success condition
+            if (res.data.message === "Contact message sent successfully.") {
+                setForm({
+                    name: "",
+                    phone: "",
+                    email: "",
+                    message: "",
+                });
+                navigate("/contact");
+            }
+        } catch (error) {
+            console.error("Error sending contact message:", error);
+
+            // failed condition
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            }
+        }
+    };
     return (
         <motion.div
             className="block md:flex items-center gap-3"
@@ -33,59 +110,71 @@ export default function ContactForm() {
                 <form action="" className="my-6">
                     <div className="md:flex gap-3">
                         <div className="md:w-1/2 mb-3">
-                            <label
+                            <Label
                                 htmlFor="name"
                                 className="text-base font-medium"
                             >
                                 Name
-                            </label>
+                            </Label>
                             <Input
                                 id="name"
                                 type="text"
+                                name="name"
+                                value={form.name}
+                                onChange={handleInputChange}
                                 placeholder="Enter your name"
                                 className="mt-1 border-gray-500"
                             />
                         </div>
                         <div className="md:w-1/2 mb-3">
-                            <label
-                                htmlFor="email"
+                            <Label
+                                htmlFor="phone"
                                 className="text-base font-medium"
                             >
-                                Email
-                            </label>
+                                Phone
+                            </Label>
                             <Input
-                                id="email"
+                                id="phone"
                                 type="text"
-                                placeholder="Enter your email"
+                                name="phone"
+                                value={form.phone}
+                                onChange={handleInputChange}
+                                placeholder="Enter your phone"
                                 className="mt-1 border-gray-500"
                             />
                         </div>
                     </div>
                     <div className="mb-3">
-                        <label
-                            htmlFor="phone"
+                        <Label
+                            htmlFor="email"
                             className="text-base font-medium"
                         >
-                            Phone
-                        </label>
+                            Email
+                        </Label>
                         <Input
-                            id="phone"
+                            id="email"
                             type="text"
-                            placeholder="Enter your phone"
+                            name="email"
+                            value={form.email}
+                            onChange={handleInputChange}
+                            placeholder="Enter your email"
                             className="mt-1 border-gray-500"
                         />
                     </div>
                     <div className="mb-3">
-                        <label
+                        <Label
                             htmlFor="message"
                             className="text-base font-medium"
                         >
                             Message
-                        </label>
+                        </Label>
                         <Textarea
                             id="message"
                             type="text"
-                            placeholder="Search..."
+                            name="message"
+                            value={form.message}
+                            onChange={handleInputChange}
+                            placeholder="Write here..."
                             className="mt-1 border-gray-500"
                         ></Textarea>
                     </div>
@@ -93,6 +182,7 @@ export default function ContactForm() {
                         <Button
                             variant="default"
                             className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                            onClick={submit}
                         >
                             Send
                         </Button>

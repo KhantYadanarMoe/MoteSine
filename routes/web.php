@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\ProductsController;
@@ -62,6 +63,9 @@ Route::delete('/api/blog/{blog}', [BlogController::class, 'delete']);
 
 Route::get('/api/reviews', [ReviewsController::class, 'index']);
 Route::post("/api/review/create", [ReviewsController::class, 'send']);
+// need to add delete feature
+
+Route::post("contact/send", [ContactController::class, 'send']);
 
 Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);
