@@ -48,4 +48,11 @@ class ReviewsController extends Controller
             'reviews' => $reviews
         ]);
     }
+
+    public function delete(Review $review){
+        $review->delete();
+        return response()->json([
+            'message' => 'Review deleted successful!'
+        ]);
+    }
 }

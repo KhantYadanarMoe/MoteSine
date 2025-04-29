@@ -63,7 +63,7 @@ Route::delete('/api/blog/{blog}', [BlogController::class, 'delete']);
 
 Route::get('/api/reviews', [ReviewsController::class, 'index']);
 Route::post("/api/review/create", [ReviewsController::class, 'send']);
-// need to add delete feature
+Route::delete('/api/review/{review}', [ReviewsController::class, 'delete']);
 
 Route::get('/api/contacts', [ContactController::class, 'index']);
 Route::post("contact/send", [ContactController::class, 'send']);
