@@ -75,4 +75,11 @@ class ContactController extends Controller
         return response()->json(['message' => 'Contact marked successfully']);
     }
 
+    public function delete(Contact $contact){
+        $contact->delete();
+        return response()->json([
+            'message' => 'Contact message deleted successful!'
+        ]);
+    }
+
 }

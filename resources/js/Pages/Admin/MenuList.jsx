@@ -62,8 +62,6 @@ export default function MenuList() {
         setCurrentPage(page);
     };
 
-    // const [isDialogOpen, setIsDialogOpen] = useState(false);
-
     let deleteMenu = async (id) => {
         try {
             const csrfToken = document
