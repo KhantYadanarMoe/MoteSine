@@ -28,13 +28,17 @@ export default function ContactsList() {
     }, []);
 
     // send marked value to backend
-    const markContact = async (id) => {
+    const markContact = async (id, currentMarked) => {
         try {
-            let res = await axios.post("/api/contacts/marked/" + id);
-            setContacts((prev) =>
-                prev.map((contact) =>
+            let newMarked = currentMarked ? 0 : 1;
+
+            let res = await axios.post("/api/contacts/marked/" + id, {
+                marked: newMarked,
+            });
+            setContacts((prevContacts) =>
+                prevContacts.map((contact) =>
                     contact.id === id
-                        ? { ...contact, marked: contact.marked ? 0 : 1 }
+                        ? { ...contact, marked: newMarked }
                         : contact
                 )
             );
@@ -131,7 +135,10 @@ export default function ContactsList() {
                                         >
                                             <DropdownMenuItem
                                                 onClick={() =>
-                                                    markContact(contact.id)
+                                                    markContact(
+                                                        contact.id,
+                                                        contact.marked
+                                                    )
                                                 }
                                                 className={
                                                     contact.marked
