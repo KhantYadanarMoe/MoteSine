@@ -61,4 +61,18 @@ class ContactController extends Controller
             return response()->json(['message' => 'Contact message not found'], 404);
         }
     }
+
+    public function mark($id){
+        $contact = Contact::find($id);
+
+        if (!$contact) {
+            return response()->json(['message' => 'Contact not found'], 404);
+        }
+
+        $contact->marked = true; // Set marked to 1
+        $contact->save();
+
+        return response()->json(['message' => 'Contact marked successfully']);
+    }
+
 }

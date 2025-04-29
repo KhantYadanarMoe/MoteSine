@@ -68,6 +68,8 @@ Route::post("/api/review/create", [ReviewsController::class, 'send']);
 Route::get('/api/contacts', [ContactController::class, 'index']);
 Route::post("contact/send", [ContactController::class, 'send']);
 Route::get('/api/contacts/{id}', [ContactController::class, 'show']);
+Route::post('/api/contacts/marked/{id}', [ContactController::class, 'mark']);
+
 
 Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);

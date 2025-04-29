@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Bell, Ellipsis } from "lucide-react";
+import { Bell, Ellipsis, Flag } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -26,6 +26,22 @@ export default function ContactsList() {
     useEffect(() => {
         getContacts();
     }, []);
+
+    // send marked value to backend
+    const markContact = async (id) => {
+        try {
+            let res = await axios.post("/api/contacts/marked/" + id);
+            setContacts((prev) =>
+                prev.map((contact) =>
+                    contact.id === id
+                        ? { ...contact, marked: contact.marked ? 0 : 1 }
+                        : contact
+                )
+            );
+        } catch (error) {
+            console.error("Failed to mark contact:", error);
+        }
+    };
 
     return (
         <motion.div
@@ -82,6 +98,12 @@ export default function ContactsList() {
                                                 minute: "2-digit",
                                             })}
                                         </p>
+                                        {contact.marked ? (
+                                            <Flag
+                                                size={16}
+                                                className="text-yellow-400 fill-yellow-400"
+                                            />
+                                        ) : null}
                                     </div>
                                     <span className="text-xs text-gray-800 mt-1 flex gap-1">
                                         {contact.email}
@@ -96,24 +118,37 @@ export default function ContactsList() {
                                             .join(" ") + "..."}
                                     </div>
                                 </Link>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
+                                <div>
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    markContact(contact.id)
+                                                }
+                                                className={
+                                                    contact.marked
+                                                        ? "text-accentRed"
+                                                        : "text-accentGreen"
+                                                }
+                                            >
+                                                {contact.marked
+                                                    ? "Remove Mark"
+                                                    : "Mark"}
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </div>
                             </div>
                         </li>
                     ))
