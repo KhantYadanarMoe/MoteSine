@@ -101,12 +101,6 @@ export default function ContactsList() {
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
                     </Link>
                 </li>
-                <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
-                        Marked
-                        <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
-                </li>
             </ul>
             <ul className="my-3">
                 {contacts.length > 0 ? (

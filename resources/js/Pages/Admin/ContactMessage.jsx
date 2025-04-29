@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Flag } from "lucide-react";
 import { Textarea } from "../../Components/ui/textarea";
 import { Button } from "../../Components/ui/button";
 import { motion } from "framer-motion";
@@ -25,6 +26,24 @@ export default function ContactMessage() {
         getDetails(id);
     }, [id]);
 
+    const markContact = async (id, currentMarked) => {
+        try {
+            const newMarked = currentMarked ? 0 : 1;
+
+            const res = await axios.post(`/api/contacts/marked/${id}`, {
+                marked: newMarked,
+            });
+
+            // Update the single contact state directly
+            setContact((prevContact) => ({
+                ...prevContact,
+                marked: newMarked,
+            }));
+        } catch (error) {
+            console.error("Failed to mark contact:", error);
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -41,7 +60,15 @@ export default function ContactMessage() {
                     </div>
                     <div className="mt-4 bg-white border-l-2 border-l-accentRed px-3 py-4 rounded-md shadow-md">
                         <div className="flex items-center justify-between">
-                            <h1 className="font-medium">{contact.name}</h1>
+                            <div className="flex gap-3 items-center">
+                                <h1 className="font-medium">{contact.name}</h1>
+                                {contact.marked ? (
+                                    <Flag
+                                        size={16}
+                                        className="text-yellow-400 fill-yellow-400"
+                                    />
+                                ) : null}
+                            </div>
                             <p className="text-sm md:text-base text-gray-800">
                                 {new Date(
                                     contact.created_at
@@ -64,13 +91,18 @@ export default function ContactMessage() {
                         </p>
                         <div className="flex gap-1 items-center justify-end mt-6">
                             <Button
-                                className="bg-accentGreen text-white"
+                                className="bg-accentGreen hover:bg-hoverGreen text-white"
                                 onClick={() => setShowReply(!showReply)}
                             >
                                 Reply
                             </Button>
-                            <Button className="bg-accentYellow text-black">
-                                Mark
+                            <Button
+                                onClick={() =>
+                                    markContact(contact.id, contact.marked)
+                                }
+                                className="bg-accentYellow hover:bg-hoverYellow text-black"
+                            >
+                                {contact.marked ? "Unmark" : "Mark"}
                             </Button>
                         </div>
                     </div>
