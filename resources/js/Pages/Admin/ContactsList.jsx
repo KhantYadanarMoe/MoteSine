@@ -65,8 +65,8 @@ export default function ContactsList() {
                             key={contact.id}
                             className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed"
                         >
-                            <Link to={`/admin/contact/${contact.id}`}>
-                                <div className="flex justify-between items-center">
+                            <div className="flex justify-between">
+                                <Link to={`/admin/contact/${contact.id}`}>
                                     <div className="flex gap-1 items-center">
                                         <h1 className="text-sm md:text-base font-medium">
                                             {contact.name}
@@ -74,9 +74,7 @@ export default function ContactsList() {
                                         <p className="text-sm md:text-base text-gray-800">
                                             sent you a message.
                                         </p>
-                                    </div>
-                                    <div className="flex gap-2 items-center">
-                                        <p className="text-sm text-gray-700 hidden md:block">
+                                        <p className="text-sm text-gray-700 hidden md:block ml-1">
                                             {new Date(
                                                 contact.created_at
                                             ).toLocaleTimeString([], {
@@ -84,39 +82,39 @@ export default function ContactsList() {
                                                 minute: "2-digit",
                                             })}
                                         </p>
-                                        <DropdownMenu modal={false}>
-                                            <DropdownMenuTrigger asChild>
-                                                <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                                    <Ellipsis size={20} />
-                                                </button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent
-                                                align="end"
-                                                className="w-40"
-                                            >
-                                                <DropdownMenuItem className="text-accentGreen">
-                                                    Mark
-                                                </DropdownMenuItem>
-                                                <DropdownMenuItem className="text-accentRed">
-                                                    Delete
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
                                     </div>
-                                </div>
-                                <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                                    {contact.email}
-                                    <p className="hidden md:block">
-                                        | {contact.phone}
-                                    </p>
-                                </span>
-                                <div className="text-sm truncate text-gray-800 mt-2">
-                                    {contact.message
-                                        ?.split(" ")
-                                        .slice(0, 18)
-                                        .join(" ") + "..."}
-                                </div>
-                            </Link>
+                                    <span className="text-xs text-gray-800 mt-1 flex gap-1">
+                                        {contact.email}
+                                        <p className="hidden md:block">
+                                            | {contact.phone}
+                                        </p>
+                                    </span>
+                                    <div className="text-sm truncate text-gray-800 mt-2">
+                                        {contact.message
+                                            ?.split(" ")
+                                            .slice(0, 18)
+                                            .join(" ") + "..."}
+                                    </div>
+                                </Link>
+                                <DropdownMenu modal={false}>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="p-1 rounded-md outline-none">
+                                            <Ellipsis size={20} />
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        align="end"
+                                        className="w-40"
+                                    >
+                                        <DropdownMenuItem className="text-accentGreen">
+                                            Mark
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem className="text-accentRed">
+                                            Delete
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
+                            </div>
                         </li>
                     ))
                 ) : (
