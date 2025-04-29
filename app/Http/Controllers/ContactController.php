@@ -38,4 +38,27 @@ class ContactController extends Controller
             'contact' => $contact,
         ]);
     }
+
+    public function index(){
+
+        // take data from backend database
+        $contacts = Contact::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'contacts' => $contacts
+        ]);
+    }
+
+    public function show($id){
+        $contact = Contact::find($id); // Find contact by ID
+
+        // Check if contact exists
+        if ($contact) {
+            return response()->json(['contact' => $contact]);
+        } else {
+            // If contact not found, return a 404 with a message
+            return response()->json(['message' => 'Contact message not found'], 404);
+        }
+    }
 }

@@ -220,7 +220,7 @@ const routes = createBrowserRouter([
                 element: <ContactsList />,
             },
             {
-                path: "/admin/contact/id",
+                path: "/admin/contact/:id",
                 element: <ContactMessage />,
             },
             {

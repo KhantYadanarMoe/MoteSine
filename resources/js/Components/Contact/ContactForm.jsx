@@ -16,6 +16,8 @@ export default function ContactForm() {
         email: "",
         message: "",
     });
+    // store errors state
+    const [errors, setErrors] = useState({});
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -71,6 +73,7 @@ export default function ContactForm() {
                     email: "",
                     message: "",
                 });
+                setErrors({});
                 navigate("/contact");
             }
         } catch (error) {
@@ -125,6 +128,11 @@ export default function ContactForm() {
                                 placeholder="Enter your name"
                                 className="mt-1 border-gray-500"
                             />
+                            {errors.name && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.name[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="md:w-1/2 mb-3">
                             <Label
@@ -142,6 +150,11 @@ export default function ContactForm() {
                                 placeholder="Enter your phone"
                                 className="mt-1 border-gray-500"
                             />
+                            {errors.phone && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.phone[0]}
+                                </p>
+                            )}
                         </div>
                     </div>
                     <div className="mb-3">
@@ -160,6 +173,11 @@ export default function ContactForm() {
                             placeholder="Enter your email"
                             className="mt-1 border-gray-500"
                         />
+                        {errors.email && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {errors.email[0]}
+                            </p>
+                        )}
                     </div>
                     <div className="mb-3">
                         <Label
@@ -177,6 +195,11 @@ export default function ContactForm() {
                             placeholder="Write here..."
                             className="mt-1 border-gray-500"
                         ></Textarea>
+                        {errors.message && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {errors.message[0]}
+                            </p>
+                        )}
                     </div>
                     <div className="flex justify-end mt-6">
                         <Button

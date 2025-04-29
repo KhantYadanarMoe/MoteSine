@@ -7,8 +7,26 @@ import {
     DropdownMenuTrigger,
 } from "../../Components/ui/dropdown-menu";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function ContactsList() {
+    // state to store contacts
+    let [contacts, setContacts] = useState([]);
+
+    // fetch data that send from backend
+    let getContacts = async () => {
+        let res = await axios.get("/api/contacts");
+        let data = res.data;
+        setContacts(data.contacts);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getContacts();
+    }, []);
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -41,516 +59,71 @@ export default function ContactsList() {
                 </li>
             </ul>
             <ul className="my-3">
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
-                <li className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed">
-                    <Link to="/admin/contact/id">
-                        <div className="flex justify-between items-center">
-                            <div className="flex gap-1 items-center">
-                                <h1 className="text-sm md:text-base font-medium">
-                                    Khant Yadanar Moe{" "}
-                                </h1>
-                                <p className="text-sm md:text-base text-gray-800">
-                                    sent you a message.
-                                </p>
-                            </div>
-                            <div className="flex gap-2 items-center">
-                                <p className="text-sm text-gray-700 hidden md:block">
-                                    23 minutes ago
-                                </p>
-                                <DropdownMenu modal={false}>
-                                    <DropdownMenuTrigger asChild>
-                                        <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                            <Ellipsis size={20} />
-                                        </button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent
-                                        align="end"
-                                        className="w-40"
-                                    >
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            Mark
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem className="text-accentRed">
-                                            Delete
-                                        </DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-                        <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                            khantyadanarmoe3489@gmail.com{" "}
-                            <p className="hidden md:block">| (328) 453 784</p>
-                        </span>
-                        <div className="text-sm truncate text-gray-800 mt-2">
-                            Lorem, ipsum dolor sit amet consectetur adipisicing
-                            elit. Iure, laborum doloribus nisi alias molestiae
-                            assumenda magni quibusdam mollitia tenetur illo vero
-                            ullam voluptatibus, dolorem repudiandae minus vitae
-                            repellat, ipsam aperiam animi explicabo! A facere,
-                            quod eligendi dolorem nam autem ullam laborum
-                            reprehenderit dignissimos est, eos laboriosam ipsum
-                            nesciunt et aut!
-                        </div>
-                    </Link>
-                </li>
+                {contacts.length > 0 ? (
+                    contacts.map((contact) => (
+                        <li
+                            key={contact.id}
+                            className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed"
+                        >
+                            <Link to={`/admin/contact/${contact.id}`}>
+                                <div className="flex justify-between items-center">
+                                    <div className="flex gap-1 items-center">
+                                        <h1 className="text-sm md:text-base font-medium">
+                                            {contact.name}
+                                        </h1>
+                                        <p className="text-sm md:text-base text-gray-800">
+                                            sent you a message.
+                                        </p>
+                                    </div>
+                                    <div className="flex gap-2 items-center">
+                                        <p className="text-sm text-gray-700 hidden md:block">
+                                            {new Date(
+                                                contact.created_at
+                                            ).toLocaleTimeString([], {
+                                                hour: "2-digit",
+                                                minute: "2-digit",
+                                            })}
+                                        </p>
+                                        <DropdownMenu modal={false}>
+                                            <DropdownMenuTrigger asChild>
+                                                <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                    <Ellipsis size={20} />
+                                                </button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent
+                                                align="end"
+                                                className="w-40"
+                                            >
+                                                <DropdownMenuItem className="text-accentGreen">
+                                                    Mark
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem className="text-accentRed">
+                                                    Delete
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
+                                </div>
+                                <span className="text-xs text-gray-800 mt-1 flex gap-1">
+                                    {contact.email}
+                                    <p className="hidden md:block">
+                                        | {contact.phone}
+                                    </p>
+                                </span>
+                                <div className="text-sm truncate text-gray-800 mt-2">
+                                    {contact.message
+                                        ?.split(" ")
+                                        .slice(0, 18)
+                                        .join(" ") + "..."}
+                                </div>
+                            </Link>
+                        </li>
+                    ))
+                ) : (
+                    <p className="text-center font-medium text-accentRed">
+                        Loading...
+                    </p> //add lazy loading after complete
+                )}
             </ul>
         </motion.div>
     );
