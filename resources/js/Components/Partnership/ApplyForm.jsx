@@ -9,9 +9,100 @@ import {
 import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function ApplyForm() {
     const [position, setPosition] = useState("");
+
+    // prepare state to store form data
+    const [form, setForm] = useState({
+        businessName: "",
+        businessAddress: "",
+        name: "",
+        email: "",
+        phone: "",
+        social: "",
+        type: "",
+        certificate: "",
+    });
+    // store errors state
+    const [errors, setErrors] = useState({});
+
+    // prepare to move another route/page after sending data
+    const navigate = useNavigate();
+
+    // Handle HTML inputs
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    // Handle other custom components' inputs
+    const handleCustomChange = (name, value) => {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    // form submit function
+    const submit = async (e) => {
+        e.preventDefault();
+
+        // url and method to use in sending data using axios
+        let url = "/partnership/send";
+        let method = "post";
+
+        // create new object to store form data to send
+        let formData = new FormData();
+
+        console.log("Form Data before submitting:", form);
+
+        // store state data in object
+        formData.append("businessName", form.businessName);
+        formData.append("businessAddress", form.businessAddress);
+        formData.append("name", form.name);
+        formData.append("email", form.email);
+        formData.append("phone", form.phone);
+        formData.append("social", form.social);
+        formData.append("type", form.type);
+        formData.append("certificate", form.certificate);
+
+        console.log("Form data after appending:", formData);
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            // send data
+            const res = await axios[method](url, formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // success condition
+            if (
+                res.data.message ===
+                "Partnership application sent successfully."
+            ) {
+                navigate("/partnerships");
+            }
+        } catch (error) {
+            console.error("Error sending application:", error);
+
+            // failed condition
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            }
+        }
+    };
     return (
         <motion.div
             initial={{ y: 100, opacity: 0 }}
@@ -37,10 +128,18 @@ export default function ApplyForm() {
                                 </label>
                                 <Input
                                     id="businessName"
+                                    name="businessName"
+                                    value={form.businessName}
+                                    onChange={handleInputChange}
                                     type="text"
                                     placeholder="Enter your business name"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.businessName && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.businessName[0]}
+                                    </p>
+                                )}
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="businessAddress">
@@ -48,19 +147,35 @@ export default function ApplyForm() {
                                 </label>
                                 <Input
                                     id="businessAddress"
+                                    name="businessAddress"
+                                    value={form.businessAddress}
+                                    onChange={handleInputChange}
                                     type="text"
                                     placeholder="Enter your business address"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.businessAddress && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.businessAddress[0]}
+                                    </p>
+                                )}
                             </div>
                             <div className="mb-3">
                                 <label htmlFor="name">Name</label>
                                 <Input
                                     id="name"
+                                    name="name"
+                                    value={form.name}
+                                    onChange={handleInputChange}
                                     type="text"
                                     placeholder="Enter your name"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.name && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.name[0]}
+                                    </p>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -70,19 +185,35 @@ export default function ApplyForm() {
                                 <label htmlFor="email">Email</label>
                                 <Input
                                     id="email"
+                                    name="email"
+                                    value={form.email}
+                                    onChange={handleInputChange}
                                     type="text"
                                     placeholder="Enter your email"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.email && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.email[0]}
+                                    </p>
+                                )}
                             </div>
                             <div className="lg:w-1/2 mb-3">
                                 <label htmlFor="phone">Phone</label>
                                 <Input
                                     id="phone"
+                                    name="phone"
+                                    value={form.phone}
+                                    onChange={handleInputChange}
                                     type="text"
                                     placeholder="Enter your phone"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.phone && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.phone[0]}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <div className="mb-3">
@@ -91,16 +222,32 @@ export default function ApplyForm() {
                             </label>
                             <Input
                                 id="social"
+                                name="social"
+                                value={form.social}
+                                onChange={handleInputChange}
                                 type="text"
                                 placeholder="Enter your website or social URL"
                                 className="mt-1 border-gray-500"
                             />
+                            {errors.social && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.social[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="mb-3">
                             <label htmlFor="Type">Type of Business</label>
                             <div className="mt-2">
-                                <Select onValueChange={setPosition}>
-                                    <SelectTrigger className="w-full border-gray-400">
+                                <Select
+                                    value={form.type}
+                                    onValueChange={(value) =>
+                                        handleCustomChange("type", value)
+                                    }
+                                >
+                                    <SelectTrigger
+                                        className="w-full border-gray-400"
+                                        name="type"
+                                    >
                                         <SelectValue placeholder="Choose a position" />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -122,6 +269,11 @@ export default function ApplyForm() {
                                         </SelectItem>
                                     </SelectContent>
                                 </Select>
+                                {errors.type && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.type[0]}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <div className="mb-3">
@@ -130,15 +282,28 @@ export default function ApplyForm() {
                             </label>
                             <Input
                                 id="certificate"
+                                name="certificate"
+                                onChange={(e) =>
+                                    handleCustomChange(
+                                        "certificate",
+                                        e.target.files[0]
+                                    )
+                                }
                                 type="file"
                                 placeholder="Upload your Resume"
                                 className="mt-1 border-gray-500"
                             />
+                            {errors.certificate && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.certificate[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="flex justify-end mt-5">
                             <Button
                                 variant="default"
                                 className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                                onClick={submit}
                             >
                                 Submit
                             </Button>

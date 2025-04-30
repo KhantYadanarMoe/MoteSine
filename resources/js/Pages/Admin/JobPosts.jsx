@@ -89,7 +89,9 @@ export default function JobPosts() {
             className="mx-2 md:mx-4 my-8"
         >
             <div className="flex justify-between md:items-center">
-                <h1 className="md:text-lg font-medium">6 Job Posts Found</h1>
+                <h1 className="md:text-lg font-medium">
+                    {jobs.length} Job Posts Found
+                </h1>
                 <div className="flex gap-2">
                     <Link to="/admin/jobs/applications">
                         <Button

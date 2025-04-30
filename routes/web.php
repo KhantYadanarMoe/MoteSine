@@ -5,6 +5,7 @@ use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
+use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewsController;
@@ -71,9 +72,10 @@ Route::get('/api/contacts/{id}', [ContactController::class, 'show']);
 Route::post('/api/contacts/marked/{id}', [ContactController::class, 'mark']);
 Route::delete('/api/contact/{contact}', [ContactController::class, 'delete']);
 
-
 Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);
 Route::get('/api/job/{id}', [JobController::class, 'show']);
 Route::put('/api/job/{job}', [JobController::class, 'update']);
 Route::delete('/api/job/{job}', [JobController::class, 'delete']);
+
+Route::post("/partnership/send", [PartnershipController::class, 'send']);
