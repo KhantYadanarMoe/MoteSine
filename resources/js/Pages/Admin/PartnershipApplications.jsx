@@ -26,8 +26,43 @@ import {
     PaginationPrevious,
 } from "../../Components/ui/pagination";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function PartnershipApplications() {
+    // state to store partnerships
+    let [partnerships, setPartnerships] = useState([]);
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 10;
+
+    // fetch data that send from backend
+    let getPartnerships = async () => {
+        let res = await axios.get("/api/partnership");
+        let data = res.data;
+        setPartnerships(data.partnerships);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getPartnerships();
+    }, []);
+
+    // calculate the last items, first items and set partnerships to show
+    const indexOfLastPartnership = currentPage * rowsPerPage;
+    const indexOfFirstPartnership = indexOfLastPartnership - rowsPerPage;
+    const currentPartnerships = partnerships.slice(
+        indexOfFirstPartnership,
+        indexOfLastPartnership
+    );
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -36,7 +71,9 @@ export default function PartnershipApplications() {
             viewport={{ once: false, amount: 0.2 }}
             className="md:h-[89vh] lg:h-full mx-2 md:mx-4 my-6"
         >
-            <h1 className="md:text-lg font-medium">34 Applications Found</h1>
+            <h1 className="md:text-lg font-medium">
+                {partnerships?.length} Applications Found
+            </h1>
             <ul className="mb-5 mt-8 flex space-x-6 mx-2">
                 <li>
                     <Link to="" className="relative hover:text-gray-950 group">
@@ -75,1156 +112,160 @@ export default function PartnershipApplications() {
                         <li className="basis-[14%]">Type</li>
                         <li className="basis-[5%]"></li>
                     </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen ml-0">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[22%]">Linn Pone Yay Gyi</li>
-                        <li className="basis-[15%]">U Aung Lin</li>
-                        <li className="basis-[23%]">aunglin38@gmail.com</li>
-                        <li className="basis-[17%]">09 258 327 459</li>
-                        <li className="basis-[14%]">Manufacturer</li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Dialog>
-                                        <DialogTrigger asChild>
-                                            <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
-                                                View Details
-                                            </Button>
-                                        </DialogTrigger>
-                                        <DialogContent>
-                                            <DialogHeader>
-                                                <DialogTitle>
-                                                    Linn Pone Yay Gyi
-                                                </DialogTitle>
-                                                <DialogDescription>
-                                                    Here's the details
-                                                    information of Linn Pone Yay
-                                                    Gyi
-                                                </DialogDescription>
-                                            </DialogHeader>
-                                            <hr className="border-t-gray-400" />
-                                            <div className="space-y-2">
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Business Name:
-                                                    </p>{" "}
-                                                    Linn Pone Yay Gyi
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Owner:
-                                                    </p>{" "}
-                                                    U Aung Lin
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Email:
-                                                    </p>
-                                                    aunglin38@gmail.com
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Phone:
-                                                    </p>{" "}
-                                                    09 258 382 487
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Type:
-                                                    </p>{" "}
-                                                    Manufacturer
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Address:
-                                                    </p>{" "}
-                                                    No. 23, MyintMo Street,
-                                                    Phwar Saw Village, Bagan,
-                                                    Myanmar
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Website:
-                                                    </p>{" "}
-                                                    <a
-                                                        href=""
-                                                        target="_blank"
-                                                        className="text-blue-500"
-                                                    >
-                                                        LinnPoneYay.com
-                                                    </a>
-                                                </span>
-                                                <span className="flex gap-2">
-                                                    <p className="font-medium">
-                                                        Certification:
-                                                    </p>{" "}
-                                                    No
-                                                </span>
-                                            </div>
-                                            <hr className="border-t-gray-400" />
-                                            <DialogFooter>
-                                                <Button className="bg-accentRed hover:bg-hoverRed">
-                                                    Rejected
-                                                </Button>
-                                                <Button className="bg-accentGreen hover:bg-hoverGreen">
-                                                    Approved
-                                                </Button>
-                                            </DialogFooter>
-                                        </DialogContent>
-                                    </Dialog>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Approved
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Rejected
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
+                    {currentPartnerships.length > 0 ? (
+                        currentPartnerships.map((partnership) => (
+                            <ul
+                                key={partnership.id}
+                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                            >
+                                <li className="basis-[4%]">{partnership.id}</li>
+                                <li className="basis-[22%]">
+                                    {partnership.businessName}
+                                </li>
+                                <li className="basis-[15%]">
+                                    {partnership.name}
+                                </li>
+                                <li className="basis-[23%]">
+                                    {partnership.email}
+                                </li>
+                                <li className="basis-[17%]">
+                                    {partnership.phone}
+                                </li>
+                                <li className="basis-[14%]">
+                                    {partnership.type}
+                                </li>
+                                <li className="basis-[5%]">
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <Dialog>
+                                                <DialogTrigger asChild>
+                                                    <Button className="text-accentYellow px-2 py-0 bg-white shadow-none hover:bg-white">
+                                                        View Details
+                                                    </Button>
+                                                </DialogTrigger>
+                                                <DialogContent>
+                                                    <DialogHeader>
+                                                        <DialogTitle>
+                                                            {
+                                                                partnership.businessName
+                                                            }
+                                                        </DialogTitle>
+                                                        <DialogDescription>
+                                                            Here's the details
+                                                            information of Linn
+                                                            Pone Yay Gyi
+                                                        </DialogDescription>
+                                                    </DialogHeader>
+                                                    <hr className="border-t-gray-400" />
+                                                    <div className="space-y-2">
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Business Name:
+                                                            </p>{" "}
+                                                            {
+                                                                partnership.businessName
+                                                            }
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Owner:
+                                                            </p>{" "}
+                                                            {partnership.name}
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Email:
+                                                            </p>
+                                                            {partnership.email}
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Phone:
+                                                            </p>{" "}
+                                                            {partnership.phone}
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Type:
+                                                            </p>{" "}
+                                                            {partnership.type}
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Address:
+                                                            </p>{" "}
+                                                            {
+                                                                partnership.businessAddress
+                                                            }
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Website:
+                                                            </p>{" "}
+                                                            <a
+                                                                href=""
+                                                                target="_blank"
+                                                                className="text-blue-500"
+                                                            >
+                                                                {
+                                                                    partnership.social
+                                                                }
+                                                            </a>
+                                                        </span>
+                                                        <span className="flex gap-2">
+                                                            <p className="font-medium">
+                                                                Certification:
+                                                            </p>
+                                                            {partnership.certificate ? (
+                                                                <a
+                                                                    href={`/storage/${partnership.certificate}`}
+                                                                    target="_blank"
+                                                                    rel="noopener noreferrer"
+                                                                    className="text-blue-600 underline"
+                                                                >
+                                                                    View
+                                                                    Certificate
+                                                                </a>
+                                                            ) : (
+                                                                "No"
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                    <hr className="border-t-gray-400" />
+                                                    <DialogFooter>
+                                                        <Button className="bg-accentRed hover:bg-hoverRed">
+                                                            Rejected
+                                                        </Button>
+                                                        <Button className="bg-accentGreen hover:bg-hoverGreen ml-0">
+                                                            Approved
+                                                        </Button>
+                                                    </DialogFooter>
+                                                </DialogContent>
+                                            </Dialog>
+                                            <DropdownMenuItem className="text-accentGreen">
+                                                Approved
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Rejected
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
             </div>
             <div className="mt-8 flex">
@@ -1232,22 +273,47 @@ export default function PartnershipApplications() {
                     <Pagination className="text-accentRed">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        partnerships.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem></PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(
+                                            partnerships.length / rowsPerPage
+                                        )
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>

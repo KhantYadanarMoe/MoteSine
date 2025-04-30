@@ -29,9 +29,9 @@ class PartnershipController extends Controller
         }
 
         $certificatePath = null;
-if (request()->hasFile('certificate')) {
-    $certificatePath = request()->file('certificate')->store('certificates', 'public');
-}
+        if (request()->hasFile('certificate')) {
+            $certificatePath = request()->file('certificate')->store('certificates', 'public');
+        }
 
         // store the rest of the data
         $partnership = Partnership::create([
@@ -49,6 +49,17 @@ if (request()->hasFile('certificate')) {
         return response()->json([
             'message' => 'Partnership application sent successfully.',
             'partnership' => $partnership,
+        ]);
+    }
+
+    public function index(){
+
+        // take data from backend database
+        $partnerships = Partnership::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'partnerships' => $partnerships
         ]);
     }
 }

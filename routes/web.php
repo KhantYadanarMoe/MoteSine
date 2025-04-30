@@ -79,3 +79,4 @@ Route::put('/api/job/{job}', [JobController::class, 'update']);
 Route::delete('/api/job/{job}', [JobController::class, 'delete']);
 
 Route::post("/partnership/send", [PartnershipController::class, 'send']);
+Route::get('/api/partnership', [partnershipController::class, 'index']);
