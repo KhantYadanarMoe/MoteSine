@@ -25,6 +25,17 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "../../Components/ui/pagination";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
@@ -61,6 +72,27 @@ export default function PartnershipApplications() {
     // function for pagination button
     const handlePageChange = (page) => {
         setCurrentPage(page);
+    };
+
+    let deletePartnership = async (id) => {
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            let res = await axios.delete("/api/partnership/" + id, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setPartnerships((prev) =>
+                prev.filter((partnership) => partnership.id !== id)
+            );
+        } catch (e) {
+            console.log(e);
+        }
     };
 
     return (
@@ -255,6 +287,43 @@ export default function PartnershipApplications() {
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Rejected
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem asChild>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                            Delete
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you sure you
+                                                                want to delete
+                                                                this menu?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    deletePartnership(
+                                                                        partnership.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>

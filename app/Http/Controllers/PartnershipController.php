@@ -62,4 +62,11 @@ class PartnershipController extends Controller
             'partnerships' => $partnerships
         ]);
     }
+
+    public function delete(Partnership $partnership){
+        $partnership->delete();
+        return response()->json([
+            'message' => 'Partnership application deleted successful!'
+        ]);
+    }
 }

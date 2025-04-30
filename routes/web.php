@@ -80,3 +80,4 @@ Route::delete('/api/job/{job}', [JobController::class, 'delete']);
 
 Route::post("/partnership/send", [PartnershipController::class, 'send']);
 Route::get('/api/partnership', [partnershipController::class, 'index']);
+Route::delete('/api/partnership/{partnership}', [PartnershipController::class, 'delete']);
