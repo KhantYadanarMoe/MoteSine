@@ -45,6 +45,8 @@ import Checkout from "./Pages/User/Checkout";
 import MenuForm from "./Pages/Admin/MenuForm";
 import JobPosts from "./Pages/Admin/JobPosts";
 import Reviews from "./Pages/User/Reviews";
+import PartnershipApproved from "./Pages/Admin/PartnershipApproved";
+import PartnershipRejected from "./Pages/Admin/PartnershipRejected";
 
 const routes = createBrowserRouter([
     {
@@ -242,6 +244,14 @@ const routes = createBrowserRouter([
             {
                 path: "/admin/partnership",
                 element: <PartnershipApplications />,
+            },
+            {
+                path: "/admin/partnerships/approved",
+                element: <PartnershipApproved />,
+            },
+            {
+                path: "/admin/partnerships/rejected",
+                element: <PartnershipRejected />,
             },
             {
                 path: "/admin/settings",

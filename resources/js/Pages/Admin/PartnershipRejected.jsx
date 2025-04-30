@@ -41,30 +41,35 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 
-export default function PartnershipApplications() {
+export default function PartnershipRejected() {
     // state to store partnerships
-    let [partnerships, setPartnerships] = useState([]);
+    let [rejectedPartnership, setRejectedPartnership] = useState([]);
     // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 10;
 
     // fetch data that send from backend
-    let getPartnerships = async () => {
+    let getRejectedPartnerships = async () => {
         let res = await axios.get("/api/partnership");
         let data = res.data;
-        setPartnerships(data.partnerships);
+        let rejected = data.partnerships.filter(
+            (partnership) => partnership.status === "rejected"
+        );
+
+        // Set the rejected partnerships state
+        setRejectedPartnership(rejected);
     };
 
     // call data fetching function in useEffect to run when user enter the page
     useEffect(() => {
-        getPartnerships();
+        getRejectedPartnerships();
     }, []);
 
     // calculate the last items, first items and set partnerships to show
     const indexOfLastPartnership = currentPage * rowsPerPage;
     const indexOfFirstPartnership = indexOfLastPartnership - rowsPerPage;
-    const currentPartnerships = partnerships.slice(
+    const currentPartnerships = rejectedPartnership.slice(
         indexOfFirstPartnership,
         indexOfLastPartnership
     );
@@ -80,8 +85,12 @@ export default function PartnershipApplications() {
                 status: newStatus,
             });
 
-            setPartnerships((prev) =>
-                prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
+            setRejectedPartnership((prev) =>
+                newStatus === "rejected"
+                    ? prev.map((p) =>
+                          p.id === id ? { ...p, status: newStatus } : p
+                      )
+                    : prev.filter((p) => p.id !== id)
             );
         } catch (error) {
             console.error("Failed to update partnership status:", error);
@@ -101,7 +110,7 @@ export default function PartnershipApplications() {
                 },
             });
 
-            setPartnerships((prev) =>
+            setRejectedPartnership((prev) =>
                 prev.filter((partnership) => partnership.id !== id)
             );
         } catch (e) {
@@ -118,11 +127,14 @@ export default function PartnershipApplications() {
             className="md:h-[89vh] lg:h-full mx-2 md:mx-4 my-6"
         >
             <h1 className="md:text-lg font-medium">
-                {partnerships?.length} Applications Found
+                {rejectedPartnership?.length} Applications Found
             </h1>
             <ul className="mb-5 mt-8 flex space-x-6 mx-2">
                 <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
+                    <Link
+                        to="/admin/partnership"
+                        className="relative hover:text-gray-950 group"
+                    >
                         All
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
                     </Link>
@@ -162,13 +174,7 @@ export default function PartnershipApplications() {
                         currentPartnerships.map((partnership) => (
                             <ul
                                 key={partnership.id}
-                                className={`flex items-center px-3 py-4 rounded-md shadow-md mb-2 ${
-                                    partnership.status === "approved"
-                                        ? "bg-[rgba(0,255,0,0.1)]"
-                                        : partnership.status === "rejected"
-                                        ? "bg-[rgba(255,0,0,0.1)]"
-                                        : "bg-white"
-                                }`}
+                                className="flex items-center px-3 py-4 rounded-md shadow-md mb-2 bg-[rgba(255,0,0,0.1)]"
                             >
                                 <li className="basis-[4%]">{partnership.id}</li>
                                 <li className="basis-[22%]">
@@ -429,7 +435,7 @@ export default function PartnershipApplications() {
                             {Array.from(
                                 {
                                     length: Math.ceil(
-                                        partnerships.length / rowsPerPage
+                                        rejectedPartnership.length / rowsPerPage
                                     ),
                                 },
                                 (_, index) => (
@@ -455,7 +461,8 @@ export default function PartnershipApplications() {
                                     disabled={
                                         currentPage ===
                                         Math.ceil(
-                                            partnerships.length / rowsPerPage
+                                            rejectedPartnership.length /
+                                                rowsPerPage
                                         )
                                     }
                                 />
