@@ -92,6 +92,16 @@ export default function ApplyForm() {
                 res.data.message ===
                 "Partnership application sent successfully."
             ) {
+                setForm({
+                    businessName: "",
+                    businessAddress: "",
+                    name: "",
+                    email: "",
+                    phone: "",
+                    social: "",
+                    type: "",
+                    certificate: "",
+                });
                 navigate("/partnerships");
             }
         } catch (error) {
