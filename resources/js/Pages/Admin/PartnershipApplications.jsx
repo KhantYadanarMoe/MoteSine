@@ -74,6 +74,20 @@ export default function PartnershipApplications() {
         setCurrentPage(page);
     };
 
+    const updateStatus = async (id, newStatus) => {
+        try {
+            await axios.post(`/api/partnership/status/${id}`, {
+                status: newStatus,
+            });
+
+            setPartnerships((prev) =>
+                prev.map((p) => (p.id === id ? { ...p, status: newStatus } : p))
+            );
+        } catch (error) {
+            console.error("Failed to update partnership status:", error);
+        }
+    };
+
     let deletePartnership = async (id) => {
         try {
             const csrfToken = document
@@ -148,7 +162,13 @@ export default function PartnershipApplications() {
                         currentPartnerships.map((partnership) => (
                             <ul
                                 key={partnership.id}
-                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                                className={`flex items-center px-3 py-4 rounded-md shadow-md mb-2 ${
+                                    partnership.status === "approved"
+                                        ? "bg-[rgba(0,255,0,0.1)]"
+                                        : partnership.status === "rejected"
+                                        ? "bg-[rgba(255,0,0,0.1)]"
+                                        : "bg-white"
+                                }`}
                             >
                                 <li className="basis-[4%]">{partnership.id}</li>
                                 <li className="basis-[22%]">
@@ -282,11 +302,39 @@ export default function PartnershipApplications() {
                                                     </DialogFooter>
                                                 </DialogContent>
                                             </Dialog>
-                                            <DropdownMenuItem className="text-accentGreen">
-                                                Approved
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    updateStatus(
+                                                        partnership.id,
+                                                        partnership.status ===
+                                                            "approved"
+                                                            ? null
+                                                            : "approved"
+                                                    )
+                                                }
+                                                className="text-accentGreen"
+                                            >
+                                                {partnership.status ===
+                                                "approved"
+                                                    ? "Disapprove"
+                                                    : "Approve"}
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-accentRed">
-                                                Rejected
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    updateStatus(
+                                                        partnership.id,
+                                                        partnership.status ===
+                                                            "rejected"
+                                                            ? null
+                                                            : "rejected"
+                                                    )
+                                                }
+                                                className="text-accentRed"
+                                            >
+                                                {partnership.status ===
+                                                "rejected"
+                                                    ? "Unreject"
+                                                    : "Reject"}
                                             </DropdownMenuItem>
                                             <DropdownMenuItem asChild>
                                                 <AlertDialog>

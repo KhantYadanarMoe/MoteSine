@@ -69,4 +69,17 @@ class PartnershipController extends Controller
             'message' => 'Partnership application deleted successful!'
         ]);
     }
+
+    public function updateStatus(Request $request, $id){
+        $partnership = Partnership::find($id);
+
+        if (!$partnership) {
+            return response()->json(['message' => 'Partnership not found'], 404);
+        }
+
+        $partnership->status = $request->status; // 'approved' or 'rejected'
+        $partnership->save();
+
+        return response()->json(['message' => 'Status updated successfully']);
+    }
 }

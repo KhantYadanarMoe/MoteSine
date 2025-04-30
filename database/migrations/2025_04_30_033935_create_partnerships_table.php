@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('social')->nullable();
             $table->string('type');
             $table->string('certificate')->nullable();
+            $table->enum('status', ['approved', 'rejected'])->nullable();
             $table->timestamps();
         });
     }
