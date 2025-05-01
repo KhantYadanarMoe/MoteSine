@@ -17,8 +17,44 @@ import {
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Button } from "../../Components/ui/button";
+import { useState } from "react";
+import { useEffect } from "react";
+import axios from "axios";
 
 export default function JobApplications() {
+    // state to store applications
+    let [applications, setApplications] = useState([]);
+
+    // fetch data that send from backend
+    let getApplications = async () => {
+        let res = await axios.get("/api/jobs/applications");
+        let data = res.data;
+        setApplications(data.applications);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getApplications();
+    }, []);
+
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 10;
+
+    // calculate the last items, first items and set applications to show
+    const indexOfLastApplication = currentPage * rowsPerPage;
+    const indexOfFirstApplication = indexOfLastApplication - rowsPerPage;
+    const currentApplications = applications.slice(
+        indexOfFirstApplication,
+        indexOfLastApplication
+    );
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -51,346 +87,62 @@ export default function JobApplications() {
                         <li className="basis-[20%]">Resume</li>
                         <li className="basis-[5%]"></li>
                     </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Check
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[4%]">1</li>
-                        <li className="basis-[18%]">Khant Yadanar Moe</li>
-                        <li className="basis-[27%] text-sm">
-                            khantyadanarmoe478@gmail.com
-                        </li>
-                        <li className="basis-[13%] text-sm">(376) 459 786</li>
-                        <li className="basis-[13%]">Delivery Man</li>
-                        <li className="basis-[20%] text-sm">
-                            <a href="" className="text-blue-600 underline">
-                                KhantYadanarMoe.pdf
-                            </a>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Checked
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
+                    {currentApplications.length > 0 ? (
+                        currentApplications.map((application) => (
+                            <ul
+                                key={application.id}
+                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                            >
+                                <li className="basis-[4%]">{application.id}</li>
+                                <li className="basis-[18%]">
+                                    {application.firstName}{" "}
+                                    {application.lastName}
+                                </li>
+                                <li className="basis-[27%] text-sm">
+                                    {application.email}
+                                </li>
+                                <li className="basis-[13%] text-sm">
+                                    {application.phone}
+                                </li>
+                                <li className="basis-[13%]">
+                                    {application.position}
+                                </li>
+                                <li className="basis-[20%] text-sm">
+                                    <a
+                                        href={`/storage/${application.resume}`}
+                                        className="text-blue-600 underline"
+                                        download
+                                    >
+                                        {application.firstName}
+                                    </a>
+                                </li>
+                                <li className="basis-[5%]">
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <DropdownMenuItem className="text-accentGreen">
+                                                Checked
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
             </div>
             <div className="mt-8 flex">

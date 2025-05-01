@@ -139,4 +139,15 @@ class JobController extends Controller
             'jobApplications' => $jobApplications,
         ]);
     }
+
+    public function showApplications(){
+
+        // take data from backend database
+        $applications = JobApplication::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'applications' => $applications
+        ]);
+    }
 }

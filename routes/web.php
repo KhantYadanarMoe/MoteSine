@@ -77,7 +77,9 @@ Route::post("/api/job/create", [JobController::class, 'store']);
 Route::get('/api/job/{id}', [JobController::class, 'show']);
 Route::put('/api/job/{job}', [JobController::class, 'update']);
 Route::delete('/api/job/{job}', [JobController::class, 'delete']);
+
 Route::post('/jobs/apply', [JobController::class, 'apply']);
+Route::get('/api/jobs/applications', [JobController::class, 'showApplications']);
 
 Route::post("/partnership/send", [PartnershipController::class, 'send']);
 Route::get('/api/partnership', [partnershipController::class, 'index']);
