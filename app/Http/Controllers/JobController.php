@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\JobApplication;
 use App\Models\JobPost;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -97,6 +98,45 @@ class JobController extends Controller
         $job->delete();
         return response()->json([
             'message' => 'Job post deleted successful!'
+        ]);
+    }
+
+    public function apply(){
+        $validator = Validator::make(request()->all(), [
+            "firstName" => ["required"],
+            "lastName" => ["required"],
+            "email" => ["required"],
+            "phone" => ["required"],
+            "position" => ["required"],
+            "resume" => ["required"],
+        ]);
+
+        // condition for failed validation
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()->messages()
+            ], 422);
+        }
+
+        $resume = null;
+        if (request()->hasFile('resume')) {
+            $resume = request()->file('resume')->store('resumes', 'public');
+        }
+
+        // store the rest of the data
+        $jobApplications = JobApplication::create([
+            'firstName' => request('firstName'),
+            'lastName' => request('lastName'),
+            'email' => request('email'),
+            'phone' => request('phone'),
+            'position' => request('position'),
+            'resume' => $resume,
+        ]);
+
+        // return when the data is successfully created.
+        return response()->json([
+            'message' => 'Job application sent successfully.',
+            'jobApplications' => $jobApplications,
         ]);
     }
 }
