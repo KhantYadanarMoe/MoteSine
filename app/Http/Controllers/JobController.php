@@ -150,4 +150,17 @@ class JobController extends Controller
             'applications' => $applications
         ]);
     }
+
+    public function checked(Request $request, $id){
+        $application = JobApplication::find($id);
+
+        if (!$application) {
+            return response()->json(['message' => 'Application not found'], 404);
+        }
+
+        $application->checked = $request->checked; // Set checked to 1
+        $application->save();
+
+        return response()->json(['message' => 'application marked successfully']);
+    }
 }

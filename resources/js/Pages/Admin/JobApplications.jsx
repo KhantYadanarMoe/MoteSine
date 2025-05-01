@@ -1,4 +1,4 @@
-import { Ellipsis, Plus } from "lucide-react";
+import { Ellipsis, Plus, CircleCheckBig } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -55,6 +55,25 @@ export default function JobApplications() {
         setCurrentPage(page);
     };
 
+    const checked = async (id, currentChecked) => {
+        try {
+            let newChecked = currentChecked ? 0 : 1;
+
+            let res = await axios.post("/api/jobs/applications/checked/" + id, {
+                checked: newChecked,
+            });
+            setApplications((prevApplications) =>
+                prevApplications.map((application) =>
+                    application.id === id
+                        ? { ...application, checked: newChecked }
+                        : application
+                )
+            );
+        } catch (error) {
+            console.error("Failed to check application:", error);
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -65,7 +84,7 @@ export default function JobApplications() {
         >
             <div className="flex justify-between md:items-center">
                 <h1 className="md:text-lg font-medium">
-                    34 Applications Found
+                    {applications.length} Applications Found
                 </h1>
                 <Link to="/admin/jobs/create">
                     <Button
@@ -79,9 +98,10 @@ export default function JobApplications() {
             <div className="mt-8 overflow-x-auto">
                 <div className="min-w-[920px] lg:min-w-[880px]">
                     <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">
+                        <li className="basis-[4%]"></li>
                         <li className="basis-[4%]">ID</li>
                         <li className="basis-[18%]">Name</li>
-                        <li className="basis-[27%] pl-2">Email</li>
+                        <li className="basis-[23%] pl-2">Email</li>
                         <li className="basis-[13%]">Phone</li>
                         <li className="basis-[13%]">Position</li>
                         <li className="basis-[20%]">Resume</li>
@@ -93,12 +113,20 @@ export default function JobApplications() {
                                 key={application.id}
                                 className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
                             >
+                                <li className="basis-[4%]">
+                                    {application.checked === 1 && (
+                                        <CircleCheckBig
+                                            size={24}
+                                            className="text-green-600"
+                                        />
+                                    )}
+                                </li>
                                 <li className="basis-[4%]">{application.id}</li>
                                 <li className="basis-[18%]">
                                     {application.firstName}{" "}
                                     {application.lastName}
                                 </li>
-                                <li className="basis-[27%] text-sm">
+                                <li className="basis-[23%] text-sm">
                                     {application.email}
                                 </li>
                                 <li className="basis-[13%] text-sm">
@@ -127,8 +155,18 @@ export default function JobApplications() {
                                             align="end"
                                             className="w-40"
                                         >
-                                            <DropdownMenuItem className="text-accentGreen">
-                                                Checked
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    checked(
+                                                        application.id,
+                                                        application.checked
+                                                    )
+                                                }
+                                                className="text-accentGreen"
+                                            >
+                                                {application.checked
+                                                    ? "Unchecked"
+                                                    : "Checked"}
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Delete
