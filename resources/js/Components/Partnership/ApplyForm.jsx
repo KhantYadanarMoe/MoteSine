@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
 
 export default function ApplyForm() {
     const [position, setPosition] = useState("");
@@ -48,6 +49,8 @@ export default function ApplyForm() {
             [name]: value,
         }));
     };
+
+    const certificateRef = useRef();
 
     // form submit function
     const submit = async (e) => {
@@ -102,6 +105,7 @@ export default function ApplyForm() {
                     type: "",
                     certificate: "",
                 });
+                certificateRef.current.value = "";
                 navigate("/partnerships");
             }
         } catch (error) {
@@ -293,6 +297,7 @@ export default function ApplyForm() {
                             <Input
                                 id="certificate"
                                 name="certificate"
+                                ref={certificateRef}
                                 onChange={(e) =>
                                     handleCustomChange(
                                         "certificate",

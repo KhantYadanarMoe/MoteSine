@@ -13,6 +13,7 @@ import { Input } from "../ui/input";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Label } from "../ui/label";
+import { useRef } from "react";
 
 export default function JobForm() {
     const [position, setPosition] = useState("");
@@ -47,6 +48,8 @@ export default function JobForm() {
             [name]: value,
         }));
     };
+
+    const resumeRef = useRef();
 
     // form submit function
     const submit = async (e) => {
@@ -94,6 +97,7 @@ export default function JobForm() {
                     position: "",
                     resume: "",
                 });
+                resumeRef.current.value = "";
                 navigate("/jobs");
             }
         } catch (error) {
@@ -249,6 +253,7 @@ export default function JobForm() {
                                 handleCustomChange("resume", e.target.files[0])
                             }
                             name="resume"
+                            ref={resumeRef}
                             placeholder="Upload your Resume"
                             className="mt-1 border-gray-500"
                         />

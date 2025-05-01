@@ -150,22 +150,47 @@ export default function JobApplications() {
                     <Pagination className="text-accentREbg-accentRed">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        applications.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem></PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(
+                                            applications.length / rowsPerPage
+                                        )
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
