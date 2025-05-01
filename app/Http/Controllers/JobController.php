@@ -163,4 +163,11 @@ class JobController extends Controller
 
         return response()->json(['message' => 'application marked successfully']);
     }
+
+    public function deleteApplication(JobApplication $application){
+        $application->delete();
+        return response()->json([
+            'message' => 'Job application deleted successful!'
+        ]);
+    }
 }

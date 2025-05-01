@@ -164,7 +164,7 @@ export default function JobPosts() {
                                                             <AlertDialogTitle>
                                                                 Are you sure you
                                                                 want to delete
-                                                                this menu?
+                                                                this job post?
                                                             </AlertDialogTitle>
                                                             <AlertDialogDescription>
                                                                 This action

@@ -6,6 +6,17 @@ import {
     DropdownMenuTrigger,
 } from "../../Components/ui/dropdown-menu";
 import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
+import {
     Pagination,
     PaginationContent,
     PaginationEllipsis,
@@ -71,6 +82,27 @@ export default function JobApplications() {
             );
         } catch (error) {
             console.error("Failed to check application:", error);
+        }
+    };
+
+    let deleteApplication = async (id) => {
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            let res = await axios.delete("/api/jobs/application/" + id, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setApplications((prev) =>
+                prev.filter((application) => application.id !== id)
+            );
+        } catch (e) {
+            console.log(e);
         }
     };
 
@@ -168,8 +200,43 @@ export default function JobApplications() {
                                                     ? "Unchecked"
                                                     : "Checked"}
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-accentRed">
-                                                Delete
+                                            <DropdownMenuItem asChild>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                            Delete
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you sure you
+                                                                want to delete
+                                                                this job
+                                                                application?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    deleteApplication(
+                                                                        application.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
