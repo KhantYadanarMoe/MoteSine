@@ -83,7 +83,10 @@ export default function Favorite() {
                 >
                     <CarouselContent>
                         {featuredMenus.map((menu) => (
-                            <CarouselItem className="md:basis-1/2 lg:basis-1/3">
+                            <CarouselItem
+                                key={menu.id}
+                                className="md:basis-1/2 lg:basis-1/3"
+                            >
                                 <div className="p-1 mt-10">
                                     <Card className="relative bg-white border h-[250px] border-gray-400 shadow-lg rounded-lg">
                                         <div className="absolute -top-10 mr-3 right-0 flex justify-end">
