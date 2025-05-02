@@ -1,13 +1,21 @@
 import { useState } from "react";
-import { Menu, X, ShoppingBag, LogIn } from "lucide-react";
+import { Menu, X, ShoppingBag, LogIn, ChevronDown } from "lucide-react"; // Import ChevronDown
 import Logo from "../../images/logo.png";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const { user } = useAuth(); // Get user from context
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
+    };
+
+    const logout = () => {
+        // Your logout logic here
+        console.log("Logging out...");
     };
 
     return (
@@ -22,7 +30,7 @@ const Navbar = () => {
 
                 <img
                     src={Logo}
-                    alt=""
+                    alt="Logo"
                     className="h-auto w-[96px] md:w-[110px]"
                 />
 
@@ -82,23 +90,46 @@ const Navbar = () => {
                         Cart (0)
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
                     </Link>
-                    <Link to="/login">
-                        <button className="text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 duration-300 border-l-2 border-accentRed px-2 py-1 relative group">
-                            Login
-                        </button>
-                    </Link>
-                </div>
 
-                <div className="flex space-x-2 md:hidden text-gray-700 focus:outline-none">
-                    <a href="#" className="relative">
-                        <ShoppingBag size={20} />
-                        <span className="absolute bottom-[-7px] right-[-6px] w-4 h-4 bg-accentRed text-white text-xs flex items-center justify-center rounded-full">
-                            0
-                        </span>
-                    </a>
-                    <a href="#">
-                        <LogIn size={20} />
-                    </a>
+                    {user ? (
+                        <div className="relative">
+                            <div
+                                onClick={() => setDropdownOpen(!dropdownOpen)}
+                                className="text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 duration-300 border-l-2 border-accentRed px-2 py-1 flex items-center space-x-2 cursor-pointer"
+                            >
+                                <span>{user.name}</span>
+                                <ChevronDown
+                                    size={16}
+                                    className="text-gray-700"
+                                />
+                            </div>
+
+                            {/* Dropdown Menu */}
+                            {dropdownOpen && (
+                                <div className="absolute right-0 mt-2 w-40 bg-white text-black rounded shadow-lg z-50">
+                                    <Link
+                                        to="/profile"
+                                        className="block px-4 py-2 hover:bg-gray-100"
+                                        onClick={() => setDropdownOpen(false)} // Close dropdown on click
+                                    >
+                                        Profile
+                                    </Link>
+                                    <button
+                                        onClick={logout}
+                                        className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                                    >
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <Link to="/login">
+                            <button className="text-gray-700 hover:text-gray-900 bg-white hover:bg-gray-100 duration-300 border-l-2 border-accentRed px-2 py-1 relative group">
+                                Login
+                            </button>
+                        </Link>
+                    )}
                 </div>
             </div>
 
