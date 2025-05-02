@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
@@ -10,6 +11,7 @@ use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewsController;
 use Illuminate\Foundation\Application;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -87,3 +89,7 @@ Route::post("/partnership/send", [PartnershipController::class, 'send']);
 Route::get('/api/partnership', [partnershipController::class, 'index']);
 Route::post('/api/partnership/status/{id}', [PartnershipController::class, 'updateStatus']);
 Route::delete('/api/partnership/{partnership}', [PartnershipController::class, 'delete']);
+
+Route::post('/api/login', [AuthController::class, 'login']);
+Route::post('/api/register', [AuthController::class, 'register']);
+Route::middleware('auth:sanctum')->get('/api/user', fn(Request $req) => $req->user());

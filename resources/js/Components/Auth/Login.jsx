@@ -1,18 +1,74 @@
+import { useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import Logo from "../../../images/Logo.png";
 import AuthBg from "../../../images/auth-bg.jpg";
-import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Login() {
+    const [form, setForm] = useState({
+        email: "",
+        password: "",
+    });
+
+    const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
+
+    // Handle input changes
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    // Handle login
+    const submit = async (e) => {
+        e.preventDefault();
+
+        try {
+            setErrors({});
+
+            // Step 1: Get CSRF cookie
+            await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+                withCredentials: true,
+            });
+
+            // Step 2: Send login request
+            const res = await axios.post(
+                "http://localhost:8000/api/login",
+                {
+                    email: form.email,
+                    password: form.password,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+
+            // Step 3: Optional - Fetch user info
+            const userRes = await axios.get("http://localhost:8000/api/user", {
+                withCredentials: true,
+            });
+
+            console.log("Logged in user:", userRes.data);
+
+            navigate("/"); // redirect on success
+        } catch (error) {
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            } else {
+                setErrors({ general: "Login failed. Please try again." });
+            }
+        }
+    };
+
     return (
         <div className="block md:flex">
             <motion.div
                 initial={{ x: -100, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
                 transition={{ duration: 0.6, ease: "easeOut" }}
-                viewport={{ once: false, amount: 0.2 }}
                 className="md:w-2/5 lg:w-1/2"
             >
                 <img
@@ -25,8 +81,7 @@ export default function Login() {
                 initial={{ y: -100, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                viewport={{ once: false, amount: 0.2 }}
-                className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:my-0 my-5 lg:h-screen"
+                className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:h-screen"
             >
                 <div className="w-[97%] md:w-[90%] lg:w-[87%] mx-auto">
                     <img src={Logo} alt="" className="w-28 h-auto mb-2" />
@@ -34,7 +89,7 @@ export default function Login() {
                         Order the food that can make your taste bud feel like
                         you're HOME.
                     </p>
-                    <form action="" className="mt-5">
+                    <form onSubmit={submit} className="mt-5">
                         <div className="mb-5">
                             <h2 className="text-2xl font-semibold mb-1 relative inline-block">
                                 Login
@@ -44,37 +99,62 @@ export default function Login() {
                                 <div className="w-1 h-1 bg-accentRed rounded-full ml-2"></div>
                             </div>
                         </div>
+
+                        {errors.general && (
+                            <p className="text-red-600 text-sm mb-2">
+                                {errors.general}
+                            </p>
+                        )}
+
                         <div className="mb-3">
-                            <label htmlFor="name" className="mb-1">
-                                Name
+                            <label htmlFor="email" className="mb-1 block">
+                                Email
                             </label>
                             <Input
-                                id="name"
-                                type="text"
-                                placeholder="Enter your name"
+                                id="email"
+                                name="email"
+                                type="email"
+                                placeholder="Enter your email"
                                 className="mt-1 border-gray-500"
+                                onChange={handleInputChange}
                             />
+                            {errors.email && (
+                                <p className="text-sm text-red-600 mt-1">
+                                    {errors.email[0]}
+                                </p>
+                            )}
                         </div>
+
                         <div className="mb-3">
-                            <label htmlFor="password" className="mb-1">
+                            <label htmlFor="password" className="mb-1 block">
                                 Password
                             </label>
                             <Input
                                 id="password"
-                                type="text"
+                                name="password"
+                                type="password"
                                 placeholder="Enter your password"
-                                className="w-full px-3 py-2 border border-gray-400 rounded-md focus:outline-none focus:ring-2 focus:ring-crimson focus:border-crimson text-gray-700"
+                                className="mt-1 border-gray-500"
+                                onChange={handleInputChange}
                             />
+                            {errors.password && (
+                                <p className="text-sm text-red-600 mt-1">
+                                    {errors.password[0]}
+                                </p>
+                            )}
                         </div>
-                        <a href="" className="text-sm text-gray-800 ">
+
+                        <a href="#" className="text-sm text-gray-800">
                             Forgot Password?
                         </a>
+
                         <Button
-                            variant="default"
+                            type="submit"
                             className="rounded-lg bg-accentRed mt-4 text-white w-full hover:bg-hoverRed duration-300"
                         >
                             Login
                         </Button>
+
                         <p className="text-sm text-gray-800 text-center mt-1">
                             Don't have an Account?{" "}
                             <Link
