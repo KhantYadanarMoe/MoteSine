@@ -93,3 +93,4 @@ Route::delete('/api/partnership/{partnership}', [PartnershipController::class, '
 Route::post('/api/login', [AuthController::class, 'login']);
 Route::post('/api/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->get('/api/user', fn(Request $req) => $req->user());
+Route::post('/api/logout', [AuthController::class, 'logout']);

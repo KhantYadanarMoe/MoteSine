@@ -6,6 +6,7 @@ import AuthBg from "../../../images/auth-bg.jpg";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Login() {
     const [form, setForm] = useState({
@@ -21,6 +22,8 @@ export default function Login() {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
     };
+
+    const { setUser } = useAuth();
 
     // Handle login
     const submit = async (e) => {
@@ -50,6 +53,7 @@ export default function Login() {
             const userRes = await axios.get("http://localhost:8000/api/user", {
                 withCredentials: true,
             });
+            setUser(userRes.data);
 
             console.log("Logged in user:", userRes.data);
 

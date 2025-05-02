@@ -1,21 +1,31 @@
 import { useState } from "react";
 import { Menu, X, ShoppingBag, LogIn, ChevronDown } from "lucide-react"; // Import ChevronDown
 import Logo from "../../images/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import axios from "axios";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const { user } = useAuth(); // Get user from context
+    const { user, setUser } = useAuth(); // Get user from context
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
     };
 
-    const logout = () => {
-        // Your logout logic here
-        console.log("Logging out...");
+    const navigate = useNavigate();
+
+    const logout = async () => {
+        try {
+            await axios.post("http://localhost:8000/api/logout", null, {
+                withCredentials: true,
+            });
+            setUser(null);
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     };
 
     return (
