@@ -5,6 +5,7 @@ import AuthBg from "../../../images/auth-bg.jpg";
 import { Button } from "@/components/ui/button";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
+import Google from "../../../images/Google.png";
 import axios from "axios";
 
 export default function Register() {
@@ -63,7 +64,7 @@ export default function Register() {
     };
 
     return (
-        <div className="block md:flex">
+        <div className="block md:flex md:h-screen overflow-hidden">
             <motion.div
                 initial={{ x: -100, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
@@ -73,7 +74,7 @@ export default function Register() {
                 <img
                     src={AuthBg}
                     alt=""
-                    className="h-48 md:h-screen w-full object-cover"
+                    className="h-48 md:h-full w-full object-cover sticky top-0"
                 />
             </motion.div>
 
@@ -81,7 +82,7 @@ export default function Register() {
                 initial={{ y: -100, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:h-screen"
+                className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:pt-20 overflow-y-auto py-6"
             >
                 <div className="w-[97%] md:w-[90%] lg:w-[87%] mx-auto">
                     <img src={Logo} alt="" className="w-28 h-auto mb-2" />
@@ -197,7 +198,17 @@ export default function Register() {
                             Register
                         </Button>
                         <a href="http://localhost:8000/auth/google">
-                            <button type="button">Continue with Google</button>
+                            <Button
+                                type="button"
+                                className="mt-3 bg-white text-black w-full border border-gray-700 hover:bg-gray-50"
+                            >
+                                <img
+                                    src={Google}
+                                    alt="Google Logo"
+                                    className="w-5 h-5 object-cover"
+                                />
+                                Continue with Google
+                            </Button>
                         </a>
 
                         <p className="text-sm text-gray-800 text-center mt-1">

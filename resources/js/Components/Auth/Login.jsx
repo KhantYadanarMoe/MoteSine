@@ -68,7 +68,7 @@ export default function Login() {
     };
 
     return (
-        <div className="block md:flex">
+        <div className="block md:flex md:h-screen overflow-hidden">
             <motion.div
                 initial={{ x: -100, opacity: 0 }}
                 whileInView={{ x: 0, opacity: 1 }}
@@ -78,14 +78,14 @@ export default function Login() {
                 <img
                     src={AuthBg}
                     alt=""
-                    className="h-48 md:h-screen w-full object-cover"
+                    className="h-48 md:h-full w-full object-cover sticky top-0"
                 />
             </motion.div>
             <motion.div
                 initial={{ y: -100, opacity: 0 }}
                 whileInView={{ y: 0, opacity: 1 }}
                 transition={{ duration: 0.8, ease: "easeOut" }}
-                className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:h-screen"
+                className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:pt-20 overflow-y-auto py-6"
             >
                 <div className="w-[97%] md:w-[90%] lg:w-[87%] mx-auto">
                     <img src={Logo} alt="" className="w-28 h-auto mb-2" />
