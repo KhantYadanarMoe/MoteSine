@@ -36,6 +36,9 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
+Route::get('auth/google', [AuthController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+
 Route::get('/{any}', function () {
     return view('app');
 })->where('any', '^(?!api).*');

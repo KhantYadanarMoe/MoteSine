@@ -196,6 +196,9 @@ export default function Register() {
                         >
                             Register
                         </Button>
+                        <a href="http://localhost:8000/auth/google">
+                            <button type="button">Continue with Google</button>
+                        </a>
 
                         <p className="text-sm text-gray-800 text-center mt-1">
                             Already have an Account?{" "}
