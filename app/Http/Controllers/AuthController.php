@@ -78,4 +78,14 @@ class AuthController extends Controller
         }
     }
 
+    public function showUsers(){
+        // take data from backend database
+        $users = User::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'users' => $users
+        ]);
+    }
+
 }

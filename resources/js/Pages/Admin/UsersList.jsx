@@ -16,8 +16,40 @@ import {
 import { ChevronDown, Ellipsis } from "lucide-react";
 import Profile from "../../../images/Profile.jpg";
 import { motion } from "framer-motion";
+import { useAuth } from "@/contexts/AuthContext";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function UsersList() {
+    // state to store users
+    let [users, setUsers] = useState([]);
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 10;
+
+    // fetch data that send from backend
+    let getUsers = async () => {
+        let res = await axios.get("/api/users");
+        let data = res.data;
+        setUsers(data.users);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getUsers();
+    }, []);
+
+    // calculate the last items, first items and set users to show
+    const indexOfLastUser = currentPage * rowsPerPage;
+    const indexOfFirstUser = indexOfLastUser - rowsPerPage;
+    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -27,7 +59,9 @@ export default function UsersList() {
             className="mx-2 md:mx-4 my-8"
         >
             <div className="flex justify-between items-center">
-                <h1 className="text-lg font-medium">26,478 Users Found</h1>
+                <h1 className="text-lg font-medium">
+                    {users.length} Users Found
+                </h1>
                 <div className="hidden md:block">
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
@@ -68,516 +102,67 @@ export default function UsersList() {
                         <li className="basis-[11%] pl-3">Status</li>
                         <li className="basis-[4%]"></li>
                     </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[3%]">1</li>
-                        <li className="basis-[19%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-8 h-8 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[26%] text-xs md:text-sm">
-                            khantyadanarmoe83@gmail.com
-                        </li>
-                        <li className="basis-[12%] text-xs md:text-sm">
-                            01 237 347 23
-                        </li>
-                        <li className="basis-[25%] text-xs">
-                            843 West 57th Street, Apt 12C, New York, NY 10019,
-                            USA
-                        </li>
-                        <li className="basis-[11%]">
-                            <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                Banned
-                            </span>
-                        </li>
-                        <li className="basis-[4%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <DropdownMenuItem className="text-accentYellow">
-                                        Ban
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentGreen">
-                                        Edit
-                                    </DropdownMenuItem>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Delete
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
+                    {currentUsers.length > 0 ? (
+                        currentUsers.map((user) => (
+                            <ul
+                                key={user.id}
+                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                            >
+                                <li className="basis-[3%]">{user.id}</li>
+                                <li className="basis-[19%] flex gap-1 items-center">
+                                    <img
+                                        src={Profile}
+                                        alt="Profile"
+                                        className="w-8 h-8 object-cover rounded-full"
+                                    />
+                                    <p className="text-xs md:text-sm">
+                                        {user.name}
+                                    </p>
+                                </li>
+                                <li className="basis-[26%] text-xs md:text-sm">
+                                    {user.email}
+                                </li>
+                                <li className="basis-[12%] text-xs md:text-sm">
+                                    {user.phone}
+                                </li>
+                                <li className="basis-[25%] text-xs">
+                                    {user.address}
+                                </li>
+                                <li className="basis-[11%]">
+                                    <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
+                                        Banned
+                                    </span>
+                                </li>
+                                <li className="basis-[4%]">
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <DropdownMenuItem className="text-accentYellow">
+                                                Ban
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-accentGreen">
+                                                Edit
+                                            </DropdownMenuItem>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Delete
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
             </div>
             <div className="mt-8 flex">
