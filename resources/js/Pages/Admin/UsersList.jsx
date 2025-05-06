@@ -61,6 +61,23 @@ export default function UsersList() {
         setCurrentPage(page);
     };
 
+    const banUser = async (id, currentStatus) => {
+        try {
+            let newStatus = currentStatus ? 0 : 1;
+
+            let res = await axios.post("/api/users/banned/" + id, {
+                banned: newStatus,
+            });
+            setUsers((prevUsers) =>
+                prevUsers.map((user) =>
+                    user.id === id ? { ...user, banned: newStatus } : user
+                )
+            );
+        } catch (error) {
+            console.error("Failed:", error);
+        }
+    };
+
     let deleteUser = async (id) => {
         try {
             const csrfToken = document
@@ -162,8 +179,14 @@ export default function UsersList() {
                                     {user.address}
                                 </li>
                                 <li className="basis-[11%]">
-                                    <span className="ml-3 text-xs md:text-sm rounded-sm bg-yellow-100 text-accentYellow px-1 py-1">
-                                        Banned
+                                    <span
+                                        className={`ml-3 text-xs md:text-sm rounded-sm px-1 py-1 ${
+                                            user.banned
+                                                ? "text-accentRed bg-gray-100"
+                                                : "text-accentGreen bg-green-100"
+                                        }`}
+                                    >
+                                        {user.banned ? "Banned" : "Active"}
                                     </span>
                                 </li>
                                 <li className="basis-[4%]">
@@ -177,9 +200,24 @@ export default function UsersList() {
                                             align="end"
                                             className="w-40"
                                         >
-                                            <DropdownMenuItem className="text-accentYellow">
-                                                Ban
+                                            <DropdownMenuItem
+                                                onClick={() =>
+                                                    banUser(
+                                                        user.id,
+                                                        user.banned
+                                                    )
+                                                }
+                                                className={
+                                                    user.banned
+                                                        ? "text-accentGreen"
+                                                        : "text-accentYellow"
+                                                }
+                                            >
+                                                {user.banned
+                                                    ? "Re-activate"
+                                                    : "Ban"}
                                             </DropdownMenuItem>
+
                                             <DropdownMenuItem asChild>
                                                 <AlertDialog>
                                                     <AlertDialogTrigger asChild>
@@ -234,22 +272,45 @@ export default function UsersList() {
                     <Pagination className="text-accentRed">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        users.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem></PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(users.length / rowsPerPage)
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>

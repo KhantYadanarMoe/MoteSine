@@ -132,6 +132,19 @@ class AuthController extends Controller
         ]);
     }
 
+    public function ban(Request $request, $id){
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        $user->banned = $request->banned; // Set banned to 1
+        $user->save();
+
+        return response()->json(['message' => 'User banned successfully']);
+    }
+
     public function delete(User $user){
         $user->delete();
         return response()->json([

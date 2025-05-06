@@ -63,6 +63,7 @@ Route::delete('/api/product/{product}', [ProductsController::class, 'delete']);
 
 Route::get('/api/users', [AuthController::class, 'showUsers']);
 Route::put('/api/user/{user}', [AuthController::class, 'updateUser']);
+Route::post('/api/users/banned/{id}', [AuthController::class, 'ban']);
 Route::delete('/api/user/{user}', [AuthController::class, 'delete']);
 
 Route::get('/api/blogs', [BlogController::class, 'index']);
