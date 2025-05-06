@@ -16,7 +16,17 @@ import {
 import { ChevronDown, Ellipsis } from "lucide-react";
 import Profile from "../../../images/Profile.jpg";
 import { motion } from "framer-motion";
-import { useAuth } from "@/contexts/AuthContext";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
@@ -49,6 +59,25 @@ export default function UsersList() {
     // function for pagination button
     const handlePageChange = (page) => {
         setCurrentPage(page);
+    };
+
+    let deleteUser = async (id) => {
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            let res = await axios.delete("/api/user/" + id, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setUsers((prev) => prev.filter((user) => user.id !== id));
+        } catch (e) {
+            console.log(e);
+        }
     };
     return (
         <motion.div
@@ -151,8 +180,42 @@ export default function UsersList() {
                                             <DropdownMenuItem className="text-accentYellow">
                                                 Ban
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-accentRed">
-                                                Delete
+                                            <DropdownMenuItem asChild>
+                                                <AlertDialog>
+                                                    <AlertDialogTrigger asChild>
+                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                            Delete
+                                                        </button>
+                                                    </AlertDialogTrigger>
+                                                    <AlertDialogContent>
+                                                        <AlertDialogHeader>
+                                                            <AlertDialogTitle>
+                                                                Are you sure you
+                                                                want to delete
+                                                                this menu?
+                                                            </AlertDialogTitle>
+                                                            <AlertDialogDescription>
+                                                                This action
+                                                                cannot be
+                                                                undone.
+                                                            </AlertDialogDescription>
+                                                        </AlertDialogHeader>
+                                                        <AlertDialogFooter>
+                                                            <AlertDialogCancel>
+                                                                Cancel
+                                                            </AlertDialogCancel>
+                                                            <AlertDialogAction
+                                                                onClick={() =>
+                                                                    deleteUser(
+                                                                        user.id
+                                                                    )
+                                                                }
+                                                            >
+                                                                Delete
+                                                            </AlertDialogAction>
+                                                        </AlertDialogFooter>
+                                                    </AlertDialogContent>
+                                                </AlertDialog>
                                             </DropdownMenuItem>
                                         </DropdownMenuContent>
                                     </DropdownMenu>
