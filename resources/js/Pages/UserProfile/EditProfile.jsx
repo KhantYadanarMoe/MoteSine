@@ -19,7 +19,6 @@ export default function EditProfile() {
         email: "",
         phone: "",
         address: "",
-        password: "",
     });
     // store errors state
     const [errors, setErrors] = useState({});
@@ -51,7 +50,6 @@ export default function EditProfile() {
                 email: user.email || "",
                 phone: user.phone || "",
                 address: user.address || "",
-                password: "",
             });
         }
     }, [user]);
@@ -74,7 +72,6 @@ export default function EditProfile() {
         formData.append("email", form.email);
         formData.append("phone", form.phone);
         formData.append("address", form.address);
-        formData.append("password", form.password || "");
 
         console.log("Form data after appending:", formData);
 

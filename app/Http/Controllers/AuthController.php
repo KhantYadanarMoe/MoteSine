@@ -95,7 +95,6 @@ class AuthController extends Controller
             "email" => ["required"],
             "phone" => ["nullable", "numeric"],
             "address" => ["nullable"],
-            "password" => ["nullable", "numeric"],
             "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],
         ]);
 
@@ -125,7 +124,6 @@ class AuthController extends Controller
             'email' => request('email'),
             'phone' => request('phone'),
             'address' => request('address'),
-            'password' => request('password'),
             'image' => $imagePath, // Save image path if any
         ]);
         return response()->json([

@@ -111,7 +111,11 @@ export default function UsersList() {
                                 <li className="basis-[3%]">{user.id}</li>
                                 <li className="basis-[19%] flex gap-1 items-center">
                                     <img
-                                        src={Profile}
+                                        src={
+                                            user.image
+                                                ? `/storage/${user.image}`
+                                                : Profile
+                                        }
                                         alt="Profile"
                                         className="w-8 h-8 object-cover rounded-full"
                                     />
@@ -146,9 +150,6 @@ export default function UsersList() {
                                         >
                                             <DropdownMenuItem className="text-accentYellow">
                                                 Ban
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-accentGreen">
-                                                Edit
                                             </DropdownMenuItem>
                                             <DropdownMenuItem className="text-accentRed">
                                                 Delete
