@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import Google from "../../../images/Google.png";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Register() {
     const [form, setForm] = useState({
@@ -18,6 +19,7 @@ export default function Register() {
 
     const [errors, setErrors] = useState({});
     const navigate = useNavigate();
+    const { setUser } = useAuth();
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -50,6 +52,7 @@ export default function Register() {
             const userRes = await axios.get("http://localhost:8000/api/user", {
                 withCredentials: true,
             });
+            setUser(userRes.data);
 
             console.log("Registered user:", userRes.data);
 
