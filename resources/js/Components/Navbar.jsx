@@ -8,7 +8,7 @@ import axios from "axios";
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
-    const { user, setUser } = useAuth(); // Get user from context
+    const { user, setUser } = useAuth();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);

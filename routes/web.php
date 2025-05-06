@@ -62,6 +62,7 @@ Route::put('/api/product/{product}', [ProductsController::class, 'update']);
 Route::delete('/api/product/{product}', [ProductsController::class, 'delete']);
 
 Route::get('/api/users', [AuthController::class, 'showUsers']);
+Route::put('/api/user/{user}', [AuthController::class, 'updateUser']);
 
 Route::get('/api/blogs', [BlogController::class, 'index']);
 Route::post("/api/blog/create", [BlogController::class, 'store']);

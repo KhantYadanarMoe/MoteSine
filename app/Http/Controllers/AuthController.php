@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -85,6 +86,51 @@ class AuthController extends Controller
         // send data to frontend
         return response()->json([
             'users' => $users
+        ]);
+    }
+
+    public function updateUser(User $user){
+        $validator = Validator::make(request()->all(), [
+            "name" => ["required"],
+            "email" => ["required"],
+            "phone" => ["nullable", "numeric"],
+            "address" => ["nullable"],
+            "password" => ["nullable", "numeric"],
+            "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],
+        ]);
+
+        // condition for failed validation
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()->messages()
+            ], 422);
+        }
+
+        // store image
+        $imagePath = null;
+        if (request()->hasFile('image')) {
+            $image = request()->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('users', $imageName, 'public'); 
+        }else {
+            // Retain the old image if no new image is provided
+            $imagePath = $user->image;
+        }
+
+        Log::info(request()->all()); // Log all incoming data
+
+
+        $user->update([
+            'name' => request('name'),
+            'email' => request('email'),
+            'phone' => request('phone'),
+            'address' => request('address'),
+            'password' => request('password'),
+            'image' => $imagePath, // Save image path if any
+        ]);
+        return response()->json([
+            'message' => 'User updated successfully.',
+            'user' => $user
         ]);
     }
 
