@@ -68,6 +68,23 @@ export default function MenuForm() {
     // state to store detail of the menu related to ID
     let [menuDetail, setMenuDetails] = useState(null);
 
+    // Define state for categories
+    const [categories, setCategories] = useState([]);
+
+    // Fetch categories data from backend
+    const getCategories = async () => {
+        try {
+            const response = await axios.get("/api/categories");
+            setCategories(response.data.categories);
+        } catch (error) {
+            console.error("Error fetching categories data: ", error);
+        }
+    };
+
+    useEffect(() => {
+        getCategories();
+    }, []);
+
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
         let res = await fetch("http://localhost:8000/api/menu/" + id);
@@ -352,33 +369,14 @@ export default function MenuForm() {
 
                                     <SelectContent className="w-96 max-h-60">
                                         <SelectItem value="all">All</SelectItem>
-                                        <SelectItem value="curries">
-                                            Curries
-                                        </SelectItem>
-                                        <SelectItem value="noodles">
-                                            Noodles
-                                        </SelectItem>
-                                        <SelectItem value="salads">
-                                            Salads
-                                        </SelectItem>
-                                        <SelectItem value="soups">
-                                            Soups
-                                        </SelectItem>
-                                        <SelectItem value="side-dishes">
-                                            Side Dishes
-                                        </SelectItem>
-                                        <SelectItem value="snacks-street-foods">
-                                            Snacks & Street Foods
-                                        </SelectItem>
-                                        <SelectItem value="chefs-favorite">
-                                            Chef's Favorite
-                                        </SelectItem>
-                                        <SelectItem value="desserts">
-                                            Desserts
-                                        </SelectItem>
-                                        <SelectItem value="drinks-beverages">
-                                            Drinks & Beverages
-                                        </SelectItem>
+                                        {categories.map((category) => (
+                                            <SelectItem
+                                                key={category.id}
+                                                value={category.category}
+                                            >
+                                                {category.category}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                                 {errors.category && (
