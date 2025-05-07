@@ -75,7 +75,17 @@ export default function MenuForm() {
     const getCategories = async () => {
         try {
             const response = await axios.get("/api/categories");
-            setCategories(response.data.categories);
+            let data = response.data;
+            let allCategories = data.categories;
+
+            const visibilityMap = JSON.parse(
+                localStorage.getItem("categoryVisibility") || "{}"
+            );
+            const publishedCategories = allCategories.filter(
+                (c) => visibilityMap[c.id]
+            );
+
+            setCategories(publishedCategories);
         } catch (error) {
             console.error("Error fetching categories data: ", error);
         }

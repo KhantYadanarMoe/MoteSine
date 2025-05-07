@@ -185,6 +185,21 @@ export default function Category() {
         }
     }, [categoryDetail]);
 
+    const [visibility, setVisibility] = useState({});
+
+    useEffect(() => {
+        const stored = JSON.parse(
+            localStorage.getItem("categoryVisibility") || "{}"
+        );
+        setVisibility(stored);
+    }, []);
+
+    const toggleVisibility = (id, checked) => {
+        const updated = { ...visibility, [id]: checked };
+        setVisibility(updated);
+        localStorage.setItem("categoryVisibility", JSON.stringify(updated));
+    };
+
     // delete function
     let deleteCategory = async (id) => {
         try {
@@ -286,7 +301,17 @@ export default function Category() {
                                     {category.category}
                                 </li>
                                 <li className="basis-[15%]">
-                                    <Switch />
+                                    <Switch
+                                        checked={
+                                            visibility[category.id] || false
+                                        }
+                                        onCheckedChange={(checked) =>
+                                            toggleVisibility(
+                                                category.id,
+                                                checked
+                                            )
+                                        }
+                                    />
                                 </li>
                                 <li className="basis-[18%] pl-2">23</li>
                                 <li className="basis-[22%]">
