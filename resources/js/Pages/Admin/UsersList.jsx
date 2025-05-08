@@ -96,6 +96,30 @@ export default function UsersList() {
             console.log(e);
         }
     };
+
+    const [selectedFilter, setSelectedFilter] = useState("newest");
+
+    const handleFilterChange = (filterValue) => {
+        setSelectedFilter(filterValue);
+
+        axios
+            .get(`/api/users?sort=${filterValue}`)
+            .then((response) => {
+                const data = response.data;
+                if (data.users) {
+                    setUsers(data.users);
+                    console.log(data.message);
+                }
+            })
+            .catch((error) => {
+                console.error("Axios request failed:", error);
+            });
+    };
+
+    useEffect(() => {
+        handleFilterChange("newest"); // initial load
+    }, []);
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -112,7 +136,15 @@ export default function UsersList() {
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
                             <button className="flex gap-1 items-center px-2 py-1 border border-gray-800 rounded-md">
-                                Filter By Newest <ChevronDown size={16} />
+                                {
+                                    {
+                                        newest: "Filter By Newest",
+                                        oldest: "Filter By Oldest",
+                                        "a-z": "Filter By A-Z",
+                                        "z-a": "Filter By Z-A",
+                                    }[selectedFilter]
+                                }
+                                <ChevronDown size={16} />
                             </button>
                         </DropdownMenuTrigger>
 
@@ -121,16 +153,28 @@ export default function UsersList() {
                             className="w-40"
                             avoidCollisions={false}
                         >
-                            <DropdownMenuItem className="cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => handleFilterChange("newest")}
+                                className="cursor-pointer"
+                            >
                                 Filter By Newest
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => handleFilterChange("oldest")}
+                                className="cursor-pointer"
+                            >
                                 Filter By Oldest
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => handleFilterChange("a-z")}
+                                className="cursor-pointer"
+                            >
                                 Filter By A-Z
                             </DropdownMenuItem>
-                            <DropdownMenuItem className="cursor-pointer">
+                            <DropdownMenuItem
+                                onSelect={() => handleFilterChange("z-a")}
+                                className="cursor-pointer"
+                            >
                                 Filter By Z-A
                             </DropdownMenuItem>
                         </DropdownMenuContent>
