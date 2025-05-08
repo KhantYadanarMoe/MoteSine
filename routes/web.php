@@ -81,6 +81,7 @@ Route::post("contact/send", [ContactController::class, 'send']);
 Route::get('/api/contacts/{id}', [ContactController::class, 'show']);
 Route::post('/api/contacts/marked/{id}', [ContactController::class, 'mark']);
 Route::delete('/api/contact/{contact}', [ContactController::class, 'delete']);
+Route::post('/api/contacts/reply/{id}', [ContactController::class, 'replyToContact']);
 
 Route::get('/api/jobs', [JobController::class, 'index']);
 Route::post("/api/job/create", [JobController::class, 'store']);

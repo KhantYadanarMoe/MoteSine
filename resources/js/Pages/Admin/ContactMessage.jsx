@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function ContactMessage() {
     const { id } = useParams();
@@ -41,6 +42,24 @@ export default function ContactMessage() {
             }));
         } catch (error) {
             console.error("Failed to mark contact:", error);
+        }
+    };
+
+    const [replyText, setReplyText] = useState("");
+
+    const handleReply = async () => {
+        try {
+            const res = await axios.post(`/api/contacts/reply/${contact.id}`, {
+                message: replyText,
+            });
+
+            if (res.data.contact) {
+                setShowReply(false);
+                setContact(res.data.contact); // update UI
+                setReplyText(""); // clear box
+            }
+        } catch (err) {
+            console.error("Failed to send reply:", err);
         }
     };
 
@@ -115,9 +134,15 @@ export default function ContactMessage() {
                     <Textarea
                         placeholder="Type your reply here..."
                         className="w-full"
+                        name="message"
+                        value={replyText}
+                        onChange={(e) => setReplyText(e.target.value)}
                     />
                     <div className="flex justify-end mt-3">
-                        <Button className="mt-2 bg-accentGreen text-white">
+                        <Button
+                            onClick={handleReply}
+                            className="mt-2 bg-accentGreen text-white"
+                        >
                             Send
                         </Button>
                     </div>
