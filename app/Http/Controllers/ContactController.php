@@ -41,16 +41,30 @@ class ContactController extends Controller
         ]);
     }
 
-    public function index(){
+    public function index(Request $request){
+        $filter = $request->query('filter', 'all'); 
+        $query = Contact::query();
 
-        // take data from backend database
-        $contacts = Contact::latest()->get();
+        switch ($filter) {
+            case 'new':
+                $query->where('replied', false);
+                break;
+            case 'replied':
+                $query->where('replied', true);
+                break;
+            case 'all':
+            default:
+                break;
+        }
 
-        // send data to frontend
+        $contacts = $query->latest()->get();
+
         return response()->json([
+            'message' => 'Contact messages retrieved successfully.',
             'contacts' => $contacts
         ]);
     }
+
 
     public function show($id){
         $contact = Contact::find($id); // Find contact by ID

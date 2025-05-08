@@ -77,6 +77,29 @@ export default function ContactsList() {
         }
     };
 
+    const [selectedFilter, setSelectedFilter] = useState("all");
+
+    const handleFilterChange = (filterValue) => {
+        setSelectedFilter(filterValue);
+
+        axios
+            .get(`/api/contacts?filter=${filterValue}`)
+            .then((response) => {
+                const data = response.data;
+                if (data.contacts) {
+                    setContacts(data.contacts);
+                    console.log(data.contact);
+                }
+            })
+            .catch((error) => {
+                console.error("Axios request failed:", error);
+            });
+    };
+
+    useEffect(() => {
+        handleFilterChange("all"); // initial load
+    }, []);
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -90,16 +113,31 @@ export default function ContactsList() {
             </h1>
             <ul className="mt-7 mb-4 flex space-x-7">
                 <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
-                        New
+                    <button
+                        onClick={() => handleFilterChange("all")}
+                        className="relative hover:text-gray-950 group"
+                    >
+                        All
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
+                    </button>
                 </li>
                 <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
+                    <button
+                        onClick={() => handleFilterChange("new")}
+                        className="relative hover:text-gray-950 group"
+                    >
+                        New
+                        <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
+                    </button>
+                </li>
+                <li>
+                    <button
+                        onClick={() => handleFilterChange("replied")}
+                        className="relative hover:text-gray-950 group"
+                    >
                         Replied
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
+                    </button>
                 </li>
             </ul>
             <ul className="my-3">
