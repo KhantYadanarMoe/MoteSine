@@ -5,16 +5,18 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         axios
             .get("http://localhost:8000/api/user", { withCredentials: true })
             .then((res) => setUser(res.data))
-            .catch(() => setUser(null));
+            .catch(() => setUser(null))
+            .finally(() => setLoading(false));
     }, []);
 
     return (
-        <AuthContext.Provider value={{ user, setUser }}>
+        <AuthContext.Provider value={{ user, setUser, loading }}>
             {children}
         </AuthContext.Provider>
     );

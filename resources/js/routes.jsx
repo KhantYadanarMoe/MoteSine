@@ -47,6 +47,7 @@ import JobPosts from "./Pages/Admin/JobPosts";
 import Reviews from "./Pages/User/Reviews";
 import PartnershipApproved from "./Pages/Admin/PartnershipApproved";
 import PartnershipRejected from "./Pages/Admin/PartnershipRejected";
+import ProtectedRoute from "./Components/ProtectedRoute";
 
 const routes = createBrowserRouter([
     {
@@ -105,7 +106,11 @@ const routes = createBrowserRouter([
     },
     {
         path: "/user",
-        element: <UserLayout />,
+        element: (
+            <ProtectedRoute>
+                <UserLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "/user",
@@ -139,7 +144,11 @@ const routes = createBrowserRouter([
     },
     {
         path: "/admin",
-        element: <AdminLayout />,
+        element: (
+            <ProtectedRoute>
+                <AdminLayout />
+            </ProtectedRoute>
+        ),
         children: [
             {
                 path: "/admin",

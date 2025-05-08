@@ -24,9 +24,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return Inertia::render('Dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,8 +36,8 @@ Route::middleware('auth')->group(function () {
 
 require __DIR__.'/auth.php';
 
-Route::get('auth/google', [AuthController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
+Route::middleware('guest')->get('auth/google', [AuthController::class, 'redirectToGoogle']);
+Route::middleware('guest')->get('auth/google/callback', [AuthController::class, 'handleGoogleCallback']);
 
 Route::get('/{any}', function () {
     return view('app');
@@ -62,7 +62,7 @@ Route::put('/api/product/{product}', [ProductsController::class, 'update']);
 Route::delete('/api/product/{product}', [ProductsController::class, 'delete']);
 
 Route::get('/api/users', [AuthController::class, 'index']);
-Route::put('/api/user/{user}', [AuthController::class, 'updateUser']);
+Route::middleware('auth:sanctum')->put('/api/user/{user}', [AuthController::class, 'updateUser']);
 Route::post('/api/users/banned/{id}', [AuthController::class, 'ban']);
 Route::delete('/api/user/{user}', [AuthController::class, 'delete']);
 
