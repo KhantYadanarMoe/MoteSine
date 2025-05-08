@@ -107,114 +107,107 @@ export default function ContactsList() {
                     contacts.map((contact) => (
                         <li
                             key={contact.id}
-                            className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed"
+                            className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed flex justify-between"
                         >
-                            <div className="flex justify-between">
-                                <Link to={`/admin/contact/${contact.id}`}>
-                                    <div className="flex gap-1 items-center">
-                                        <h1 className="text-sm md:text-base font-medium">
-                                            {contact.name}
-                                        </h1>
-                                        <p className="text-sm md:text-base text-gray-800">
-                                            sent you a message.
-                                        </p>
-                                        <p className="text-sm text-gray-700 hidden md:block ml-1">
-                                            {new Date(
-                                                contact.created_at
-                                            ).toLocaleTimeString([], {
-                                                hour: "2-digit",
-                                                minute: "2-digit",
-                                            })}
-                                        </p>
-                                        {contact.marked ? (
-                                            <Flag
-                                                size={16}
-                                                className="text-yellow-400 fill-yellow-400"
-                                            />
-                                        ) : null}
-                                    </div>
-                                    <span className="text-xs text-gray-800 mt-1 flex gap-1">
-                                        {contact.email}
-                                        <p className="hidden md:block">
-                                            | {contact.phone}
-                                        </p>
-                                    </span>
-                                    <div className="text-sm truncate text-gray-800 mt-2">
-                                        {contact.message
-                                            ?.split(" ")
-                                            .slice(0, 18)
-                                            .join(" ") + "..."}
-                                    </div>
-                                </Link>
-                                <div>
-                                    <DropdownMenu modal={false}>
-                                        <DropdownMenuTrigger asChild>
-                                            <button className="p-1 rounded-md outline-none">
-                                                <Ellipsis size={20} />
-                                            </button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent
-                                            align="end"
-                                            className="w-40"
-                                        >
-                                            <DropdownMenuItem
-                                                onClick={() =>
-                                                    markContact(
-                                                        contact.id,
-                                                        contact.marked
-                                                    )
-                                                }
-                                                className={
-                                                    contact.marked
-                                                        ? "text-accentRed"
-                                                        : "text-accentGreen"
-                                                }
-                                            >
-                                                {contact.marked
-                                                    ? "Remove Mark"
-                                                    : "Mark"}
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem asChild>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
-                                                            Delete
-                                                        </button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Are you sure you
-                                                                want to delete
-                                                                this contact
-                                                                message?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action
-                                                                cannot be
-                                                                undone.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                onClick={() =>
-                                                                    deleteContact(
-                                                                        contact.id
-                                                                    )
-                                                                }
-                                                            >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
+                            <Link to={`/admin/contact/${contact.id}`}>
+                                <div className="flex gap-1 items-center">
+                                    <h1 className="text-sm md:text-base font-medium">
+                                        {contact.name}
+                                    </h1>
+                                    <p className="text-sm md:text-base text-gray-800">
+                                        sent you a message.
+                                    </p>
+                                    <p className="text-sm text-gray-700 hidden md:block ml-1">
+                                        {new Date(
+                                            contact.created_at
+                                        ).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </p>
+                                    {contact.marked ? (
+                                        <Flag
+                                            size={16}
+                                            className="text-yellow-400 fill-yellow-400"
+                                        />
+                                    ) : null}
                                 </div>
+                                <span className="text-xs text-gray-800 mt-1 flex gap-1">
+                                    {contact.email}
+                                    <p className="hidden md:block">
+                                        | {contact.phone}
+                                    </p>
+                                </span>
+                                <div className="text-sm text-gray-800 mt-2 line-clamp-1 sm:line-clamp-1">
+                                    {contact.message}
+                                </div>
+                            </Link>
+                            <div>
+                                <DropdownMenu modal={false}>
+                                    <DropdownMenuTrigger asChild>
+                                        <button className="p-1 rounded-md outline-none">
+                                            <Ellipsis size={20} />
+                                        </button>
+                                    </DropdownMenuTrigger>
+                                    <DropdownMenuContent
+                                        align="end"
+                                        className="w-40"
+                                    >
+                                        <DropdownMenuItem
+                                            onClick={() =>
+                                                markContact(
+                                                    contact.id,
+                                                    contact.marked
+                                                )
+                                            }
+                                            className={
+                                                contact.marked
+                                                    ? "text-accentRed"
+                                                    : "text-accentGreen"
+                                            }
+                                        >
+                                            {contact.marked
+                                                ? "Remove Mark"
+                                                : "Mark"}
+                                        </DropdownMenuItem>
+                                        <DropdownMenuItem asChild>
+                                            <AlertDialog>
+                                                <AlertDialogTrigger asChild>
+                                                    <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                        Delete
+                                                    </button>
+                                                </AlertDialogTrigger>
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Are you sure you
+                                                            want to delete this
+                                                            contact message?
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            This action cannot
+                                                            be undone.
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>
+                                                            Cancel
+                                                        </AlertDialogCancel>
+                                                        <AlertDialogAction
+                                                            onClick={() =>
+                                                                deleteContact(
+                                                                    contact.id
+                                                                )
+                                                            }
+                                                        >
+                                                            Delete
+                                                        </AlertDialogAction>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
+                                        </DropdownMenuItem>
+                                    </DropdownMenuContent>
+                                </DropdownMenu>
                             </div>
                         </li>
                     ))
