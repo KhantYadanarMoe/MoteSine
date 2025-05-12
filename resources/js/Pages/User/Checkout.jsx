@@ -7,9 +7,14 @@ import { Button } from "../../Components/ui/button";
 import { Input } from "../../Components/ui/input";
 import { Textarea } from "../../Components/ui/textarea";
 import { motion } from "framer-motion";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Checkout() {
     const [count, setCount] = useState(1);
+    const { cartItems, updateQuantity } = useCart();
+
+    console.log(cartItems);
+
     return (
         <div className="px-4 md:px-6 py-7 bg-lightBackground lg:flex gap-5">
             <motion.div
@@ -113,115 +118,95 @@ export default function Checkout() {
                     <div>
                         <h1 className="text-lg font-medium">Order Summary</h1>
                         <div className="px-0 md:px-4 py-5 mt-3">
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-2">
-                                    <img
-                                        src={Mohinga}
-                                        alt=""
-                                        className="w-16 h-auto"
-                                    />
+                            {cartItems.map((item) => (
+                                <div
+                                    key={item.id}
+                                    className="flex justify-between items-center mb-6"
+                                >
+                                    <div className="flex items-center gap-2">
+                                        <img
+                                            src={
+                                                `/storage/${item.image}` ||
+                                                "/default-food.jpg"
+                                            }
+                                            alt={item.title}
+                                            className="w-16 h-auto rounded-full"
+                                        />
+                                        <div>
+                                            <h1 className="font-medium">
+                                                {item.title}
+                                            </h1>
+                                            {item.promotion ? (
+                                                <div>
+                                                    <span className="text-red-600 font-semibold">
+                                                        $
+                                                        {item.finalPrice.toFixed(
+                                                            2
+                                                        )}
+                                                    </span>
+                                                    <span className="line-through text-sm text-gray-500 ml-2">
+                                                        $
+                                                        {item.originalPrice.toFixed(
+                                                            2
+                                                        )}
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <span>
+                                                    $
+                                                    {item.originalPrice.toFixed(
+                                                        2
+                                                    )}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
                                     <div>
-                                        <h1 className="font-medium">Mohinga</h1>
-                                        <p className="text-sm text-gray-800">
-                                            6.12 $
-                                        </p>
+                                        <div className="flex items-center space-x-1 p-1 border border-gray-300 rounded-sm shadow-sm">
+                                            <button
+                                                onClick={() =>
+                                                    updateQuantity(item.id, -1)
+                                                }
+                                                className="px-3 py-1"
+                                            >
+                                                <Minus size={16} />
+                                            </button>
+                                            <span className="text-base font-medium">
+                                                {item.quantity}
+                                            </span>
+                                            <button
+                                                onClick={() =>
+                                                    updateQuantity(item.id, 1)
+                                                }
+                                                className="px-3 py-1"
+                                            >
+                                                <Plus size={16} />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                                <div>
-                                    <div className="flex items-center space-x-1 p-1 border border-gray-300 rounded-sm shadow-sm">
-                                        <button
-                                            onClick={() => setCount(count - 1)}
-                                            className="px-3 py-1"
-                                        >
-                                            <Minus size={16} />
-                                        </button>
-                                        <span className="text-base font-medium">
-                                            {count}
-                                        </span>
-                                        <button
-                                            onClick={() => setCount(count + 1)}
-                                            className="px-3 py-1"
-                                        >
-                                            <Plus size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-2">
-                                    <img
-                                        src={Mohinga}
-                                        alt=""
-                                        className="w-16 h-auto"
-                                    />
-                                    <div>
-                                        <h1 className="font-medium">Mohinga</h1>
-                                        <p className="text-sm text-gray-800">
-                                            6.12 $
-                                        </p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="flex items-center space-x-1 p-1 border border-gray-300 rounded-sm shadow-sm">
-                                        <button
-                                            onClick={() => setCount(count - 1)}
-                                            className="px-3 py-1"
-                                        >
-                                            <Minus size={16} />
-                                        </button>
-                                        <span className="text-base font-medium">
-                                            {count}
-                                        </span>
-                                        <button
-                                            onClick={() => setCount(count + 1)}
-                                            className="px-3 py-1"
-                                        >
-                                            <Plus size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="flex justify-between items-center mb-6">
-                                <div className="flex items-center gap-2">
-                                    <img
-                                        src={Mohinga}
-                                        alt=""
-                                        className="w-16 h-auto"
-                                    />
-                                    <div>
-                                        <h1 className="font-medium">Mohinga</h1>
-                                        <p className="text-sm text-gray-800">
-                                            6.12 $
-                                        </p>
-                                    </div>
-                                </div>
-                                <div>
-                                    <div className="flex items-center space-x-1 p-1 border border-gray-300 rounded-sm shadow-sm">
-                                        <button
-                                            onClick={() => setCount(count - 1)}
-                                            className="px-3 py-1"
-                                        >
-                                            <Minus size={16} />
-                                        </button>
-                                        <span className="text-base font-medium">
-                                            {count}
-                                        </span>
-                                        <button
-                                            onClick={() => setCount(count + 1)}
-                                            className="px-3 py-1"
-                                        >
-                                            <Plus size={16} />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
+
+                    {/* Subtotal & Confirm */}
                     <div>
                         <hr className="border-t-gray-400" />
                         <div className="flex justify-between my-5">
                             <h1 className="text-sm">Subtotal - </h1>
-                            <p className="text-gray-800 font-medium">45.78 $</p>
+                            <p className="text-gray-800 font-medium">
+                                $
+                                {cartItems
+                                    .reduce(
+                                        (total, item) =>
+                                            total +
+                                            (item.finalPrice ||
+                                                item.originalPrice) *
+                                                item.quantity, // Use finalPrice if available, otherwise originalPrice
+                                        0
+                                    )
+                                    .toFixed(2)}
+                            </p>
                         </div>
                         <div className="flex justify-between my-2">
                             <h1 className="text-sm">Shipping - </h1>
@@ -230,7 +215,19 @@ export default function Checkout() {
                         <hr className="border-gray-400 my-5" />
                         <div className="flex justify-between my-2">
                             <h1 className="text-sm">Total - </h1>
-                            <p className="text-gray-800 font-medium">45.78 $</p>
+                            <p className="text-gray-800 font-medium">
+                                $
+                                {cartItems
+                                    .reduce(
+                                        (total, item) =>
+                                            total +
+                                            (item.finalPrice ||
+                                                item.originalPrice) *
+                                                item.quantity,
+                                        0
+                                    )
+                                    .toFixed(2)}
+                            </p>
                         </div>
                         <Button
                             variant="default"

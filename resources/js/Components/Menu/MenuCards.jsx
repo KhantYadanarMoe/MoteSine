@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
 
 export default function MenuCards() {
     // state to store menus
@@ -21,6 +22,8 @@ export default function MenuCards() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 6;
+
+    const { addToCart } = useCart();
 
     // fetch data that send from backend
     let getMenus = async () => {
@@ -141,7 +144,7 @@ export default function MenuCards() {
                                         ) : (
                                             <span>{menu.price} $</span>
                                         )}
-                                        <button>
+                                        <button onClick={() => addToCart(menu)}>
                                             <ShoppingCart
                                                 size={24}
                                                 className="text-accentRed"
