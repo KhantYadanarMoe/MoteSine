@@ -33,10 +33,21 @@ const generateTimes = (minTime, maxTime) => {
         });
 };
 
-export default function TimePicker({ minTime = 540, maxTime = 1320 }) {
-    const [selectedTime, setSelectedTime] = React.useState(null);
+export default function TimePicker({
+    minTime = 540,
+    maxTime = 1320,
+    name,
+    selectedTime,
+    onTimeChange,
+}) {
+    const [internalTime, setInternalTime] = React.useState(selectedTime || "");
 
-    // Generate times based on the minTime and maxTime props
+    React.useEffect(() => {
+        if (selectedTime !== internalTime) {
+            setInternalTime(selectedTime);
+        }
+    }, [selectedTime]);
+
     const times = generateTimes(minTime, maxTime);
 
     return (
@@ -46,7 +57,7 @@ export default function TimePicker({ minTime = 540, maxTime = 1320 }) {
                     variant="outline"
                     className="w-full border-b text-left justify-start text-gray-600 border-gray-500"
                 >
-                    {selectedTime || "Select Time"}
+                    {internalTime || "Select Time"}
                 </Button>
             </PopoverTrigger>
             <PopoverContent className="w-36 p-0">
@@ -56,7 +67,10 @@ export default function TimePicker({ minTime = 540, maxTime = 1320 }) {
                             <div
                                 key={time}
                                 className="p-2 cursor-pointer hover:bg-gray-100 rounded-md"
-                                onClick={() => setSelectedTime(time)}
+                                onClick={() => {
+                                    setInternalTime(time);
+                                    if (onTimeChange) onTimeChange(time);
+                                }}
                             >
                                 {time}
                             </div>

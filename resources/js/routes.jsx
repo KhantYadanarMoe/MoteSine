@@ -79,7 +79,7 @@ const routes = createBrowserRouter([
                 element: <Checkout />,
             },
             {
-                path: "/reviews",
+                path: "/review",
                 element: <Reviews />,
             },
             {

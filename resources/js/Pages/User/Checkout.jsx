@@ -8,10 +8,108 @@ import { Input } from "../../Components/ui/input";
 import { Textarea } from "../../Components/ui/textarea";
 import { motion } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
+import { format } from "date-fns";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export default function Checkout() {
     const [count, setCount] = useState(1);
     const { cartItems, updateQuantity } = useCart();
+
+    // prepare state to store form data
+    const [form, setForm] = useState({
+        name: "",
+        phone: "",
+        email: "",
+        address: "",
+        date: "",
+        time: "",
+        note: "",
+    });
+    // store errors state
+    const [errors, setErrors] = useState({});
+    // use state to check dialog open or not and control
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    // prepare to move another route/page after sending data
+    const navigate = useNavigate();
+
+    // Handle HTML inputs
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    // Handle other custom components' inputs
+    const handleCustomChange = (name, value) => {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const submit = async (e) => {
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        console.log("Form data before appending:", form);
+
+        // Basic order info
+        formData.append("name", form.name);
+        formData.append("phone", form.phone);
+        formData.append("email", form.email);
+        formData.append("address", form.address);
+        formData.append("note", form.note);
+        formData.append("date", format(new Date(form.date), "yyyy-MM-dd"));
+        formData.append("time", form.time);
+
+        const total = cartItems.reduce(
+            (totalValue, item) =>
+                totalValue +
+                (item.finalPrice || item.originalPrice) * item.quantity,
+            0
+        );
+        formData.append("total", total.toFixed(2));
+
+        // Cart items
+        cartItems.forEach((item, index) => {
+            formData.append(`items[${index}][id]`, item.id);
+            formData.append(`items[${index}][menu_id]`, item.menu_id);
+            formData.append(`items[${index}][title]`, item.title);
+            formData.append(
+                `items[${index}][price]`,
+                (item.finalPrice || item.originalPrice).toFixed(2)
+            );
+            formData.append(`items[${index}][quantity]`, item.quantity);
+        });
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute("content");
+
+            const res = await axios.post("/api/orders/create", formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            if (res.data.message === "Order created successfully.") {
+                console.log("Order submitted!");
+                navigate("/review");
+            }
+        } catch (error) {
+            console.error("Failed to submit order:", error);
+            if (error.response?.status === 422) {
+                setErrors(error.response.data.errors);
+            }
+        }
+    };
 
     console.log(cartItems);
 
@@ -36,6 +134,9 @@ export default function Checkout() {
                             <label htmlFor="name">Name</label>
                             <Input
                                 id="name"
+                                name="name"
+                                value={form.name}
+                                onChange={handleInputChange}
                                 type="text"
                                 placeholder="Enter your name"
                                 className="mt-1 border-gray-500"
@@ -47,6 +148,9 @@ export default function Checkout() {
                                 <Input
                                     id="phone"
                                     type="text"
+                                    name="phone"
+                                    value={form.phone}
+                                    onChange={handleInputChange}
                                     placeholder="Enter your phone"
                                     className="mt-1 border-gray-500"
                                 />
@@ -56,6 +160,9 @@ export default function Checkout() {
                                 <Input
                                     id="email"
                                     type="text"
+                                    name="email"
+                                    value={form.email}
+                                    onChange={handleInputChange}
                                     placeholder="Enter your email"
                                     className="mt-1 border-gray-500"
                                 />
@@ -66,6 +173,9 @@ export default function Checkout() {
                             <Textarea
                                 id="address"
                                 type="text"
+                                name="address"
+                                value={form.address}
+                                onChange={handleInputChange}
                                 placeholder="Enter your address"
                                 className="mt-1 border-gray-500"
                             ></Textarea>
@@ -80,17 +190,34 @@ export default function Checkout() {
                     >
                         <div className="mb-3 flex flex-col gap-2">
                             <label htmlFor="date">Date</label>
-                            <DatePicker />
+                            <DatePicker
+                                name="date"
+                                selectedDate={form.date}
+                                onDateChange={(date) =>
+                                    handleCustomChange("date", date)
+                                }
+                            />
                         </div>
                         <div className="mb-3 flex flex-col gap-2">
                             <label htmlFor="time">Time</label>
-                            <TimePicker minTime={540} maxTime={1320} />
+                            <TimePicker
+                                minTime={540}
+                                maxTime={1320}
+                                name="time"
+                                selectedTime={form.time}
+                                onTimeChange={(time) =>
+                                    handleCustomChange("time", time)
+                                }
+                            />
                         </div>
                         <div className="mb-3 flex flex-col gap-2">
                             <label htmlFor="note">Note</label>
                             <Textarea
                                 id="note"
                                 type="text"
+                                name="note"
+                                value={form.note}
+                                onChange={handleInputChange}
                                 placeholder="Write something..."
                                 className="mt-1 border-gray-500"
                             ></Textarea>
@@ -230,6 +357,7 @@ export default function Checkout() {
                             </p>
                         </div>
                         <Button
+                            onClick={submit}
                             variant="default"
                             className="rounded-lg w-full mt-5 bg-accentRed text-white hover:bg-hoverRed duration-300"
                         >

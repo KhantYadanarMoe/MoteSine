@@ -9,4 +9,8 @@ class Menu extends Model
     protected $fillable = [
         'title', 'category', 'desc', 'price', 'promotion', 'startDate', 'endDate', 'featured', 'visibility', 'image'
     ];
+
+    public function orderItems(){
+        return $this->hasMany(OrderItem::class);  
+    }
 }
