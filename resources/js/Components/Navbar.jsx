@@ -4,11 +4,13 @@ import Logo from "../../images/logo.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import { useCart } from "@/contexts/CartContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const { user, setUser } = useAuth();
+    const { cartItems } = useCart();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -97,7 +99,7 @@ const Navbar = () => {
                         to="/checkout"
                         className="relative text-gray-800 hover:text-gray-950 group"
                     >
-                        Cart (0)
+                        Cart ({cartItems.length})
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
                     </Link>
 
