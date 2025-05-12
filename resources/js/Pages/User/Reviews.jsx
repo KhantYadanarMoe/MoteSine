@@ -76,7 +76,7 @@ export default function Reviews() {
                     review: "",
                 });
                 setRating(0);
-                navigate("/reviews");
+                navigate("/review");
             }
         } catch (error) {
             console.error("Error sending review:", error);
