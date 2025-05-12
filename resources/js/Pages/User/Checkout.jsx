@@ -14,7 +14,7 @@ import axios from "axios";
 
 export default function Checkout() {
     const [count, setCount] = useState(1);
-    const { cartItems, updateQuantity } = useCart();
+    const { cartItems, updateQuantity, clearCart } = useCart();
 
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -101,6 +101,18 @@ export default function Checkout() {
 
             if (res.data.message === "Order created successfully.") {
                 console.log("Order submitted!");
+                setForm({
+                    name: "",
+                    phone: "",
+                    email: "",
+                    address: "",
+                    date: "",
+                    time: "",
+                    note: "",
+                });
+
+                // ✅ Clear cart
+                clearCart();
                 navigate("/review");
             }
         } catch (error) {
