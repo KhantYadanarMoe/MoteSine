@@ -195,7 +195,7 @@ const routes = createBrowserRouter([
                 element: <AdminOrderHistories />,
             },
             {
-                path: "/admin/order",
+                path: "/admin/order/:id",
                 element: <AdminOrderDetails />,
             },
             {

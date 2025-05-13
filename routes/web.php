@@ -62,7 +62,9 @@ Route::get('/api/product/{id}', [ProductsController::class, 'show']);
 Route::put('/api/product/{product}', [ProductsController::class, 'update']);
 Route::delete('/api/product/{product}', [ProductsController::class, 'delete']);
 
+Route::get('/api/orders', [OrdersController::class, 'index']);
 Route::post("/api/orders/create", [OrdersController::class, 'order']);
+Route::get('/api/order/{id}', [OrdersController::class, 'orderDetails']);
 
 Route::get('/api/users', [AuthController::class, 'index']);
 Route::middleware('auth:sanctum')->put('/api/user/{user}', [AuthController::class, 'updateUser']);

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class OrdersController extends Controller
@@ -30,10 +31,18 @@ class OrdersController extends Controller
             ], 422);
         }
 
+        // If the user is logged in, fetch user data
+        $user = Auth::user();
+        
+        // Generate a unique order number (e.g., ORD-20230512-1234)
+        $orderNumber = '#' . mt_rand(1000, 9999);
+
         $order = Order::create([
-            'name' => request('name'),
+            'order_number' => $orderNumber, 
+            'user_id' => $user->id,  
+            'name' => $user ? $user->name : request('name'),  
             'phone' => request('phone'),
-            'email' => request('email'),
+            'email' => $user ? $user->email : request('email'),
             'address' => request('address'),
             'date' => request('date'),
             'time' => request('time'),
@@ -53,6 +62,27 @@ class OrdersController extends Controller
             'message' => 'Order created successfully.',
             'order' => $order->load('items'), 
         ]);
+    }
+
+    public function index(){
+        // Fetch all orders with their related order items
+        $orders = Order::with('items')->latest()->get();
+
+        return response()->json([
+            'orders' => $orders
+        ]);
+    }
+
+    public function orderDetails($id){
+        $order = Order::with('items.menu')->find($id);; 
+
+        // Check if order exists
+        if ($order) {
+            return response()->json(['order' => $order]);
+        } else {
+            // If order not found, return a 404 with a message
+            return response()->json(['message' => 'Order not found'], 404);
+        }
     }
 
 }

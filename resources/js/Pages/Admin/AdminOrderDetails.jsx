@@ -4,6 +4,10 @@ import Mohinga from "../../../images/Mohinga.png";
 import Profile from "../../../images/profile.jpg";
 import { ReceiptText } from "lucide-react";
 import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
+import dayjs from "dayjs";
 
 export default function AdminOrderDetails() {
     const [progress, setProgress] = React.useState(13);
@@ -12,6 +16,27 @@ export default function AdminOrderDetails() {
         const timer = setTimeout(() => setProgress(66), 500);
         return () => clearTimeout(timer);
     }, []);
+
+    // take id for edit feature
+    let { id } = useParams();
+
+    const [orderDetails, setOrderDetails] = useState(null);
+
+    // fetch data to show prev data in input fields
+    let getDetails = async (id) => {
+        let res = await fetch("http://localhost:8000/api/order/" + id);
+        let data = await res.json();
+        setOrderDetails(data.order);
+    };
+
+    // call data fetching function depend on id changes
+    useEffect(() => {
+        getDetails(id);
+    }, [id]);
+
+    const subtotal = orderDetails?.items?.reduce((acc, item) => {
+        return acc + item.quantity * parseFloat(item.price);
+    }, 0);
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -22,7 +47,9 @@ export default function AdminOrderDetails() {
         >
             <div className="md:w-[60%] lg:w-[70%]">
                 <div className="flex items-center gap-2">
-                    <h1 className="text-xl font-medium">#432782</h1>
+                    <h1 className="text-xl font-medium">
+                        {orderDetails?.order_number}
+                    </h1>
                     <div>
                         <span className="text-accentYellow border border-accentYellow rounded-lg text-sm px-2 py-1">
                             In progress
@@ -30,7 +57,9 @@ export default function AdminOrderDetails() {
                     </div>
                 </div>
                 <p className="text-sm text-gray-700 mt-2">
-                    April 23, 2025 at 5:00 PM
+                    {dayjs(orderDetails?.created_at).format(
+                        "MMMM D, YYYY [at] h:mm A"
+                    )}
                 </p>
                 <div className="my-5 px-3 py-4 bg-white shadow-lg rounded-md">
                     <h1 className="font-medium text-lg">Order Progress</h1>
@@ -91,82 +120,36 @@ export default function AdminOrderDetails() {
                                 Total
                             </li>
                         </ul>
-                        <ul className="flex items-center justify-between mt-2 py-3 px-3 shadow-md">
-                            <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
-                                <img
-                                    src={Mohinga}
-                                    alt="mohinga"
-                                    className="w-12 h-12 object-cover"
-                                />
-                                <h1 className="font-medium text-sm">Mohinga</h1>
-                            </li>
-                            <li className="basis-[15%] md:basis-[12%] ml-1 text-sm">
-                                x 2
-                            </li>
-                            <li className="md:basis-[18%] hidden md:block ml-1 text-sm">
-                                6.12
-                            </li>
-                            <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
-                                12.24 $
-                            </li>
-                        </ul>
-                        <ul className="flex items-center justify-between mt-2 py-3 px-3 shadow-md">
-                            <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
-                                <img
-                                    src={Mohinga}
-                                    alt="mohinga"
-                                    className="w-12 h-12 object-cover"
-                                />
-                                <h1 className="font-medium text-sm">Mohinga</h1>
-                            </li>
-                            <li className="basis-[15%] md:basis-[12%] ml-1 text-sm">
-                                x 2
-                            </li>
-                            <li className="md:basis-[18%] hidden md:block ml-1 text-sm">
-                                6.12
-                            </li>
-                            <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
-                                12.24 $
-                            </li>
-                        </ul>
-                        <ul className="flex items-center justify-between mt-2 py-3 px-3 shadow-md">
-                            <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
-                                <img
-                                    src={Mohinga}
-                                    alt="mohinga"
-                                    className="w-12 h-12 object-cover"
-                                />
-                                <h1 className="font-medium text-sm">Mohinga</h1>
-                            </li>
-                            <li className="basis-[15%] md:basis-[12%] ml-1 text-sm">
-                                x 2
-                            </li>
-                            <li className="md:basis-[18%] hidden md:block ml-1 text-sm">
-                                6.12
-                            </li>
-                            <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
-                                12.24 $
-                            </li>
-                        </ul>
-                        <ul className="flex items-center justify-between mt-2 py-3 px-3 shadow-md">
-                            <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
-                                <img
-                                    src={Mohinga}
-                                    alt="mohinga"
-                                    className="w-12 h-12 object-cover"
-                                />
-                                <h1 className="font-medium text-sm">Mohinga</h1>
-                            </li>
-                            <li className="basis-[15%] md:basis-[12%] ml-1 text-sm">
-                                x 2
-                            </li>
-                            <li className="md:basis-[18%] hidden md:block ml-1 text-sm">
-                                6.12
-                            </li>
-                            <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
-                                12.24 $
-                            </li>
-                        </ul>
+                        {orderDetails?.items?.map((item, index) => (
+                            <ul
+                                key={index}
+                                className="flex items-center justify-between mt-2 py-3 px-3 shadow-md"
+                            >
+                                <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
+                                    <img
+                                        src={
+                                            item.menu.image
+                                                ? `/storage/${item.menu.image}`
+                                                : Mohinga
+                                        }
+                                        alt={item.title}
+                                        className="w-12 h-12 object-cover rounded-full"
+                                    />
+                                    <h1 className="font-medium text-sm">
+                                        {item.title}
+                                    </h1>
+                                </li>
+                                <li className="basis-[15%] md:basis-[12%] ml-1 text-sm">
+                                    x {item.quantity}
+                                </li>
+                                <li className="md:basis-[18%] hidden md:block ml-1 text-sm">
+                                    {item.price}
+                                </li>
+                                <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
+                                    {(item.quantity * item.price).toFixed(2)} $
+                                </li>
+                            </ul>
+                        ))}
                     </div>
                 </div>
                 <div className="my-5 px-3 py-4 border-t-2 border-t-accentRed bg-white shadow-lg rounded-md">
@@ -176,23 +159,26 @@ export default function AdminOrderDetails() {
                             <h1 className="text-sm font-medium">
                                 Scheduled Date -
                             </h1>
-                            <p className="text-sm">23.3.2025</p>
+                            <p className="text-sm">
+                                {dayjs(orderDetails?.created_at).format(
+                                    "MMMM D, YYYY"
+                                )}
+                            </p>
                         </div>
                         <div className="flex justify-between mb-3">
                             <h1 className="text-sm font-medium">
                                 Scheduled Time -
                             </h1>
-                            <p className="text-sm">12:45 PM</p>
+                            <p className="text-sm">
+                                {" "}
+                                {dayjs(orderDetails?.created_at).format(
+                                    "h:mm A"
+                                )}
+                            </p>
                         </div>
                         <div className="mb-3">
                             <h1 className="text-sm font-medium">Note -</h1>
-                            <p className="mt-1 text-sm">
-                                Lorem ipsum dolor sit amet, consectetur
-                                adipisicing elit. Quidem, consequuntur corrupti
-                                sequi qui libero dolorem sed doloribus nobis,
-                                ullam enim, sunt labore voluptatibus tenetur
-                                incidunt quia odio.
-                            </p>
+                            <p className="mt-1 text-sm">{orderDetails?.note}</p>
                         </div>
                     </div>
                 </div>
@@ -206,24 +192,28 @@ export default function AdminOrderDetails() {
                     <div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Sub Total - </p>
-                            <p className=" text-black">74.87 $ </p>
+                            <p className=" text-black">{subtotal} $ </p>
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Discount - </p>
-                            <p className=" text-black">1 $ </p>
+                            <p className=" text-black">0.00 $ </p>
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Delivery Charge - </p>
-                            <p className=" text-black">0 $ </p>
+                            <p className=" text-black">0.00 $ </p>
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Tax (10%) - </p>
-                            <p className=" text-black">6.12 $ </p>
+                            <p className=" text-black">
+                                {(subtotal * 0.1).toFixed(2)} ${" "}
+                            </p>
                         </div>
                         <hr className="border-t-gray-400 my-6" />
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Total - </p>
-                            <p className=" text-black">79.12 $ </p>
+                            <p className=" text-black">
+                                {subtotal + subtotal * 0.1} ${" "}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -236,9 +226,11 @@ export default function AdminOrderDetails() {
                             className="w-12 h-12 rounded-full object-cover"
                         />
                         <div>
-                            <h1 className="font-medium">Khant Yadanar Moe</h1>
+                            <h1 className="font-medium">
+                                {orderDetails?.name}
+                            </h1>
                             <p className="text-xs text-gray-800">
-                                khantyadanarmoe489@gmail.com
+                                {orderDetails?.email}
                             </p>
                         </div>
                     </div>
@@ -247,7 +239,7 @@ export default function AdminOrderDetails() {
                         <div className="my-5">
                             <p className="text-gray-700 mb-2">Phone - </p>
                             <p className="text-sm text-black">
-                                (723) 732-760-576
+                                {orderDetails?.phone}
                             </p>
                         </div>
                         <div className="my-5">
@@ -255,16 +247,7 @@ export default function AdminOrderDetails() {
                                 Delivery Address -{" "}
                             </p>
                             <p className="text-sm text-black">
-                                Wilson's Jewelers LTD 1344 Hershell Hollow Road
-                                , Tukwila, WA 98168 , United States
-                            </p>
-                        </div>
-                        <div className="my-5">
-                            <p className="text-gray-700 mb-2">Note - </p>
-                            <p className="text-sm text-black">
-                                Lorem ipsum dolor sit, amet consectetur
-                                adipisicing elit. Atque amet quo exercitationem
-                                corrupti tenetur quidem, debitis nesciunt culpa?
+                                {orderDetails?.address}
                             </p>
                         </div>
                     </div>

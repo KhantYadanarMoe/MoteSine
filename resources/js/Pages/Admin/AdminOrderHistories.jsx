@@ -17,8 +17,42 @@ import { Link } from "react-router-dom";
 import { Ellipsis } from "lucide-react";
 import Profile from "../../../images/profile.jpg";
 import { motion } from "framer-motion";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function AdminOrderHistories() {
+    // state to store orders
+    let [orders, setOrders] = useState([]);
+
+    console.log("Order:", orders);
+    // state for pagination
+    const [currentPage, setCurrentPage] = useState(1);
+    // rows to show in a page
+    const rowsPerPage = 10;
+
+    // fetch data that send from backend
+    let getOrders = async () => {
+        let res = await axios.get("/api/orders");
+        let data = res.data;
+        setOrders(data.orders);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getOrders();
+    }, []);
+
+    // calculate the last items, first items and set orders to show
+    const indexOfLastOrder = currentPage * rowsPerPage;
+    const indexOfFirstOrder = indexOfLastOrder - rowsPerPage;
+    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
+
+    // function for pagination button
+    const handlePageChange = (page) => {
+        setCurrentPage(page);
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -27,7 +61,9 @@ export default function AdminOrderHistories() {
             viewport={{ once: false, amount: 0.2 }}
             className="mx-2 md:mx-4 my-8"
         >
-            <h1 className="text-lg font-medium">2,389 Orders Found</h1>
+            <h1 className="text-lg font-medium">
+                {orders.length} Orders Found
+            </h1>
             <ul className="mt-6 flex gap-3 items-center space-x-4">
                 <li>
                     <Link to="" className="relative hover:text-gray-950 group">
@@ -65,456 +101,97 @@ export default function AdminOrderHistories() {
                         <li className="basis-[20%]">Ordered at</li>
                         <li className="basis-[5%]"></li>
                     </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
-                    <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2">
-                        <li className="basis-[15%]">#3784</li>
-                        <li className="basis-[25%] flex gap-1 items-center">
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 object-cover rounded-full"
-                            />
-                            <p className="text-xs md:text-sm">
-                                Khant Yadanar Moe
-                            </p>
-                        </li>
-                        <li className="basis-[20%]">89.56 $</li>
-                        <li className="basis-[15%]">
-                            <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                Pending
-                            </span>
-                        </li>
-                        <li className="basis-[20%]">
-                            <p className="text-sm">23. 5. 2024</p>
-                            <p className="text-sm">12:23 PM</p>
-                        </li>
-                        <li className="basis-[5%]">
-                            <DropdownMenu modal={false}>
-                                <DropdownMenuTrigger asChild>
-                                    <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                        <Ellipsis size={20} />
-                                    </button>
-                                </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                    align="end"
-                                    className="w-40"
-                                >
-                                    <Link to="/admin/order">
-                                        <DropdownMenuItem className="text-accentGreen">
-                                            View Details
-                                        </DropdownMenuItem>
-                                    </Link>
-                                    <DropdownMenuItem className="text-accentRed">
-                                        Cancel
-                                    </DropdownMenuItem>
-                                </DropdownMenuContent>
-                            </DropdownMenu>
-                        </li>
-                    </ul>
+                    {currentOrders.length > 0 ? (
+                        currentOrders.map((order) => (
+                            <ul
+                                key={order.id}
+                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                            >
+                                <li className="basis-[15%]">
+                                    {order.order_number}
+                                </li>
+                                <li className="basis-[25%] flex gap-1 items-center">
+                                    <img
+                                        src={Profile}
+                                        // {order.user?.profileImage || Profile }
+                                        alt="Profile"
+                                        className="w-10 h-10 object-cover rounded-full"
+                                    />
+                                    <p className="text-xs md:text-sm">
+                                        {order.name}
+                                    </p>
+                                </li>
+                                <li className="basis-[20%]">
+                                    {(order.items ?? [])
+                                        .reduce(
+                                            (total, item) =>
+                                                total +
+                                                parseFloat(
+                                                    item.finalPrice ||
+                                                        item.originalPrice ||
+                                                        item.price ||
+                                                        0
+                                                ) *
+                                                    parseInt(
+                                                        item.quantity ?? 1
+                                                    ),
+                                            0
+                                        )
+                                        .toFixed(2)}
+                                    $
+                                </li>
+                                <li className="basis-[15%]">
+                                    <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
+                                        Pending
+                                    </span>
+                                </li>
+                                <li className="basis-[20%]">
+                                    <p className="text-sm">
+                                        {new Date(
+                                            order.created_at
+                                        ).toLocaleDateString()}
+                                    </p>
+                                    <p className="text-sm">
+                                        {new Date(
+                                            order.created_at
+                                        ).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                        c
+                                    </p>
+                                </li>
+                                <li className="basis-[5%]">
+                                    <DropdownMenu modal={false}>
+                                        <DropdownMenuTrigger asChild>
+                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                <Ellipsis size={20} />
+                                            </button>
+                                        </DropdownMenuTrigger>
+                                        <DropdownMenuContent
+                                            align="end"
+                                            className="w-40"
+                                        >
+                                            <Link
+                                                to={`/admin/order/${order.id}`}
+                                            >
+                                                <DropdownMenuItem className="text-accentGreen">
+                                                    View Details
+                                                </DropdownMenuItem>
+                                            </Link>
+                                            <DropdownMenuItem className="text-accentRed">
+                                                Cancel
+                                            </DropdownMenuItem>
+                                        </DropdownMenuContent>
+                                    </DropdownMenu>
+                                </li>
+                            </ul>
+                        ))
+                    ) : (
+                        <p className="text-center font-medium text-accentRed">
+                            Loading...
+                        </p> //add lazy loading after complete
+                    )}
                 </div>
             </div>
             <div className="mt-8 flex">
@@ -522,22 +199,45 @@ export default function AdminOrderHistories() {
                     <Pagination className="text-accentRed">
                         <PaginationContent>
                             <PaginationItem>
-                                <PaginationPrevious href="#" />
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className="cursor-pointer"
+                                />
                             </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        orders.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
                             <PaginationItem>
-                                <PaginationLink href="#">1</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#" isActive>
-                                    2
-                                </PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem>
-                                <PaginationLink href="#">3</PaginationLink>
-                            </PaginationItem>
-                            <PaginationItem></PaginationItem>
-                            <PaginationItem>
-                                <PaginationNext href="#" />
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className="cursor-pointer"
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(orders.length / rowsPerPage)
+                                    }
+                                />
                             </PaginationItem>
                         </PaginationContent>
                     </Pagination>
