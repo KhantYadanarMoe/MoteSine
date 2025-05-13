@@ -35,6 +35,10 @@ export default function AdminOrderDetails() {
         getDetails(id);
     }, [id]);
 
+    useEffect(() => {
+        console.log("Order Details Status: ", orderDetails?.status); // Debugging
+    }, [orderDetails]);
+
     const subtotal = orderDetails?.items?.reduce((acc, item) => {
         return acc + item.quantity * parseFloat(item.price);
     }, 0);
@@ -42,22 +46,22 @@ export default function AdminOrderDetails() {
     const STATUS_ORDER = [
         "confirmed",
         "processing",
-        "out_for_delivery",
+        "out for delivery",
         "delivered",
     ];
+
     const PROGRESS_MAP = {
         confirmed: 100,
         processing: [60, 100],
-        out_for_delivery: [70, 100],
+        "out for delivery": [70, 100],
         delivered: 100,
     };
-
     // Get progress value for a given step
     const getProgressValue = (step) => {
         const current = STATUS_ORDER.indexOf(orderDetails?.status);
         const target = STATUS_ORDER.indexOf(step);
 
-        if (step === "processing" || step === "out_for_delivery") {
+        if (step === "processing" || step === "out for delivery") {
             if (current > target) return PROGRESS_MAP[step][1];
             if (current === target) return PROGRESS_MAP[step][0];
             return 0;
@@ -83,7 +87,7 @@ export default function AdminOrderDetails() {
         const labels = {
             confirmed: "Start Processing",
             processing: "Out for Delivery",
-            out_for_delivery: "Mark as Delivered",
+            "out for delivery": "Mark as Delivered",
         };
         return labels[orderDetails?.status] || "";
     };
@@ -102,8 +106,31 @@ export default function AdminOrderDetails() {
                         {orderDetails?.order_number}
                     </h1>
                     <div>
-                        <span className="text-accentYellow border border-accentYellow rounded-lg text-sm px-2 py-1">
-                            In progress
+                        <span
+                            className={`rounded-lg text-sm px-2 py-1 border 
+                    ${
+                        orderDetails?.status === "confirmed"
+                            ? "text-accentGreen border-accentGreen"
+                            : ""
+                    }
+                    ${
+                        orderDetails?.status === "processing"
+                            ? "text-accentYellow border-accentYellow"
+                            : ""
+                    }
+                    ${
+                        orderDetails?.status === "out for delivery"
+                            ? "text-blue-300 border-blue-300"
+                            : ""
+                    }
+                    ${
+                        orderDetails?.status === "delivered"
+                            ? "text-gray-500 border-gray-500"
+                            : ""
+                    }
+                `}
+                        >
+                            {orderDetails?.status}
                         </span>
                     </div>
                 </div>
@@ -135,7 +162,7 @@ export default function AdminOrderDetails() {
                         </div>
                         <div>
                             <Progress
-                                value={getProgressValue("out_for_delivery")}
+                                value={getProgressValue("out for delivery")}
                                 className="w-[80%] [&>div]:bg-blue-300"
                             />
                             <p className="text-sm text-gray-700 mt-1">

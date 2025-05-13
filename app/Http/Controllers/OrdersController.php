@@ -109,10 +109,19 @@ class OrdersController extends Controller
         $order = Order::findOrFail($id);
 
         $validated = $request->validate([
-            'status' => 'required|in:confirmed,processing,out_for_delivery,delivered',
+            'status' => 'required|in:confirmed,processing,out for delivery,delivered',
         ]);
 
-        $order->status = $validated['status'];
+        // Map internal status to human-readable status
+    $statusMap = [
+        'confirmed' => 'confirmed',
+        'processing' => 'processing',
+        "out for delivery" => 'out for delivery',
+        'delivered' => 'delivered',
+    ];
+
+    // Set the human-readable status
+    $order->status = $statusMap[$validated['status']];
         $order->save();
 
         return response()->json(['success' => true, 'status' => $order->status]);

@@ -21,6 +21,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import OrderDetails from "../UserProfile/OrderDetails";
 
 export default function AdminOrderHistories() {
     // state to store orders
@@ -142,8 +143,31 @@ export default function AdminOrderHistories() {
                                     $
                                 </li>
                                 <li className="basis-[15%]">
-                                    <span className="text-accentYellow bg-yellow-100 px-1 py-1 text-sm rounded-sm">
-                                        Pending
+                                    <span
+                                        className={`px-1 py-1 text-sm rounded-sm 
+                                ${
+                                    order?.status === "confirmed"
+                                        ? "text-accentGreen bg-green-100"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "processing"
+                                        ? "text-accentYellow bg-yellow-100"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "out for delivery"
+                                        ? "text-blue-400 bg-blue-50"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "delivered"
+                                        ? "text-gray-500 bg-gray-100"
+                                        : ""
+                                }
+                            `}
+                                    >
+                                        {order?.status}
                                     </span>
                                 </li>
                                 <li className="basis-[20%]">
