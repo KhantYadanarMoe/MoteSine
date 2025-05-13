@@ -66,6 +66,7 @@ Route::post("/api/orders/create", [OrdersController::class, 'order']);
 Route::get('/api/orders', [OrdersController::class, 'index']);
 Route::get('/api/order/{id}', [OrdersController::class, 'orderDetails']);
 Route::get('/api/user/orders', [OrdersController::class, 'userOrders']);
+Route::put('/api/order/{id}/status', [OrdersController::class, 'updateStatus']);
 
 Route::get('/api/users', [AuthController::class, 'index']);
 Route::middleware('auth:sanctum')->put('/api/user/{user}', [AuthController::class, 'updateUser']);

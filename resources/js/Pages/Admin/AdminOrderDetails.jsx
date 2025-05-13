@@ -8,6 +8,7 @@ import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import axios from "axios";
 
 export default function AdminOrderDetails() {
     const [progress, setProgress] = React.useState(13);
@@ -37,6 +38,56 @@ export default function AdminOrderDetails() {
     const subtotal = orderDetails?.items?.reduce((acc, item) => {
         return acc + item.quantity * parseFloat(item.price);
     }, 0);
+
+    const STATUS_ORDER = [
+        "confirmed",
+        "processing",
+        "out_for_delivery",
+        "delivered",
+    ];
+    const PROGRESS_MAP = {
+        confirmed: 100,
+        processing: [60, 100],
+        out_for_delivery: [70, 100],
+        delivered: 100,
+    };
+
+    // Get progress value for a given step
+    const getProgressValue = (step) => {
+        const current = STATUS_ORDER.indexOf(orderDetails?.status);
+        const target = STATUS_ORDER.indexOf(step);
+
+        if (step === "processing" || step === "out_for_delivery") {
+            if (current > target) return PROGRESS_MAP[step][1];
+            if (current === target) return PROGRESS_MAP[step][0];
+            return 0;
+        }
+
+        return current >= target ? 100 : 0;
+    };
+
+    const handleStatusChange = () => {
+        const currentIndex = STATUS_ORDER.indexOf(orderDetails?.status);
+        const nextStatus = STATUS_ORDER[currentIndex + 1];
+
+        if (!nextStatus) return;
+
+        axios
+            .put(`/api/order/${orderDetails.id}/status`, { status: nextStatus })
+            .then(() => {
+                setOrderDetails((prev) => ({ ...prev, status: nextStatus }));
+            });
+    };
+
+    const getNextStatusLabel = () => {
+        const labels = {
+            confirmed: "Start Processing",
+            processing: "Out for Delivery",
+            out_for_delivery: "Mark as Delivered",
+        };
+        return labels[orderDetails?.status] || "";
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -66,7 +117,7 @@ export default function AdminOrderDetails() {
                     <div className="grid grid-cols-2 gap-3 mt-7">
                         <div className="mb-7">
                             <Progress
-                                value={progress}
+                                value={getProgressValue("confirmed")}
                                 className="w-[80%] [&>div]:bg-accentGreen"
                             />
                             <p className="text-sm text-gray-700 mt-1">
@@ -75,7 +126,7 @@ export default function AdminOrderDetails() {
                         </div>
                         <div className="mb-7">
                             <Progress
-                                value={progress}
+                                value={getProgressValue("processing")}
                                 className="w-[80%] [&>div]:bg-accentYellow"
                             />
                             <p className="text-sm text-gray-700 mt-1">
@@ -84,7 +135,16 @@ export default function AdminOrderDetails() {
                         </div>
                         <div>
                             <Progress
-                                value={progress}
+                                value={getProgressValue("out_for_delivery")}
+                                className="w-[80%] [&>div]:bg-blue-300"
+                            />
+                            <p className="text-sm text-gray-700 mt-1">
+                                Out for Delivery
+                            </p>
+                        </div>
+                        <div>
+                            <Progress
+                                value={getProgressValue("delivered")}
                                 className="w-[80%] [&>div]:bg-gray-500"
                             />
                             <p className="text-sm text-gray-700 mt-1">
@@ -98,11 +158,17 @@ export default function AdminOrderDetails() {
                             Estimated Time:{" "}
                             <p className="text-black">April 26, 2025</p>
                         </span>
-                        <button className="px-3 py-2 bg-accentRed text-white hover:bg-hoverRed duration-300 rounded-md">
-                            Delivered
-                        </button>
+                        {orderDetails?.status !== "delivered" && (
+                            <button
+                                onClick={handleStatusChange}
+                                className="px-3 py-2 bg-accentRed text-white hover:bg-hoverRed duration-300 rounded-md"
+                            >
+                                {getNextStatusLabel()}
+                            </button>
+                        )}
                     </div>
                 </div>
+
                 <div className="my-5 px-3 py-4 bg-white shadow-lg rounded-md">
                     <h1 className="font-medium text-lg">Order</h1>
                     <div className="mt-6">

@@ -105,4 +105,18 @@ class OrdersController extends Controller
         ]);
     }
 
+    public function updateStatus(Request $request, $id){
+        $order = Order::findOrFail($id);
+
+        $validated = $request->validate([
+            'status' => 'required|in:confirmed,processing,out_for_delivery,delivered',
+        ]);
+
+        $order->status = $validated['status'];
+        $order->save();
+
+        return response()->json(['success' => true, 'status' => $order->status]);
+    }
+
+
 }
