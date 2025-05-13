@@ -94,6 +94,7 @@ class OrdersController extends Controller
         }
 
         // Eager load 'items' and related 'menu' for the user's orders
+        /** @var \App\Models\User $user */
         $orders = $user->orders()
             ->with('items.menu')  // Eager load items and their associated menus
             ->latest()
