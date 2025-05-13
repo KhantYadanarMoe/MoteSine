@@ -103,9 +103,32 @@ export default function OrderHistories() {
                                         .toFixed(2)}
                                     $
                                 </li>
-                                <li className="ml-1 basis-[23%]">
-                                    <span className="text-accentGreen bg-green-100 rounded-lg text-sm p-1">
-                                        Pending
+                                <li className="basis-[23%]">
+                                    <span
+                                        className={`rounded-lg text-sm p-1
+                                ${
+                                    order?.status === "confirmed"
+                                        ? "text-accentGreen bg-green-100"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "processing"
+                                        ? "text-accentYellow bg-yellow-100"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "out for delivery"
+                                        ? "text-blue-400 bg-blue-50"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "delivered"
+                                        ? "text-gray-500 bg-gray-100"
+                                        : ""
+                                }
+                            `}
+                                    >
+                                        {order?.status}
                                     </span>
                                 </li>
                                 <li className="ml-1 basis-[22%]">

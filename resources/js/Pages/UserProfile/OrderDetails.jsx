@@ -160,8 +160,31 @@ export default function OrderDetails() {
                             <h1 className="text-sm font-medium">
                                 Order Summary
                             </h1>
-                            <p className="text-accentGreen bg-[#d7ffc7] rounded-lg p-1 text-sm">
-                                Pending
+                            <p
+                                className={`rounded-lg text-sm p-1
+                                ${
+                                    orderDetails?.status === "confirmed"
+                                        ? "text-accentGreen bg-green-100"
+                                        : ""
+                                }
+                                ${
+                                    orderDetails?.status === "processing"
+                                        ? "text-accentYellow bg-yellow-100"
+                                        : ""
+                                }
+                                ${
+                                    orderDetails?.status === "out for delivery"
+                                        ? "text-blue-400 bg-blue-50"
+                                        : ""
+                                }
+                                ${
+                                    orderDetails?.status === "delivered"
+                                        ? "text-gray-500 bg-gray-100"
+                                        : ""
+                                }
+                            `}
+                            >
+                                {orderDetails?.status}
                             </p>
                         </div>
                         <div className="flex justify-between items-center mb-3">
