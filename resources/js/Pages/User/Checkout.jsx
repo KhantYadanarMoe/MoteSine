@@ -64,8 +64,13 @@ export default function Checkout() {
         formData.append("email", form.email);
         formData.append("address", form.address);
         formData.append("note", form.note);
-        formData.append("date", format(new Date(form.date), "yyyy-MM-dd"));
-        formData.append("time", form.time);
+        if (form.date) {
+            formData.append("date", format(new Date(form.date), "yyyy-MM-dd"));
+        } else {
+            formData.append("date", "");
+        }
+
+        formData.append("time", form.time || "");
 
         const total = cartItems.reduce(
             (totalValue, item) =>

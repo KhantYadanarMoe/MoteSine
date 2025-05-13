@@ -175,7 +175,7 @@ export default function EditProfile() {
                             />
                         </div>
                         <div className="md:flex gap-2">
-                            <div className="w-1/2 my-3">
+                            <div className="md:w-1/2 my-3">
                                 <label htmlFor="email">Email</label>
                                 <Input
                                     id="email"
@@ -187,7 +187,7 @@ export default function EditProfile() {
                                     className="mt-1 border-gray-500"
                                 />
                             </div>
-                            <div className="w-1/2 my-3">
+                            <div className="md:w-1/2 my-3">
                                 <Label htmlFor="phone">Phone</Label>
                                 <Input
                                     id="phone"

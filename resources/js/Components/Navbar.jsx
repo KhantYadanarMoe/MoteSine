@@ -94,7 +94,7 @@ const Navbar = () => {
                     </li>
                 </ul>
 
-                <div className="hidden md:flex items-center justify-center space-x-4">
+                <div className="flex items-center justify-center space-x-4">
                     <Link
                         to="/checkout"
                         className="relative text-gray-800 hover:text-gray-950 group"
