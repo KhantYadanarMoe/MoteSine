@@ -125,7 +125,7 @@ const routes = createBrowserRouter([
                 element: <OrderHistories />,
             },
             {
-                path: "/user/order",
+                path: "/user/order/:id",
                 element: <OrderDetails />,
             },
             {

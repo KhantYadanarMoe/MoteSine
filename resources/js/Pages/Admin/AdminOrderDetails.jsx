@@ -127,11 +127,7 @@ export default function AdminOrderDetails() {
                             >
                                 <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
                                     <img
-                                        src={
-                                            item.menu.image
-                                                ? `/storage/${item.menu.image}`
-                                                : Mohinga
-                                        }
+                                        src={`/storage/${item.menu.image}`}
                                         alt={item.title}
                                         className="w-12 h-12 object-cover rounded-full"
                                     />
@@ -160,7 +156,7 @@ export default function AdminOrderDetails() {
                                 Scheduled Date -
                             </h1>
                             <p className="text-sm">
-                                {dayjs(orderDetails?.created_at).format(
+                                {dayjs(orderDetails?.date).format(
                                     "MMMM D, YYYY"
                                 )}
                             </p>
@@ -169,12 +165,7 @@ export default function AdminOrderDetails() {
                             <h1 className="text-sm font-medium">
                                 Scheduled Time -
                             </h1>
-                            <p className="text-sm">
-                                {" "}
-                                {dayjs(orderDetails?.created_at).format(
-                                    "h:mm A"
-                                )}
-                            </p>
+                            <p className="text-sm"> {orderDetails?.time}</p>
                         </div>
                         <div className="mb-3">
                             <h1 className="text-sm font-medium">Note -</h1>

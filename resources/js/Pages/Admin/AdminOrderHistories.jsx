@@ -20,6 +20,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import dayjs from "dayjs";
 
 export default function AdminOrderHistories() {
     // state to store orders
@@ -147,18 +148,15 @@ export default function AdminOrderHistories() {
                                 </li>
                                 <li className="basis-[20%]">
                                     <p className="text-sm">
-                                        {new Date(
-                                            order.created_at
-                                        ).toLocaleDateString()}
+                                        {dayjs(order?.created_at).format(
+                                            "MMMM D, YYYY"
+                                        )}
                                     </p>
                                     <p className="text-sm">
-                                        {new Date(
-                                            order.created_at
-                                        ).toLocaleTimeString([], {
-                                            hour: "2-digit",
-                                            minute: "2-digit",
-                                        })}
-                                        c
+                                        {" "}
+                                        {dayjs(order?.created_at).format(
+                                            "h:mm A"
+                                        )}
                                     </p>
                                 </li>
                                 <li className="basis-[5%]">

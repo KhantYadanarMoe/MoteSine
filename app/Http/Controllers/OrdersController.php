@@ -85,4 +85,23 @@ class OrdersController extends Controller
         }
     }
 
+    public function userOrders(){
+        $user = Auth::user();  // Get the logged-in user
+
+        // Check if the user exists (just to be safe)
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        // Eager load 'items' and related 'menu' for the user's orders
+        $orders = $user->orders()
+            ->with('items.menu')  // Eager load items and their associated menus
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'orders' => $orders
+        ]);
+    }
+
 }
