@@ -122,11 +122,12 @@ export default function OrderDetails() {
                                     Scheduled Date -
                                 </h1>
                                 <p className="text-sm">
-                                    {dayjs(orderDetails?.date).isValid()
+                                    {orderDetails &&
+                                    dayjs(orderDetails.date).isValid()
                                         ? dayjs(orderDetails.date).format(
                                               "MMMM D, YYYY"
                                           )
-                                        : " "}
+                                        : ""}
                                 </p>
                             </div>
                             <div className="flex justify-between mb-3">
