@@ -39,10 +39,10 @@ class OrdersController extends Controller
 
         $order = Order::create([
             'order_number' => $orderNumber, 
-            'user_id' => $user->id,  
-            'name' => $user ? $user->name : request('name'),  
+            'user_id' => $user ? $user->id : null,
+            'name' =>  request('name'),  
             'phone' => request('phone'),
-            'email' => $user ? $user->email : request('email'),
+            'email' => request('email'),
             'address' => request('address'),
             'date' => request('date'),
             'time' => request('time'),

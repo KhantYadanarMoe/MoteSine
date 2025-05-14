@@ -11,17 +11,21 @@ import { useCart } from "@/contexts/CartContext";
 import { format } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function Checkout() {
     const [count, setCount] = useState(1);
     const { cartItems, updateQuantity, clearCart } = useCart();
+    const { user } = useAuth();
+
+    console.log(user);
 
     // prepare state to store form data
     const [form, setForm] = useState({
-        name: "",
-        phone: "",
-        email: "",
-        address: "",
+        name: user?.name || "",
+        phone: user?.phone || "",
+        email: user?.email || "",
+        address: user?.address || "",
         date: "",
         time: "",
         note: "",
@@ -128,8 +132,6 @@ export default function Checkout() {
         }
     };
 
-    console.log(cartItems);
-
     const subtotal = cartItems?.reduce((acc, item) => {
         const price = item.finalPrice ?? item.originalPrice; // fallback if no finalPrice
         return acc + item.quantity * parseFloat(price);
@@ -157,7 +159,7 @@ export default function Checkout() {
                             <Input
                                 id="name"
                                 name="name"
-                                value={form.name}
+                                value={user?.name}
                                 onChange={handleInputChange}
                                 type="text"
                                 placeholder="Enter your name"
@@ -171,7 +173,7 @@ export default function Checkout() {
                                     id="phone"
                                     type="text"
                                     name="phone"
-                                    value={form.phone}
+                                    value={user?.phone}
                                     onChange={handleInputChange}
                                     placeholder="Enter your phone"
                                     className="mt-1 border-gray-500"
@@ -183,7 +185,7 @@ export default function Checkout() {
                                     id="email"
                                     type="text"
                                     name="email"
-                                    value={form.email}
+                                    value={user?.email}
                                     onChange={handleInputChange}
                                     placeholder="Enter your email"
                                     className="mt-1 border-gray-500"
@@ -196,7 +198,7 @@ export default function Checkout() {
                                 id="address"
                                 type="text"
                                 name="address"
-                                value={form.address}
+                                value={user?.address}
                                 onChange={handleInputChange}
                                 placeholder="Enter your address"
                                 className="mt-1 border-gray-500"
