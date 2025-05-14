@@ -130,6 +130,11 @@ export default function Checkout() {
 
     console.log(cartItems);
 
+    const subtotal = cartItems?.reduce((acc, item) => {
+        const price = item.finalPrice ?? item.originalPrice; // fallback if no finalPrice
+        return acc + item.quantity * parseFloat(price);
+    }, 0);
+
     return (
         <div className="px-4 md:px-6 py-7 bg-lightBackground lg:flex gap-5">
             <motion.div
@@ -367,41 +372,29 @@ export default function Checkout() {
                     {/* Subtotal & Confirm */}
                     <div>
                         <hr className="border-t-gray-400" />
-                        <div className="flex justify-between my-5">
+                        <div className="flex justify-between my-3">
                             <h1 className="text-sm">Subtotal - </h1>
                             <p className="text-gray-800 font-medium">
-                                $
-                                {cartItems
-                                    .reduce(
-                                        (total, item) =>
-                                            total +
-                                            (item.finalPrice ||
-                                                item.originalPrice) *
-                                                item.quantity, // Use finalPrice if available, otherwise originalPrice
-                                        0
-                                    )
-                                    .toFixed(2)}
+                                ${subtotal.toFixed(2)}
                             </p>
                         </div>
-                        <div className="flex justify-between my-2">
+                        <hr className="border-t-gray-400" />
+                        <div className="flex justify-between my-3">
                             <h1 className="text-sm">Shipping - </h1>
-                            <p className="text-gray-800 font-medium">-</p>
+                            <p className="text-gray-800 font-medium">$0.00</p>
+                        </div>
+                        <div className="flex justify-between my-2">
+                            <h1 className="text-sm">Tax (10%) - </h1>
+                            <p className="text-gray-800 font-medium">
+                                {" "}
+                                ${(subtotal * 0.1).toFixed(2)}
+                            </p>
                         </div>
                         <hr className="border-gray-400 my-5" />
                         <div className="flex justify-between my-2">
                             <h1 className="text-sm">Total - </h1>
                             <p className="text-gray-800 font-medium">
-                                $
-                                {cartItems
-                                    .reduce(
-                                        (total, item) =>
-                                            total +
-                                            (item.finalPrice ||
-                                                item.originalPrice) *
-                                                item.quantity,
-                                        0
-                                    )
-                                    .toFixed(2)}
+                                ${subtotal + subtotal * 0.1}
                             </p>
                         </div>
                         <Button
