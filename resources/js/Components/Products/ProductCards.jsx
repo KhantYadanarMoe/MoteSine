@@ -13,10 +13,13 @@ import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useCart } from "@/contexts/CartContext";
 
 export default function ProductCards() {
     // state to store products
     let [products, setProducts] = useState([]);
+
+    const { addToCart } = useCart();
 
     // fetch data that send from backend
     let getProducts = async () => {
@@ -129,7 +132,10 @@ export default function ProductCards() {
                                         {product.price} $
                                     </p>
                                 </div>
-                                <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
+                                <button
+                                    onClick={() => addToCart(product)}
+                                    className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2"
+                                >
                                     <ShoppingCart
                                         size={16}
                                         className="text-white"

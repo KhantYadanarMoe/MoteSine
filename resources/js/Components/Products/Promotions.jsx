@@ -10,10 +10,13 @@ import { Heart, Star, ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Promotions() {
     // state to store products
     let [products, setProducts] = useState([]);
+
+    const { addToCart } = useCart();
 
     // fetch data that send from backend
     let getProducts = async () => {
@@ -120,7 +123,12 @@ export default function Promotions() {
                                                     )}
                                                 </p>
                                             </div>
-                                            <button className="p-2">
+                                            <button
+                                                onClick={() =>
+                                                    addToCart(product)
+                                                }
+                                                className="p-2"
+                                            >
                                                 <ShoppingCart
                                                     size={20}
                                                     className="text-accentRed"

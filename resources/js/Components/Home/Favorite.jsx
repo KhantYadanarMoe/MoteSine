@@ -13,10 +13,13 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Favorite() {
     // state to store menus
     let [menus, setMenus] = useState([]);
+
+    const { addToCart } = useCart();
 
     // fetch data that send from backend
     let getMenus = async () => {
@@ -159,7 +162,11 @@ export default function Favorite() {
                                                 ) : (
                                                     <span>{menu.price} $</span>
                                                 )}
-                                                <button>
+                                                <button
+                                                    onClick={() =>
+                                                        addToCart(menu)
+                                                    }
+                                                >
                                                     <ShoppingCart
                                                         size={24}
                                                         className="text-accentRed"
