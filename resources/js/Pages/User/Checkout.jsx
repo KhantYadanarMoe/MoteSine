@@ -14,11 +14,8 @@ import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 
 export default function Checkout() {
-    const [count, setCount] = useState(1);
     const { cartItems, updateQuantity, clearCart } = useCart();
     const { user } = useAuth();
-
-    console.log(user);
 
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -159,7 +156,7 @@ export default function Checkout() {
                             <Input
                                 id="name"
                                 name="name"
-                                value={user?.name}
+                                value={form.name}
                                 onChange={handleInputChange}
                                 type="text"
                                 placeholder="Enter your name"
@@ -173,7 +170,7 @@ export default function Checkout() {
                                     id="phone"
                                     type="text"
                                     name="phone"
-                                    value={user?.phone}
+                                    value={form.phone}
                                     onChange={handleInputChange}
                                     placeholder="Enter your phone"
                                     className="mt-1 border-gray-500"
@@ -185,7 +182,7 @@ export default function Checkout() {
                                     id="email"
                                     type="text"
                                     name="email"
-                                    value={user?.email}
+                                    value={form.email}
                                     onChange={handleInputChange}
                                     placeholder="Enter your email"
                                     className="mt-1 border-gray-500"
@@ -198,7 +195,7 @@ export default function Checkout() {
                                 id="address"
                                 type="text"
                                 name="address"
-                                value={user?.address}
+                                value={form.address}
                                 onChange={handleInputChange}
                                 placeholder="Enter your address"
                                 className="mt-1 border-gray-500"
