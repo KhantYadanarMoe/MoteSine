@@ -1,6 +1,6 @@
 import DatePicker from "../../Components/DatePicker";
 import TimePicker from "../../Components/TimePicker";
-import Mohinga from "../../../images/Mohinga.png";
+import EmptyCart from "../../../images/empty-cart.png";
 import { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { Button } from "../../Components/ui/button";
@@ -9,7 +9,7 @@ import { Textarea } from "../../Components/ui/textarea";
 import { motion } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
 import { format } from "date-fns";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
 export default function Checkout() {
@@ -262,74 +262,105 @@ export default function Checkout() {
                     <div>
                         <h1 className="text-lg font-medium">Order Summary</h1>
                         <div className="px-0 md:px-4 py-5 mt-3">
-                            {cartItems.map((item) => (
-                                <div
-                                    key={item.id}
-                                    className="flex justify-between items-center mb-6"
-                                >
-                                    <div className="flex items-center gap-2">
-                                        <img
-                                            src={
-                                                `/storage/${item.image}` ||
-                                                "/default-food.jpg"
-                                            }
-                                            alt={item.title}
-                                            className="w-16 h-auto rounded-full"
-                                        />
-                                        <div>
-                                            <h1 className="font-medium">
-                                                {item.title}
-                                            </h1>
-                                            {item.promotion ? (
-                                                <div>
-                                                    <span className="text-red-600 font-semibold">
-                                                        $
-                                                        {item.finalPrice.toFixed(
-                                                            2
-                                                        )}
-                                                    </span>
-                                                    <span className="line-through text-sm text-gray-500 ml-2">
+                            {cartItems.length === 0 ? (
+                                <div className="text-center py-12">
+                                    <img
+                                        src={EmptyCart}
+                                        alt="Empty Cart"
+                                        className="mx-auto mb-4 w-32 h-32"
+                                    />
+                                    <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                                        Your cart is empty
+                                    </h2>
+                                    <p className="text-gray-500 mb-4 text-sm">
+                                        Looks like you haven't added anything
+                                        yet.
+                                    </p>
+                                    <Link to="/menu">
+                                        <Button
+                                            variant="default"
+                                            className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                                        >
+                                            Browse Menu
+                                        </Button>
+                                    </Link>
+                                </div>
+                            ) : (
+                                cartItems.map((item) => (
+                                    <div
+                                        key={item.id}
+                                        className="flex justify-between items-center mb-6"
+                                    >
+                                        <div className="flex items-center gap-2">
+                                            <img
+                                                src={
+                                                    `/storage/${item.image}` ||
+                                                    "/default-food.jpg"
+                                                }
+                                                alt={item.title}
+                                                className="w-16 h-auto rounded-full"
+                                            />
+                                            <div>
+                                                <h1 className="font-medium">
+                                                    {item.title}
+                                                </h1>
+                                                {item.promotion ? (
+                                                    <div>
+                                                        <span className="text-red-600 font-semibold">
+                                                            $
+                                                            {item.finalPrice.toFixed(
+                                                                2
+                                                            )}
+                                                        </span>
+                                                        <span className="line-through text-sm text-gray-500 ml-2">
+                                                            $
+                                                            {item.originalPrice.toFixed(
+                                                                2
+                                                            )}
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span>
                                                         $
                                                         {item.originalPrice.toFixed(
                                                             2
                                                         )}
                                                     </span>
-                                                </div>
-                                            ) : (
-                                                <span>
-                                                    $
-                                                    {item.originalPrice.toFixed(
-                                                        2
-                                                    )}
+                                                )}
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <div className="flex items-center space-x-1 p-1 border border-gray-300 rounded-sm shadow-sm">
+                                                <button
+                                                    onClick={() =>
+                                                        updateQuantity(
+                                                            item.id,
+                                                            -1
+                                                        )
+                                                    }
+                                                    className="px-3 py-1"
+                                                >
+                                                    <Minus size={16} />
+                                                </button>
+                                                <span className="text-base font-medium">
+                                                    {item.quantity}
                                                 </span>
-                                            )}
+                                                <button
+                                                    onClick={() =>
+                                                        updateQuantity(
+                                                            item.id,
+                                                            1
+                                                        )
+                                                    }
+                                                    className="px-3 py-1"
+                                                >
+                                                    <Plus size={16} />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div>
-                                        <div className="flex items-center space-x-1 p-1 border border-gray-300 rounded-sm shadow-sm">
-                                            <button
-                                                onClick={() =>
-                                                    updateQuantity(item.id, -1)
-                                                }
-                                                className="px-3 py-1"
-                                            >
-                                                <Minus size={16} />
-                                            </button>
-                                            <span className="text-base font-medium">
-                                                {item.quantity}
-                                            </span>
-                                            <button
-                                                onClick={() =>
-                                                    updateQuantity(item.id, 1)
-                                                }
-                                                className="px-3 py-1"
-                                            >
-                                                <Plus size={16} />
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                                ))
+                            )}
                         </div>
                     </div>
 
