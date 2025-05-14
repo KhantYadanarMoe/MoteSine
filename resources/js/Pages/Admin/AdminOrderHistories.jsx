@@ -55,6 +55,29 @@ export default function AdminOrderHistories() {
         setCurrentPage(page);
     };
 
+    const [selectedFilter, setSelectedFilter] = useState("all");
+
+    const handleFilterChange = (filterValue) => {
+        setSelectedFilter(filterValue);
+
+        axios
+            .get(`/api/orders?filter=${filterValue}`)
+            .then((response) => {
+                const data = response.data;
+                if (data.orders) {
+                    setOrders(data.orders);
+                    console.log(data.order);
+                }
+            })
+            .catch((error) => {
+                console.error("Axios request failed:", error);
+            });
+    };
+
+    useEffect(() => {
+        handleFilterChange("all"); // initial load
+    }, []);
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -68,28 +91,32 @@ export default function AdminOrderHistories() {
             </h1>
             <ul className="mt-6 flex gap-3 items-center space-x-4">
                 <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
+                    <button
+                        onClick={() => handleFilterChange("all")}
+                        className="relative hover:text-gray-950 group"
+                    >
                         All
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
+                    </button>
                 </li>
                 <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
+                    <button
+                        onClick={() => handleFilterChange("new")}
+                        to=""
+                        className="relative hover:text-gray-950 group"
+                    >
                         New
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
+                    </button>
                 </li>
                 <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
-                        Completed
+                    <button
+                        onClick={() => handleFilterChange("delivered")}
+                        className="relative hover:text-gray-950 group"
+                    >
+                        Delivered
                         <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
-                </li>
-                <li>
-                    <Link to="" className="relative hover:text-gray-950 group">
-                        Cancelled
-                        <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
-                    </Link>
+                    </button>
                 </li>
             </ul>
             <hr className="border-t-gray-300 mt-3" />

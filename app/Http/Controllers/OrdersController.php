@@ -64,11 +64,28 @@ class OrdersController extends Controller
         ]);
     }
 
-    public function index(){
-        // Fetch all orders with their related order items
-        $orders = Order::with('items')->latest()->get();
+    public function index(Request $request){ 
+         $filter = $request->query('filter', 'all'); 
+         $query = Order::with('items'); 
+
+        switch ($filter) {
+            case 'new':
+                $query->where('status', '!=', 'delivered');
+                break;
+
+            case 'delivered':
+                $query->where('status', 'delivered');
+                break;
+
+            case 'all':
+            default:
+                break;
+        }
+
+        $orders = $query->latest()->get();
 
         return response()->json([
+            'message' => 'Orders retrieved successfully.',
             'orders' => $orders
         ]);
     }

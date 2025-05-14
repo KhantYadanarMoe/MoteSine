@@ -22,6 +22,8 @@ return new class extends Migration
             $table->date('date')->nullable();
             $table->string('time')->nullable();
             $table->text('note')->nullable();
+            $table->string('status')->default('confirmed');
+            // $table->boolean('delivered')->default(false);
             $table->timestamps();
         });
     }
