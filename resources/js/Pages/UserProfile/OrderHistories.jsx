@@ -85,8 +85,8 @@ export default function OrderHistories() {
                                     {order.order_number}
                                 </li>
                                 <li className="ml-1 basis-[23%]">
-                                    {(order.items ?? [])
-                                        .reduce(
+                                    {(
+                                        (order.items ?? []).reduce(
                                             (total, item) =>
                                                 total +
                                                 parseFloat(
@@ -99,8 +99,8 @@ export default function OrderHistories() {
                                                         item.quantity ?? 1
                                                     ),
                                             0
-                                        )
-                                        .toFixed(2)}
+                                        ) * 1.1
+                                    ).toFixed(2)}{" "}
                                     $
                                 </li>
                                 <li className="basis-[23%]">

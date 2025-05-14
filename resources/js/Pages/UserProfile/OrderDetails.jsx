@@ -88,7 +88,7 @@ export default function OrderDetails() {
                     </div>
                     <div className="mt-3">
                         <div className="flex items-center justify-between mt-2 py-3 px-3">
-                            <h1 className="text-base">Total - </h1>
+                            <h1 className="text-base">Subtotal - </h1>
                             <h1 className="font-medium mr-4">
                                 {subtotal?.toFixed(2)} $
                             </h1>
@@ -204,15 +204,34 @@ export default function OrderDetails() {
                                 )}
                             </p>
                         </div>
-                        <div className="flex justify-between items-center mb-3">
-                            <h1 className="text-sm font-medium">Subtotal - </h1>
-                            <p className="text-sm">{subtotal?.toFixed(2)} $</p>
+                        <div className="my-3 mt-8">
+                            <div className="flex justify-between items-center mb-3">
+                                <h1 className="text-sm font-medium">
+                                    Subtotal -{" "}
+                                </h1>
+                                <p className="text-sm">
+                                    {subtotal?.toFixed(2)} $
+                                </p>
+                            </div>
+                            <div className="flex justify-between items-center mb-3">
+                                <h1 className="text-sm font-medium">
+                                    Delivery fee -
+                                </h1>
+                                <p className="text-sm">0 $</p>
+                            </div>
+                            <div className="flex justify-between items-center mb-3">
+                                <h1 className="text-sm font-medium">Tax - </h1>
+                                <p className="text-sm">
+                                    {(subtotal * 0.1).toFixed(2)} $
+                                </p>
+                            </div>
                         </div>
-                        <div className="flex justify-between items-center mb-3">
-                            <h1 className="text-sm font-medium">
-                                Delivery fee -
-                            </h1>
-                            <p className="text-sm">0 $</p>
+                        <hr className="border-t-gray-400" />
+                        <div className="flex justify-between items-center my-3">
+                            <h1 className="text-sm font-medium">Total - </h1>
+                            <p className="text-sm">
+                                {(subtotal + subtotal * 0.1).toFixed(2)} $
+                            </p>
                         </div>
                     </div>
                     <div className="mt-3 py-3 px-3 shadow-md rounded-md border-t-2 border-t-accentRed">
