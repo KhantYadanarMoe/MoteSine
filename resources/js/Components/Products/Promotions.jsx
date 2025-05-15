@@ -33,6 +33,27 @@ export default function Promotions() {
     useEffect(() => {
         getProducts();
     }, []);
+
+    const toggleWishlist = async (id, type) => {
+        try {
+            const formData = new FormData();
+            formData.append("items[0][id]", id);
+            formData.append("items[0][type]", type);
+
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute("content");
+
+            await axios.post("/api/wishlist/toggle", formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+        } catch (err) {
+            console.error("Failed to toggle wishlist", err);
+        }
+    };
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -69,12 +90,19 @@ export default function Promotions() {
                                 >
                                     <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg w-[100%] lg:w-full md:mx-auto rounded-xl">
                                         <div className="flex justify-between">
-                                            <a href="">
+                                            <button
+                                                onClick={() =>
+                                                    toggleWishlist(
+                                                        product.id,
+                                                        "product"
+                                                    )
+                                                }
+                                            >
                                                 <Heart
                                                     size={16}
                                                     className="text-accentRed"
                                                 />
-                                            </a>
+                                            </button>
                                             <a
                                                 href=""
                                                 className="text-sm flex items-center gap-1 text-accentYellow"

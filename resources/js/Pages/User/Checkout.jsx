@@ -313,7 +313,7 @@ export default function Checkout() {
                                             />
                                             <div>
                                                 <h1 className="font-medium">
-                                                    {item.title}
+                                                    {item.title || item.name}
                                                 </h1>
                                                 {item.promotion ? (
                                                     <div>

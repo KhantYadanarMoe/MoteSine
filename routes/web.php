@@ -11,6 +11,7 @@ use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReviewsController;
+use App\Http\Controllers\WishlistController;
 use Illuminate\Foundation\Application;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -43,6 +44,9 @@ Route::middleware('guest')->get('auth/google/callback', [AuthController::class, 
 Route::get('/{any}', function () {
     return view('app');
 })->where('any', '^(?!api).*');
+
+Route::post('/api/wishlist/toggle', [WishlistController::class, 'toggle']);
+Route::get('/api/wishlist', [WishlistController::class, 'index']);
 
 Route::get('/api/menus', [MenuController::class, 'index']);
 Route::post("/api/menu/create", [MenuController::class, 'store']);

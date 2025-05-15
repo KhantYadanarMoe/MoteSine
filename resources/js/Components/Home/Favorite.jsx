@@ -51,6 +51,27 @@ export default function Favorite() {
         getMenus();
     }, []);
 
+    const toggleWishlist = async (id, type) => {
+        try {
+            const formData = new FormData();
+            formData.append("items[0][id]", id);
+            formData.append("items[0][type]", type);
+
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute("content");
+
+            await axios.post("/api/wishlist/toggle", formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+        } catch (err) {
+            console.error("Failed to toggle wishlist", err);
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -103,12 +124,17 @@ export default function Favorite() {
                                         <CardContent className="pt-5 px-6">
                                             <div className="flex items-center justify-between mb-3">
                                                 <div className="flex gap-4">
-                                                    <a
-                                                        href="#"
+                                                    <button
+                                                        onClick={() =>
+                                                            toggleWishlist(
+                                                                menu.id,
+                                                                "menu"
+                                                            )
+                                                        }
                                                         className="text-gray-500 hover:text-accentRed"
                                                     >
                                                         <Heart size={20} />
-                                                    </a>
+                                                    </button>
                                                     <div className="flex items-center gap-1 text-gray-600">
                                                         <Star
                                                             size={20}
@@ -164,7 +190,7 @@ export default function Favorite() {
                                                 )}
                                                 <button
                                                     onClick={() =>
-                                                        addToCart(menu)
+                                                        addToCart(menu, "menu")
                                                     }
                                                 >
                                                     <ShoppingCart
