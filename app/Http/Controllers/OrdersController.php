@@ -19,7 +19,8 @@ class OrdersController extends Controller
             "time" => ["nullable", "string"], 
             "note" => ["nullable", "string"],
             "items" => ["required", "array", "min:1"],
-            "items.*.id" => ["required", "integer"], 
+            "items.*.id" => ["required", "integer"],
+            "items.*.type" => ["required", "in:menu,product"],
             "items.*.title" => ["required", "string"],
             "items.*.price" => ["required", "numeric"],
             "items.*.quantity" => ["required", "integer", "min:1"],
@@ -51,7 +52,8 @@ class OrdersController extends Controller
 
         foreach (request('items') as $item) {
             $order->items()->create([
-                'menu_id' => $item['id'],
+                'menu_id' => $item['type'] === 'menu' ? $item['id'] : null,
+                'product_id' => $item['type'] === 'product' ? $item['id'] : null,
                 'title' => $item['title'],
                 'price' => $item['price'],
                 'quantity' => $item['quantity'],
@@ -91,7 +93,7 @@ class OrdersController extends Controller
     }
 
     public function orderDetails($id){
-        $order = Order::with('items.menu')->find($id);; 
+        $order = Order::with('items.menu', 'items.product')->find($id);
 
         // Check if order exists
         if ($order) {
@@ -113,7 +115,7 @@ class OrdersController extends Controller
         // Eager load 'items' and related 'menu' for the user's orders
         /** @var \App\Models\User $user */
         $orders = $user->orders()
-            ->with('items.menu')  // Eager load items and their associated menus
+            ->with('items.menu', 'items.product')  // Eager load items and their associated menus
             ->latest()
             ->get();
 

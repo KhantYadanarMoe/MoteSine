@@ -144,7 +144,11 @@ export default function MenuCards() {
                                         ) : (
                                             <span>{menu.price} $</span>
                                         )}
-                                        <button onClick={() => addToCart(menu)}>
+                                        <button
+                                            onClick={() =>
+                                                addToCart(menu, "menu")
+                                            }
+                                        >
                                             <ShoppingCart
                                                 size={24}
                                                 className="text-accentRed"

@@ -220,7 +220,10 @@ export default function AdminOrderDetails() {
                             >
                                 <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
                                     <img
-                                        src={`/storage/${item.menu.image}`}
+                                        src={`/storage/${
+                                            item.menu?.image ||
+                                            item.product?.image
+                                        }`}
                                         alt={item.title}
                                         className="w-12 h-12 object-cover rounded-full"
                                     />

@@ -151,8 +151,8 @@ export default function AdminOrderHistories() {
                                     </p>
                                 </li>
                                 <li className="basis-[20%]">
-                                    {(order.items ?? [])
-                                        .reduce(
+                                    {(
+                                        (order.items ?? []).reduce(
                                             (total, item) =>
                                                 total +
                                                 parseFloat(
@@ -165,8 +165,8 @@ export default function AdminOrderHistories() {
                                                         item.quantity ?? 1
                                                     ),
                                             0
-                                        )
-                                        .toFixed(2)}
+                                        ) * 1.1
+                                    ).toFixed(2)}{" "}
                                     $
                                 </li>
                                 <li className="basis-[15%]">

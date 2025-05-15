@@ -84,8 +84,15 @@ export default function Checkout() {
         // Cart items
         cartItems.forEach((item, index) => {
             formData.append(`items[${index}][id]`, item.id);
-            formData.append(`items[${index}][menu_id]`, item.menu_id);
-            formData.append(`items[${index}][title]`, item.title);
+            formData.append(`items[${index}][type]`, item.type); // <--- Add this
+
+            if (item.type === "menu") {
+                formData.append(`items[${index}][menu_id]`, item.id);
+            } else {
+                formData.append(`items[${index}][product_id]`, item.id);
+            }
+
+            formData.append(`items[${index}][title]`, item.title || item.name);
             formData.append(
                 `items[${index}][price]`,
                 (item.finalPrice || item.originalPrice).toFixed(2)
@@ -339,6 +346,7 @@ export default function Checkout() {
                                                     onClick={() =>
                                                         updateQuantity(
                                                             item.id,
+                                                            item.type,
                                                             -1
                                                         )
                                                     }
@@ -353,6 +361,7 @@ export default function Checkout() {
                                                     onClick={() =>
                                                         updateQuantity(
                                                             item.id,
+                                                            item.type,
                                                             1
                                                         )
                                                     }

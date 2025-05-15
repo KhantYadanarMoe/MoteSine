@@ -10,11 +10,11 @@ export const CartProvider = ({ children }) => {
         localStorage.setItem("cartItems", JSON.stringify(cartItems));
     }, [cartItems]);
 
-    const updateQuantity = (productId, delta) => {
+    const updateQuantity = (itemId, type, delta) => {
         setCartItems((prev) =>
             prev
                 .map((item) =>
-                    item.id === productId
+                    item.id === itemId && item.type === type
                         ? { ...item, quantity: item.quantity + delta }
                         : item
                 )
@@ -22,20 +22,22 @@ export const CartProvider = ({ children }) => {
         );
     };
 
-    const addToCart = (product) => {
-        const originalPrice = parseFloat(product.price) || 0;
-        const promotion = parseFloat(product.promotion) || 0;
+    const addToCart = (productOrMenu, type = "menu") => {
+        const originalPrice = parseFloat(productOrMenu.price) || 0;
+        const promotion = parseFloat(productOrMenu.promotion) || 0;
 
         const discountedPrice = promotion
             ? originalPrice - (originalPrice * promotion) / 100
             : originalPrice;
 
         setCartItems((prev) => {
-            const existing = prev.find((item) => item.id === product.id);
+            const existing = prev.find(
+                (item) => item.id === productOrMenu.id && item.type === type
+            );
 
             if (existing) {
                 return prev.map((item) =>
-                    item.id === product.id
+                    item.id === productOrMenu.id && item.type === type
                         ? { ...item, quantity: item.quantity + 1 }
                         : item
                 );
@@ -44,10 +46,11 @@ export const CartProvider = ({ children }) => {
             return [
                 ...prev,
                 {
-                    ...product,
+                    ...productOrMenu,
                     quantity: 1,
                     originalPrice,
                     finalPrice: parseFloat(discountedPrice.toFixed(2)),
+                    type, // "menu" or "product"
                 },
             ];
         });

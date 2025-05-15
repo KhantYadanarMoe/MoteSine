@@ -125,7 +125,10 @@ export default function Promotions() {
                                             </div>
                                             <button
                                                 onClick={() =>
-                                                    addToCart(product)
+                                                    addToCart(
+                                                        product,
+                                                        "product"
+                                                    )
                                                 }
                                                 className="p-2"
                                             >

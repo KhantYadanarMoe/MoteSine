@@ -14,6 +14,16 @@ class Order extends Model
         return $this->hasMany(OrderItem::class);
     }
 
+//     public function menuItems(){
+//     return $this->items()->whereNotNull('menu_id');
+// }
+
+// // Optional: get only product items in this order
+// public function productItems()
+// {
+//     return $this->items()->whereNotNull('product_id');
+// }
+
     protected $fillable = [
         'order_number', 'user_id', 'name', 'phone', 'email', 'address', 'date', 'time', 'note'
     ];
