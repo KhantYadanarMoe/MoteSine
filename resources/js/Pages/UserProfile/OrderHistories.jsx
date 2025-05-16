@@ -44,7 +44,7 @@ export default function OrderHistories() {
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="w-full lg:w-[73%] flex flex-col gap-6 py-8 px-4 lg:ml-[28%]"
+            className="w-full lg:w-[68%] xl:w-[74%] flex flex-col gap-6 lg:ml-[32%] xl:ml-[26%] px-3 lg:px-4 py-8"
         >
             <div className="block md:flex justify-between mb-0 md:mb-4">
                 <h1 className="text-xl font-medium flex gap-1 items-center">
@@ -165,8 +165,31 @@ export default function OrderHistories() {
                                             {order.order_number}
                                         </span>
                                     </span>
-                                    <span className="text-accentGreen">
-                                        Pending
+                                    <span
+                                        className={`rounded-lg text-sm p-1
+                                ${
+                                    order?.status === "confirmed"
+                                        ? "text-accentGreen bg-green-100"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "processing"
+                                        ? "text-accentYellow bg-yellow-100"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "out for delivery"
+                                        ? "text-blue-400 bg-blue-50"
+                                        : ""
+                                }
+                                ${
+                                    order?.status === "delivered"
+                                        ? "text-gray-500 bg-gray-100"
+                                        : ""
+                                }
+                            `}
+                                    >
+                                        {order?.status}
                                     </span>
                                 </div>
                                 <p className="text-base text-gray-700 mt-1">

@@ -28,9 +28,9 @@ export default function Liked() {
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="w-full lg:w-[73%] flex flex-col gap-6 py-8 px-4 lg:ml-[28%]"
+            className="w-full lg:w-[68%] xl:w-[74%] flex flex-col gap-6 lg:ml-[32%] xl:ml-[26%] px-3 lg:px-7"
         >
-            <div className="flex justify-between">
+            <div className="flex justify-between mt-6">
                 <h1 className="text-2xl font-medium">Favorite</h1>
                 <div className="relative w-full max-w-md hidden md:block">
                     <Search

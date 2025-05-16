@@ -48,6 +48,7 @@ import Reviews from "./Pages/User/Reviews";
 import PartnershipApproved from "./Pages/Admin/PartnershipApproved";
 import PartnershipRejected from "./Pages/Admin/PartnershipRejected";
 import ProtectedRoute from "./Components/ProtectedRoute";
+import UserSidebar from "./Pages/User/UserSidebar";
 
 const routes = createBrowserRouter([
     {
@@ -108,6 +109,7 @@ const routes = createBrowserRouter([
         path: "/user",
         element: (
             <ProtectedRoute>
+                {/* <UserSidebar /> */}
                 <UserLayout />
             </ProtectedRoute>
         ),

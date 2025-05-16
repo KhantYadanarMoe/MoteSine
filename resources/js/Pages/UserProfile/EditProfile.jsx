@@ -114,9 +114,9 @@ export default function EditProfile() {
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="w-full lg:w-[73%] flex flex-col gap-6 lg:ml-[28%]"
+            className="w-full lg:w-[68%] xl:w-[74%] flex flex-col gap-6 lg:ml-[32%] xl:ml-[26%]"
         >
-            <div className="mx-auto my-12 w-[93%] md:w-[90%] lg:w-[80%] ">
+            <div className="mx-auto my-12 w-[93%] md:w-[90%] lg:w-[80%]">
                 <form action="">
                     <div className="flex gap-2">
                         <img
