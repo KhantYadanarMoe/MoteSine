@@ -21,6 +21,8 @@ export default function Favorite() {
 
     const { addToCart } = useCart();
 
+    const [wishlistItems, setWishlistItems] = useState([]);
+
     // fetch data that send from backend
     let getMenus = async () => {
         let res = await axios.get("/api/menus");
@@ -46,9 +48,19 @@ export default function Favorite() {
         "drinks-beverages": "text-teal-800 bg-teal-200",
     };
 
-    // call data fetching function in useEffect to run when user enter the page
+    // Fetch wishlist to know liked items
+    const getWishlistItems = async () => {
+        try {
+            const res = await axios.get("/api/wishlist?filter=menu");
+            setWishlistItems(res.data.items);
+        } catch (error) {
+            console.error("Failed to fetch wishlist items:", error);
+        }
+    };
+
     useEffect(() => {
         getMenus();
+        getWishlistItems();
     }, []);
 
     const toggleWishlist = async (id, type) => {
@@ -67,9 +79,21 @@ export default function Favorite() {
                     "Content-Type": "multipart/form-data",
                 },
             });
+
+            getWishlistItems();
         } catch (err) {
             console.error("Failed to toggle wishlist", err);
         }
+    };
+
+    // Helper to check if item is in wishlist
+    const isInWishlist = (id, type) => {
+        return wishlistItems.some(
+            (item) =>
+                item.item_type === type &&
+                ((type === "menu" && item.menu.id === id) ||
+                    (type === "product" && item.product.id === id))
+        );
     };
 
     return (
@@ -131,9 +155,26 @@ export default function Favorite() {
                                                                 "menu"
                                                             )
                                                         }
-                                                        className="text-gray-500 hover:text-accentRed"
+                                                        className={`${
+                                                            isInWishlist(
+                                                                menu.id,
+                                                                "menu"
+                                                            )
+                                                                ? "text-accentRed"
+                                                                : "text-gray-500"
+                                                        }`}
                                                     >
-                                                        <Heart size={20} />
+                                                        <Heart
+                                                            size={20}
+                                                            fill={
+                                                                isInWishlist(
+                                                                    menu.id,
+                                                                    "menu"
+                                                                )
+                                                                    ? "red"
+                                                                    : "none"
+                                                            }
+                                                        />
                                                     </button>
                                                     <div className="flex items-center gap-1 text-gray-600">
                                                         <Star

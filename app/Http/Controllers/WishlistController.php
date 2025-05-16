@@ -14,7 +14,6 @@ class WishlistController extends Controller
                 "items" => ["required", "array", "min:1"],
                 "items.*.id" => ["required", "integer"],
                 "items.*.type" => ["required", "in:menu,product"],
-                "items.*.buy_or_not" => ["nullable", "boolean"], // optional flag
             ]);
 
             if ($validator->fails()) {
@@ -34,30 +33,22 @@ class WishlistController extends Controller
             $savedItems = [];
 
             foreach ($request->items as $item) {
-                // If buy_or_not is true, remove from wishlist if exists
-                if (!empty($item['buy_or_not']) && $item['buy_or_not']) {
-                    WishlistItem::where([
+                $wishlistItem = WishlistItem::where([
+                    'user_id' => $user->id,
+                    'item_id' => $item['id'],
+                    'item_type' => $item['type'],
+                ])->first();
+
+                if ($wishlistItem) {
+                    $wishlistItem->delete();
+                } else {
+                    $wishlistItem = WishlistItem::create([
                         'user_id' => $user->id,
                         'item_id' => $item['id'],
                         'item_type' => $item['type'],
-                    ])->delete();
-
-                    continue; 
+                    ]);
+                    $savedItems[] = $wishlistItem;
                 }
-
-                // Otherwise add or update wishlist item
-                $wishlistItem = WishlistItem::updateOrCreate(
-                    [
-                        'user_id' => $user->id,
-                        'item_id' => $item['id'],
-                        'item_type' => $item['type'],
-                    ],
-                    [
-                        'buy_or_not' => $item['buy_or_not'] ?? false,
-                    ]
-                );
-
-                $savedItems[] = $wishlistItem;
             }
 
             return response()->json([

@@ -21,6 +21,8 @@ export default function ProductCards() {
 
     const { addToCart } = useCart();
 
+    const [wishlistItems, setWishlistItems] = useState([]);
+
     // fetch data that send from backend
     let getProducts = async () => {
         let res = await axios.get("/api/products");
@@ -31,11 +33,6 @@ export default function ProductCards() {
 
         setProducts(promotionProducts);
     };
-
-    // call data fetching function in useEffect to run when user enter the page
-    useEffect(() => {
-        getProducts();
-    }, []);
 
     // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
@@ -55,6 +52,21 @@ export default function ProductCards() {
         setCurrentPage(page);
     };
 
+    // Fetch wishlist to know liked items
+    const getWishlistItems = async () => {
+        try {
+            const res = await axios.get("/api/wishlist?filter=product");
+            setWishlistItems(res.data.items);
+        } catch (error) {
+            console.error("Failed to fetch wishlist items:", error);
+        }
+    };
+
+    useEffect(() => {
+        getProducts();
+        getWishlistItems();
+    }, []);
+
     const toggleWishlist = async (id, type) => {
         try {
             const formData = new FormData();
@@ -71,9 +83,21 @@ export default function ProductCards() {
                     "Content-Type": "multipart/form-data",
                 },
             });
+
+            getWishlistItems();
         } catch (err) {
             console.error("Failed to toggle wishlist", err);
         }
+    };
+
+    // Helper to check if item is in wishlist
+    const isInWishlist = (id, type) => {
+        return wishlistItems.some(
+            (item) =>
+                item.item_type === type &&
+                ((type === "product" && item.product.id === id) ||
+                    (type === "product" && item.product.id === id))
+        );
     };
     return (
         <motion.div
@@ -125,10 +149,19 @@ export default function ProductCards() {
                                     onClick={() =>
                                         toggleWishlist(product.id, "product")
                                     }
+                                    className={`${
+                                        isInWishlist(product.id, "product")
+                                            ? "text-accentRed"
+                                            : "text-gray-500"
+                                    }`}
                                 >
                                     <Heart
-                                        size={16}
-                                        className="text-accentRed"
+                                        size={20}
+                                        fill={
+                                            isInWishlist(product.id, "product")
+                                                ? "red"
+                                                : "none"
+                                        }
                                     />
                                 </button>
                                 <a

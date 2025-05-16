@@ -4,10 +4,12 @@ import { motion } from "framer-motion";
 import { Input } from "../../Components/ui/input";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import { useCart } from "@/contexts/CartContext";
 
 export default function Liked() {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [filter, setFilter] = useState("menu");
+    const { addToCart } = useCart();
 
     const getWishlistItems = async () => {
         try {
@@ -22,15 +24,39 @@ export default function Liked() {
         getWishlistItems();
     }, [filter]);
 
+    const toggleWishlist = async (id, type) => {
+        try {
+            const formData = new FormData();
+            formData.append("items[0][id]", id);
+            formData.append("items[0][type]", type);
+
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                ?.getAttribute("content");
+
+            await axios.post("/api/wishlist/toggle", formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // Refresh wishlist after toggling
+            getWishlistItems();
+        } catch (err) {
+            console.error("Failed to toggle wishlist", err);
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="w-full lg:w-[68%] xl:w-[74%] flex flex-col gap-6 lg:ml-[32%] xl:ml-[26%] px-3 lg:px-7"
+            className="w-full lg:w-[68%] xl:w-[74%] flex flex-col gap-6 lg:ml-[32%] xl:ml-[26%] px-3 lg:px-7 py-6"
         >
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between">
                 <h1 className="text-2xl font-medium">Favorite</h1>
                 <div className="relative w-full max-w-md hidden md:block">
                     <Search
@@ -45,7 +71,7 @@ export default function Liked() {
                 </div>
             </div>
 
-            <ul className="mt-6 flex gap-3 items-center space-x-4">
+            <ul className="mt-4 flex gap-3 items-center space-x-4">
                 <li>
                     <button
                         onClick={() => setFilter("menu")}
@@ -92,6 +118,35 @@ export default function Liked() {
                                         />
                                     </div>
                                     <div className="pt-5 px-6">
+                                        <div className="flex items-center justify-between mb-3">
+                                            <div className="flex gap-4">
+                                                <button
+                                                    onClick={() =>
+                                                        toggleWishlist(
+                                                            item.menu.id,
+                                                            "menu"
+                                                        )
+                                                    }
+                                                    className="text-accentRed"
+                                                >
+                                                    <Heart
+                                                        size={20}
+                                                        fill="red"
+                                                    />{" "}
+                                                </button>
+
+                                                <div className="flex items-center gap-1 text-gray-600">
+                                                    <Star
+                                                        size={20}
+                                                        fill="currentColor"
+                                                        className="text-accentYellow"
+                                                    />
+                                                    <span className="text-sm font-medium">
+                                                        4.5
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <h3 className="text-lg mt-7 md:mt-12 font-semibold">
                                             {item.menu.title}
                                         </h3>
@@ -134,11 +189,9 @@ export default function Liked() {
                                                 "product"
                                             )
                                         }
+                                        className="text-accentRed"
                                     >
-                                        <Heart
-                                            size={16}
-                                            className="text-accentRed"
-                                        />
+                                        <Heart size={16} fill="red" />
                                     </button>
                                     <a
                                         href="#"

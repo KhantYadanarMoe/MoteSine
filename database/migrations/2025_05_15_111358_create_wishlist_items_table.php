@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->unsignedBigInteger('item_id');
             $table->string('item_type'); 
-            $table->boolean('buy_or_not')->default(false);
+            // $table->boolean('buy_or_not')->default(false);
             $table->timestamps();
 
             $table->unique(['user_id', 'item_id', 'item_type']);
