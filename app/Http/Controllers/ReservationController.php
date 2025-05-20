@@ -13,6 +13,9 @@ class ReservationController extends Controller
         $validator = Validator::make(request()->all(), [
             "firstName" => ["required"],
             "lastName" => ["required"],
+            "guest" => ["required"],
+            "date" => ["required", 'date'],
+            "time" => ["required", 'string'],
             "email" => ["required"],
             "phone" => ["required"],
             "message" => ["string", "max:1000"],
@@ -29,6 +32,9 @@ class ReservationController extends Controller
         $reservation = Reservation::create([
             'firstName' => request('firstName'),
             'lastName' => request('lastName'),
+            'guest' => request('guest'),
+            'date' => request('date'),
+            'time' => request('time'),
             'email' => request('email'),
             'phone' => request('phone'),
             'message' => request('message'),
