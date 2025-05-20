@@ -64,35 +64,46 @@ class ReservationController extends Controller
             ], 422);
         }
 
+        $existing = Reservation::where('date', request('date'))
+        ->where('time', request('time'))
+        ->where('guest', request('guest'))
+        ->exists();
+
+        if ($existing) {
+            return response()->json([
+                'message' => 'Reservation for the selected time and guest count is already full. Please choose another time.',
+            ], 409);
+        }
+
         // Generate a unique order number (e.g., ORD-20230512-1234)
         $reservationID = '#' . mt_rand(1000, 9999);
 
         // Define available tables by capacity
-    $tableMap = [
-        1 => ['1A', '1B'],
-        2 => ['2A', '2B', '2C', '2D', '2E', '2F'],
-        3 => ['3A', '3B', '3C', '3D', '3E', '3F'],
-        4 => ['4A', '4B', '4C', '4D', '4E', '4F'],
-        5 => ['5A', '5B', '5C', '5D', '5E', '5F'],
-        6 => ['6A', '6B', '6C', '6D', '6E', '6F'],
-        7 => ['7A', '7B', '7C', '7D', '7E'],
-        8 => ['8A', '8B', '8C', '8D'],
-        9 => ['9A', '9B', '9C'],
-        10 => ['10A', '10B'],
-    ];
+        $tableMap = [
+            1 => ['1A', '1B'],
+            2 => ['2A', '2B', '2C', '2D', '2E', '2F'],
+            3 => ['3A', '3B', '3C', '3D', '3E', '3F'],
+            4 => ['4A', '4B', '4C', '4D', '4E', '4F'],
+            5 => ['5A', '5B', '5C', '5D', '5E', '5F'],
+            6 => ['6A', '6B', '6C', '6D', '6E', '6F'],
+            7 => ['7A', '7B', '7C', '7D', '7E'],
+            8 => ['8A', '8B', '8C', '8D'],
+            9 => ['9A', '9B', '9C'],
+            10 => ['10A', '10B'],
+        ];
 
-    $guestCount = request('guest');
+        $guestCount = request('guest');
 
-    // Choose table based on guest count
-    $availableTables = $tableMap[$guestCount] ?? null;
+        // Choose table based on guest count
+        $availableTables = $tableMap[$guestCount] ?? null;
 
-    if (!$availableTables) {
-        return response()->json([
-            'message' => "No table available for $guestCount guests."
-        ], 422);
-    }
+        if (!$availableTables) {
+            return response()->json([
+                'message' => "No table available for $guestCount guests."
+            ], 422);
+        }
 
-    $assignedTable = $availableTables[array_rand($availableTables)];
+        $assignedTable = $availableTables[array_rand($availableTables)];
 
         // store the rest of the data
         $reservation = Reservation::create([
@@ -112,6 +123,16 @@ class ReservationController extends Controller
         return response()->json([
             'message' => 'Reserved successfully.',
             'reservation' => $reservation,
+        ]);
+    }
+
+    public function index(){
+        // take data from backend database
+        $reservations = Reservation::latest()->get();
+
+        // send data to frontend
+        return response()->json([
+            'reservations' => $reservations
         ]);
     }
 }

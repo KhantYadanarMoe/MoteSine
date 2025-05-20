@@ -114,6 +114,17 @@ export default function ReservationInfo() {
         // Don't allow submit if availability was checked and it's NOT available
         if (isAvailable === false) {
             setIsDialogOpen(true);
+            setForm({
+                guest: "",
+                date: "",
+                time: "",
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: "",
+                message: "",
+            });
+            setErrors({});
             setAvailabilityMessage("");
         }
 
