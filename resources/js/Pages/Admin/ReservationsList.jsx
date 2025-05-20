@@ -33,6 +33,8 @@ export default function ReservationList() {
     // state to store reservations
     let [reservations, setReservations] = useState([]);
 
+    const [selectedReservationId, setSelectedReservationId] = useState(null);
+
     // fetch data that send from backend
     let getReservations = async () => {
         let res = await axios.get("/api/reservations");
@@ -148,7 +150,11 @@ export default function ReservationList() {
                                         >
                                             <DropdownMenuItem
                                                 className="text-accentGreen"
-                                                onClick={() => setIsOpen(true)}
+                                                onClick={() =>
+                                                    setSelectedReservationId(
+                                                        reservation.id
+                                                    )
+                                                }
                                             >
                                                 View Details
                                             </DropdownMenuItem>
@@ -158,8 +164,14 @@ export default function ReservationList() {
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                     <Sheet
-                                        open={isOpen}
-                                        onOpenChange={setIsOpen}
+                                        open={
+                                            selectedReservationId ===
+                                            reservation.id
+                                        }
+                                        onOpenChange={(open) => {
+                                            if (!open)
+                                                setSelectedReservationId(null); // close the sheet
+                                        }}
                                     >
                                         <SheetContent className="w-[93%] md:w-[48%] flex flex-col justify-between">
                                             <SheetHeader>
@@ -185,12 +197,9 @@ export default function ReservationList() {
                                                     />
                                                     <div>
                                                         <h1 className="font-medium">
-                                                            {
-                                                                reservation.firstName
-                                                            }{" "}
-                                                            {
-                                                                reservation.lastName
-                                                            }
+                                                            {reservation.user
+                                                                ?.name ??
+                                                                "Guest"}
                                                         </h1>
                                                         {/* <span className="text-sm text-gray-700">
                                                             Bahan, Yangon

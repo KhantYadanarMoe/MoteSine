@@ -132,7 +132,7 @@ class ReservationController extends Controller
 
     public function index(){
         // take data from backend database
-        $reservations = Reservation::latest()->get();
+        $reservations = Reservation::with('user')->latest()->get();
 
         // send data to frontend
         return response()->json([
