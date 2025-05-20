@@ -18,9 +18,25 @@ import { History, Hash, UserRound, Utensils, Ellipsis } from "lucide-react";
 import Profile from "../../../images/Profile.jpg";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function ReservationHistories() {
     const [isOpen, setIsOpen] = useState(false);
+    // state to store reservations
+    let [reservations, setReservations] = useState([]);
+
+    // fetch data that send from backend
+    let getReservations = async () => {
+        let res = await axios.get("/api/reservations");
+        let data = res.data;
+        setReservations(data.reservations);
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getReservations();
+    }, []);
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}

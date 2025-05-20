@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends Controller
@@ -105,8 +106,11 @@ class ReservationController extends Controller
 
         $assignedTable = $availableTables[array_rand($availableTables)];
 
+        $user = Auth::user();
+
         // store the rest of the data
         $reservation = Reservation::create([
+            'user_id' => $user ? $user->id : null,
             'firstName' => request('firstName'),
             'lastName' => request('lastName'),
             'guest' => request('guest'),
