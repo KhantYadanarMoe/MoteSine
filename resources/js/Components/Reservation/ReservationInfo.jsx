@@ -9,10 +9,14 @@ import { useState } from "react";
 import axios from "axios";
 import TimePicker from "../TimePicker";
 import DatePicker from "../DatePicker";
+import { format } from "date-fns";
 
 export default function ReservationInfo() {
     // prepare state to store form data
     const [form, setForm] = useState({
+        guest: "",
+        date: "",
+        time: "",
         firstName: "",
         lastName: "",
         email: "",
@@ -34,6 +38,14 @@ export default function ReservationInfo() {
         }));
     };
 
+    // Handle other custom components' inputs
+    const handleCustomChange = (name, value) => {
+        setForm((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
@@ -48,6 +60,11 @@ export default function ReservationInfo() {
         console.log("Form Data before submitting:", form);
 
         // store state data in object
+        formData.append("guest", form.guest);
+        if (form.date) {
+            formData.append("date", format(new Date(form.date), "yyyy-MM-dd"));
+        }
+        formData.append("time", form.time);
         formData.append("firstName", form.firstName);
         formData.append("lastName", form.lastName);
         formData.append("email", form.email);
@@ -72,6 +89,9 @@ export default function ReservationInfo() {
             // success condition
             if (res.data.message === "Reserved successfully.") {
                 setForm({
+                    guest: "",
+                    date: "",
+                    time: "",
                     firstName: "",
                     lastName: "",
                     email: "",
@@ -109,8 +129,11 @@ export default function ReservationInfo() {
                         </label>
                         <Input
                             id="guest"
+                            name="guest"
                             type="number"
-                            placeholder="Enter number"
+                            value={form.guest}
+                            onChange={handleInputChange}
+                            placeholder="Enter guest number"
                             className="mt-1 border-gray-500"
                         />
                     </div>
@@ -119,14 +142,30 @@ export default function ReservationInfo() {
                         <label htmlFor="Time" className="font-medium">
                             Time
                         </label>
-                        <TimePicker minTime={540} maxTime={1320} />
+                        <TimePicker
+                            minTime={540}
+                            maxTime={1320}
+                            id="time"
+                            name="time"
+                            selectedTime={form.time}
+                            onTimeChange={(time) =>
+                                handleCustomChange("time", time)
+                            }
+                        />
                     </div>
 
                     <div className="flex flex-col gap-1 px-2">
                         <label htmlFor="Date" className="font-medium">
                             Date
                         </label>
-                        <DatePicker />
+                        <DatePicker
+                            id="date"
+                            name="date"
+                            selectedDate={form.date}
+                            onDateChange={(date) =>
+                                handleCustomChange("date", date)
+                            }
+                        />
                     </div>
 
                     <Button
