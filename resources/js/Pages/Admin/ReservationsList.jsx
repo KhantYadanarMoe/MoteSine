@@ -29,7 +29,6 @@ import { useEffect } from "react";
 import dayjs from "dayjs";
 
 export default function ReservationList() {
-    const [isOpen, setIsOpen] = useState(false);
     // state to store reservations
     let [reservations, setReservations] = useState([]);
 
@@ -207,6 +206,19 @@ export default function ReservationList() {
                                                     </div>
                                                 </div>
                                                 <div className="mt-8">
+                                                    <div className="flex justify-between items-center mb-2">
+                                                        <h1 className="text-sm font-medium">
+                                                            Name -{" "}
+                                                        </h1>
+                                                        <span className="text-sm text-gray-800">
+                                                            {
+                                                                reservation.firstName
+                                                            }{" "}
+                                                            {
+                                                                reservation.lastName
+                                                            }
+                                                        </span>
+                                                    </div>
                                                     <div className="flex justify-between items-center mb-2">
                                                         <h1 className="text-sm font-medium">
                                                             Date -{" "}

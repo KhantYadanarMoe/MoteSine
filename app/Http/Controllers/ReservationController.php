@@ -139,4 +139,23 @@ class ReservationController extends Controller
             'reservations' => $reservations
         ]);
     }
+
+    public function userReservations(){
+        $user = Auth::user();  // Get the logged-in user
+
+        // Check if the user exists (just to be safe)
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+
+        /** @var \App\Models\User $user */
+        $reservations = $user->reservations()
+        ->with('user')
+            ->latest()
+            ->get();
+
+        return response()->json([
+            'reservations' => $reservations
+        ]);
+    }
 }
