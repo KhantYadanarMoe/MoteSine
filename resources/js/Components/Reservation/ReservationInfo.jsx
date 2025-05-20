@@ -4,8 +4,90 @@ import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
+import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
 
 export default function ReservationInfo() {
+    // prepare state to store form data
+    const [form, setForm] = useState({
+        firstName: "",
+        lastName: "",
+        email: "",
+        phone: "",
+        message: "",
+    });
+    // store errors state
+    const [errors, setErrors] = useState({});
+
+    // prepare to move another route/page after sending data
+    const navigate = useNavigate();
+
+    // Handle HTML inputs
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    // form submit function
+    const submit = async (e) => {
+        e.preventDefault();
+
+        // url and method to use in sending data using axios
+        let url = "/reserve";
+        let method = "post";
+
+        // create new object to store form data to send
+        let formData = new FormData();
+
+        console.log("Form Data before submitting:", form);
+
+        // store state data in object
+        formData.append("firstName", form.firstName);
+        formData.append("lastName", form.lastName);
+        formData.append("email", form.email);
+        formData.append("phone", form.phone);
+        formData.append("message", form.message);
+
+        console.log("Form data after appending:", formData);
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            // send data
+            const res = await axios[method](url, formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            // success condition
+            if (res.data.message === "Reserved successfully.") {
+                setForm({
+                    firstName: "",
+                    lastName: "",
+                    email: "",
+                    phone: "",
+                    message: "",
+                });
+                setErrors({});
+                navigate("/reservation");
+            }
+        } catch (error) {
+            console.error("Error reserving:", error);
+
+            // failed condition
+            if (error.response && error.response.status === 422) {
+                setErrors(error.response.data.errors);
+            }
+        }
+    };
     return (
         <div className="block md:flex gap-3 items-center mt-3 md:mt-16 mb-4 w-[96%] lg:w-[90%] mx-auto">
             <motion.div
@@ -30,7 +112,10 @@ export default function ReservationInfo() {
                             <label htmlFor="firstName">First Name</label>
                             <Input
                                 id="firstName"
+                                name="firstName"
                                 type="text"
+                                value={form.firstName}
+                                onChange={handleInputChange}
                                 placeholder="Enter your first name"
                                 className="mt-1 border-gray-500"
                             />
@@ -39,7 +124,10 @@ export default function ReservationInfo() {
                             <label htmlFor="lastName">Last Name</label>
                             <Input
                                 id="lastName"
+                                name="lastName"
                                 type="text"
+                                value={form.lastName}
+                                onChange={handleInputChange}
                                 placeholder="Enter your last name"
                                 className="mt-1 border-gray-500"
                             />
@@ -50,7 +138,10 @@ export default function ReservationInfo() {
                             <label htmlFor="email">Email</label>
                             <Input
                                 id="email"
+                                name="email"
                                 type="text"
+                                value={form.email}
+                                onChange={handleInputChange}
                                 placeholder="Enter your email"
                                 className="mt-1 border-gray-500"
                             />
@@ -59,7 +150,10 @@ export default function ReservationInfo() {
                             <label htmlFor="phone">Phone</label>
                             <Input
                                 id="phone"
+                                name="phone"
                                 type="text"
+                                value={form.phone}
+                                onChange={handleInputChange}
                                 placeholder="Enter your phone"
                                 className="mt-1 border-gray-500"
                             />
@@ -69,7 +163,10 @@ export default function ReservationInfo() {
                         <label htmlFor="message">Message</label>
                         <Textarea
                             id="message"
+                            name="message"
                             type="text"
+                            value={form.message}
+                            onChange={handleInputChange}
                             placeholder="Enter your message"
                             className="mt-1 border-gray-500"
                         ></Textarea>
@@ -78,6 +175,7 @@ export default function ReservationInfo() {
                         <Button
                             variant="default"
                             className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                            onClick={submit}
                         >
                             Reserve
                         </Button>
