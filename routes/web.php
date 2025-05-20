@@ -73,6 +73,7 @@ Route::get('/api/order/{id}', [OrdersController::class, 'orderDetails']);
 Route::get('/api/user/orders', [OrdersController::class, 'userOrders']);
 Route::put('/api/order/{id}/status', [OrdersController::class, 'updateStatus']);
 
+Route::post('/check-availability', [ReservationController::class, 'checkAvailability']);
 Route::post("/reserve", [ReservationController::class, 'reserve']);
 
 Route::get('/api/users', [AuthController::class, 'index']);

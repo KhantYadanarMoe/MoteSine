@@ -8,6 +8,42 @@ use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends Controller
 {
+    public function checkAvailability(){
+        $validator = Validator::make(request()->all(), [
+                "guest" => ["required"],
+                "date" => ["required", 'date'],
+                "time" => ["required", 'string'],
+            ]);
+        // condition for failed validation
+        if ($validator->fails()) {
+            return response()->json([
+                'available' => false,
+                'errors' => $validator->errors()->messages()
+            ], 422);
+        }
+
+        $guest = request('guest');
+        $date = request('date');
+        $time = request('time');
+
+        $existing = Reservation::where('date', $date)
+            ->where('time', $time)
+            ->where('guest', $guest)
+            ->exists();
+
+        if ($existing) {
+            return response()->json([
+                'available' => false,
+                'message' => 'Reservation for the time you preferred is full! We are sorry!',
+            ]);
+        }
+
+        return response()->json([
+            'available' => true,
+            'message' => 'The table for your reservation is available. Please fill the reservation form!',
+        ]);
+    }
+
     public function reserve(){
         // validate all the data from frontend
         $validator = Validator::make(request()->all(), [

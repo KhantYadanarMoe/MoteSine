@@ -7,6 +7,17 @@ import { Textarea } from "../ui/textarea";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import TimePicker from "../TimePicker";
 import DatePicker from "../DatePicker";
 import { format } from "date-fns";
@@ -25,6 +36,12 @@ export default function ReservationInfo() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+
+    const [availabilityMessage, setAvailabilityMessage] = useState("");
+    const [isAvailable, setIsAvailable] = useState(null);
+
+    // use state to check dialog open or not and control
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -46,9 +63,59 @@ export default function ReservationInfo() {
         }));
     };
 
+    const checkAvailability = async (e) => {
+        e.preventDefault();
+
+        // url and method to use in sending data using axios
+        let url = "/check-availability";
+        let method = "post";
+
+        // create new object to store form data to send
+        let formData = new FormData();
+
+        console.log("Form Data before checking availability:", form);
+
+        // store state data in object
+        formData.append("guest", form.guest);
+        if (form.date) {
+            formData.append("date", format(new Date(form.date), "yyyy-MM-dd"));
+        }
+        formData.append("time", form.time);
+
+        try {
+            const csrfToken = document
+                .querySelector('meta[name="csrf-token"]')
+                .getAttribute("content");
+
+            const res = await axios[method](url, formData, {
+                headers: {
+                    "X-CSRF-TOKEN": csrfToken,
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+
+            setAvailabilityMessage(res.data.message);
+            setIsAvailable(res.data.available);
+        } catch (error) {
+            console.error("Availability check error:", error);
+            if (error.response?.data?.message) {
+                setAvailabilityMessage(error.response.data.message);
+            } else {
+                setAvailabilityMessage("Error checking availability.");
+            }
+            setIsAvailable(false);
+        }
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+
+        // Don't allow submit if availability was checked and it's NOT available
+        if (isAvailable === false) {
+            setIsDialogOpen(true);
+            setAvailabilityMessage("");
+        }
 
         // url and method to use in sending data using axios
         let url = "/reserve";
@@ -100,6 +167,7 @@ export default function ReservationInfo() {
                 });
                 setErrors({});
                 navigate("/reservation");
+                setAvailabilityMessage("");
             }
         } catch (error) {
             console.error("Error reserving:", error);
@@ -171,6 +239,7 @@ export default function ReservationInfo() {
                     <Button
                         variant="outline"
                         className="rounded-lg border-accentRed text-accentRed hover:bg-gray-100 hover:text-hoverRed hover:border-hoverRed duration-300"
+                        onClick={checkAvailability}
                     >
                         Check Availability
                     </Button>
@@ -185,6 +254,17 @@ export default function ReservationInfo() {
                     viewport={{ once: false, amount: 0.05 }}
                 >
                     <div className="mb-5">
+                        {availabilityMessage && (
+                            <p
+                                className={`text-sm my-4 ${
+                                    isAvailable
+                                        ? "text-green-600"
+                                        : "text-red-600"
+                                }`}
+                            >
+                                {availabilityMessage}
+                            </p>
+                        )}
                         <h2 className="text-xl font-semibold mb-1 relative inline-block">
                             Detail Infos
                         </h2>
@@ -266,6 +346,33 @@ export default function ReservationInfo() {
                             >
                                 Reserve
                             </Button>
+                        </div>
+                        <div className="mt-5 flex justify-end">
+                            <AlertDialog
+                                open={isDialogOpen}
+                                onOpenChange={setIsDialogOpen}
+                            >
+                                <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                        <AlertDialogTitle>
+                                            Reservation Unavailable!
+                                        </AlertDialogTitle>
+                                        <AlertDialogDescription>
+                                            Reservation is not available for the
+                                            selected time.
+                                        </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                        <AlertDialogAction
+                                            onClick={() =>
+                                                setIsDialogOpen(false)
+                                            }
+                                        >
+                                            OK
+                                        </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                </AlertDialogContent>
+                            </AlertDialog>
                         </div>
                     </form>
                 </motion.div>
