@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('phone');
             $table->string('reservation_code')->unique();
             $table->string('table_no');
-            $table->text('message');
+            $table->string('status')->default('confirmed');
+            $table->text('message')->nullable();
             $table->timestamps();
         });
     }

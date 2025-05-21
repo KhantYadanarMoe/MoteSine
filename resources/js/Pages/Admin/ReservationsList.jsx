@@ -63,6 +63,28 @@ export default function ReservationList() {
     const handlePageChange = (page) => {
         setCurrentPage(page);
     };
+
+    const updateReservationStatus = async (id, currentStatus) => {
+        try {
+            let newStatus =
+                currentStatus === "confirmed" ? "reserved" : "confirmed";
+
+            let res = await axios.post(`/api/reservations/${id}/status`, {
+                status: newStatus,
+            });
+
+            setReservations((prevReservations) =>
+                prevReservations.map((reservation) =>
+                    reservation.id === id
+                        ? { ...reservation, status: newStatus }
+                        : reservation
+                )
+            );
+        } catch (error) {
+            console.error("Failed to update status:", error);
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -132,9 +154,15 @@ export default function ReservationList() {
                                     </h1>
                                 </li>
                                 <li className="basis-[13%]">
-                                    <span className="px-1 py-1 rounded-md bg-yellow-100 text-accentYellow text-sm">
-                                        Pending
-                                    </span>
+                                    {reservation.status === "confirmed" ? (
+                                        <span className="px-1 py-1 rounded-md bg-green-100 text-accentGreen text-sm">
+                                            Confirmed
+                                        </span>
+                                    ) : (
+                                        <span className="px-1 py-1 rounded-md bg-yellow-100 text-yellow-700 text-sm">
+                                            Reserved
+                                        </span>
+                                    )}
                                 </li>
                                 <li className="basis-[5%]">
                                     <DropdownMenu modal={false}>
@@ -292,8 +320,17 @@ export default function ReservationList() {
                                                 <Button
                                                     type="submit"
                                                     className="text-white bg-accentRed"
+                                                    onClick={() =>
+                                                        updateReservationStatus(
+                                                            reservation.id,
+                                                            reservation.status
+                                                        )
+                                                    }
                                                 >
-                                                    Arrived
+                                                    {reservation.status ===
+                                                    "confirmed"
+                                                        ? "Mark as Reserved"
+                                                        : "Mark as Confirmed"}
                                                 </Button>
                                             </div>
                                         </SheetContent>

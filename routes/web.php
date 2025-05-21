@@ -77,6 +77,7 @@ Route::post('/check-availability', [ReservationController::class, 'checkAvailabi
 Route::post("/reserve", [ReservationController::class, 'reserve']);
 Route::get('/api/reservations', [ReservationController::class, 'index']);
 Route::get('/api/user/reservations', [ReservationController::class, 'userReservations']);
+Route::post('/api/reservations/{id}/status', [ReservationController::class, 'updateStatus']);
 
 Route::get('/api/users', [AuthController::class, 'index']);
 Route::middleware('auth:sanctum')->put('/api/user/{user}', [AuthController::class, 'updateUser']);

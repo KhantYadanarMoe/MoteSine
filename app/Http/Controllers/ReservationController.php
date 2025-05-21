@@ -55,7 +55,7 @@ class ReservationController extends Controller
             "time" => ["required", 'string'],
             "email" => ["required"],
             "phone" => ["required"],
-            "message" => ["string", "max:1000"],
+            "message" => ["nullable", "max:1000"],
         ]);
 
         // condition for failed validation
@@ -158,4 +158,20 @@ class ReservationController extends Controller
             'reservations' => $reservations
         ]);
     }
+
+    public function updateStatus(Request $request, $id){
+        $reservation = Reservation::find($id);
+
+        if (!$reservation) {
+            return response()->json(['message' => 'Reservation not found'], 404);
+        }
+
+        // Accept status from request and update
+        $reservation->status = $request->status;
+        $reservation->save();
+
+        return response()->json(['message' => 'Reservation status updated successfully']);
+    }
+
+
 }
