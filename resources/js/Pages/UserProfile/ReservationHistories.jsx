@@ -35,7 +35,6 @@ export default function ReservationHistories() {
         setReservations(data.reservations);
     };
 
-    // call data fetching function in useEffect to run when user enter the page
     useEffect(() => {
         getReservations();
     }, []);
@@ -45,7 +44,6 @@ export default function ReservationHistories() {
         (r) => r.id === selectedReservationId
     );
 
-    // Format date function (simple example)
     function formatDate(dateStr) {
         const options = { weekday: "long", day: "numeric", month: "long" };
         return new Date(dateStr).toLocaleDateString(undefined, options);
@@ -116,9 +114,16 @@ export default function ReservationHistories() {
                                         </div>
 
                                         <div className="md:basis-[15%] hidden md:block">
-                                            <span className="px-1 py-1 rounded-md bg-yellow-100 text-accentYellow text-sm">
-                                                Pending
-                                            </span>
+                                            {reservation.status ===
+                                            "confirmed" ? (
+                                                <span className="px-1 py-1 rounded-md bg-green-100 text-accentGreen text-sm">
+                                                    Confirmed
+                                                </span>
+                                            ) : (
+                                                <span className="px-1 py-1 rounded-md bg-yellow-100 text-yellow-700 text-sm">
+                                                    Reserved
+                                                </span>
+                                            )}
                                         </div>
 
                                         <div className="basis-[8%] md:basis-[10%]">

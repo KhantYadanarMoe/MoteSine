@@ -10,29 +10,32 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useEffect } from "react";
 
 export default function ReservationCalendar() {
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [reservations, setReservations] = useState([]);
 
-    // Mock reservation data
-    const reservationData = {
-        "2025-02-02": [
-            { id: 1, name: "John Doe", time: "7:00 PM", guests: 2 },
-            { id: 2, name: "Jane Smith", time: "8:30 PM", guests: 4 },
-        ],
-        "2025-02-03": [
-            { id: 3, name: "Michael Lee", time: "6:00 PM", guests: 3 },
-        ],
+    const handleDateChange = async (date) => {
+        if (!date) return;
+
+        setSelectedDate(date);
+        const formattedDate = format(date, "yyyy-MM-dd");
+
+        try {
+            const res = await axios.get(
+                `/api/reservations/by-date/${formattedDate}`
+            );
+            setReservations(res.data || []);
+        } catch (error) {
+            console.error("Failed to fetch reservations:", error);
+            setReservations([]);
+        }
     };
 
-    // Handle date selection
-    const handleDateChange = (date) => {
-        if (!date) return; // Prevent errors if no date is selected
-        setSelectedDate(date);
-        const formattedDate = format(date, "yyyy-MM-dd"); // Convert date to "2025-02-02" format
-        setReservations(reservationData[formattedDate] || []); // Fetch reservations or set empty array
-    };
+    useEffect(() => {
+        handleDateChange(selectedDate);
+    }, []);
 
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -262,7 +265,7 @@ export default function ReservationCalendar() {
                 </div>
             </div>
             <div className="md:w-[40%] lg:w-[30%]">
-                <div className=" py-4 border border-gray-300 bg-white shadow-lg rounded-md">
+                <div className="py-4 border border-gray-300 bg-white shadow-lg rounded-md">
                     <h2 className="font-medium text-accentRed pl-4">
                         Select Date
                     </h2>
@@ -274,7 +277,6 @@ export default function ReservationCalendar() {
                     />
                 </div>
 
-                {/* Reservations for Selected Date */}
                 <div className="mt-5 p-4 border border-gray-300 bg-white shadow-lg rounded-md">
                     <h2 className="font-medium text-accentRed">Reservations</h2>
                     {reservations.length > 0 ? (
@@ -284,9 +286,11 @@ export default function ReservationCalendar() {
                                     key={res.id}
                                     className="p-2 bg-gray-50 border-l-2 border-l-accentRed"
                                 >
-                                    <p className="font-medium">{res.name}</p>
+                                    <p className="font-medium">
+                                        {res.firstName} {res.lastName}
+                                    </p>
                                     <p className="text-sm text-gray-600">
-                                        {res.time} - {res.guests} Guests
+                                        {res.time} - {res.guest} Guests
                                     </p>
                                 </li>
                             ))}

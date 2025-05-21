@@ -141,9 +141,8 @@ class ReservationController extends Controller
     }
 
     public function userReservations(){
-        $user = Auth::user();  // Get the logged-in user
+        $user = Auth::user();  
 
-        // Check if the user exists (just to be safe)
         if (!$user) {
             return response()->json(['message' => 'User not found'], 404);
         }
@@ -171,6 +170,12 @@ class ReservationController extends Controller
         $reservation->save();
 
         return response()->json(['message' => 'Reservation status updated successfully']);
+    }
+
+    public function getByDate($date){
+        $reservations = Reservation::whereDate('date', $date)->get();
+
+        return response()->json($reservations);
     }
 
 
