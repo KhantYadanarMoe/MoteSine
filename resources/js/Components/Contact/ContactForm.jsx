@@ -7,8 +7,10 @@ import { Label } from "../ui/label";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 export default function ContactForm() {
+    const { form: generalForm } = useSetting();
     // prepare state to store form data
     const [form, setForm] = useState({
         name: "",
@@ -234,7 +236,7 @@ export default function ContactForm() {
                     <div className="flex gap-3 items-center mt-4">
                         <Mail className="text-accentRed" size={20} />
                         <p className="font-medium text-accentRed">
-                            motesine@gmail.com
+                            {generalForm.email}
                         </p>
                     </div>
                 </div>
