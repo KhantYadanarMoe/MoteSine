@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrdersController;
@@ -122,3 +123,6 @@ Route::post('/api/login', [AuthController::class, 'login']);
 Route::post('/api/register', [AuthController::class, 'register']);
 Route::middleware('auth:sanctum')->get('/api/user', fn(Request $req) => $req->user());
 Route::post('/api/logout', [AuthController::class, 'logout']);
+
+Route::post('/api/setting/general', [GeneralSettingController::class, 'updateSetting']);
+Route::get('/api/setting/general', [GeneralSettingController::class, 'getSetting']);

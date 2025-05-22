@@ -13,6 +13,7 @@ import {
 } from "../../Components/ui/select";
 import { Switch } from "../../Components/ui/switch";
 import { motion } from "framer-motion";
+import GeneralSetting from "./GeneralSetting";
 
 export default function Setting() {
     return (
@@ -23,86 +24,7 @@ export default function Setting() {
             viewport={{ once: false, amount: 0.2 }}
             className="mx-2 md:mx-4 my-8"
         >
-            <div className="mb-6 p-4 border border-gray-300 bg-white shadow-lg rounded-md">
-                <h1 className="flex gap-1 items-center font-medium text-accentRed">
-                    <Settings size={20} />
-                    General Settings
-                </h1>
-                <form action="" className="mt-8">
-                    <div className="md:flex gap-4">
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="name">Website's Name</Label>
-                            <Input
-                                id="name"
-                                type="text"
-                                placeholder="Enter your website's name"
-                                className="border-gray-500"
-                            />
-                        </div>
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="logo">Website's Logo</Label>
-                            <Input
-                                id="logo"
-                                type="file"
-                                className="border-gray-500 cursor-pointer"
-                            />
-                        </div>
-                    </div>
-                    <div className="md:flex gap-4">
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="email">Business Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                placeholder="Enter your business email"
-                                className="border-gray-500"
-                            />
-                        </div>
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="phone">Business Phone</Label>
-                            <Input
-                                id="phone"
-                                type="text"
-                                placeholder="Enter your business phone"
-                                className="border-gray-500"
-                            />
-                        </div>
-                    </div>
-                    <div className="my-5 md:my-3 space-y-2">
-                        <Label htmlFor="address">Restaurant Address</Label>
-                        <Textarea
-                            id="address"
-                            type="text"
-                            placeholder="Enter your restaurant address"
-                            className="border-gray-500"
-                        ></Textarea>
-                    </div>
-                    <div className="md:flex gap-4">
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="from">Opening Hour (From)</Label>
-                            <TimePicker minTime={360} maxTime={1380} />
-                        </div>
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="to">Opening Hour (To)</Label>
-                            <TimePicker minTime={360} maxTime={1380} />
-                        </div>
-                    </div>
-                    <div className="flex justify-end gap-2 mt-7">
-                        <Button
-                            variant="outline"
-                            className="rounded-lg bg-white text-accentRed border border-accentRed hover:bg-gray-100 hover:text-hoverRed hover:border-hoverRed duration-300"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="default"
-                            className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
-                        >
-                            Save Changes
-                        </Button>
-                    </div>
-                </form>
-            </div>
+            <GeneralSetting />
             <div className="mb-6 p-4 border border-gray-300 bg-white shadow-lg rounded-md">
                 <h1 className="flex gap-1 items-center font-medium text-accentRed">
                     <Utensils size={20} />

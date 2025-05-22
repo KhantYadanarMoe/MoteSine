@@ -5,12 +5,14 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const { user, setUser } = useAuth();
     const { cartItems } = useCart();
+    const { form, image } = useSetting();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
@@ -40,11 +42,13 @@ const Navbar = () => {
                     {isOpen ? <X size={20} /> : <Menu size={20} />}
                 </button>
 
-                <img
-                    src={Logo}
-                    alt="Logo"
-                    className="h-auto w-[96px] md:w-[110px]"
-                />
+                {form.logo && (
+                    <img
+                        src={`/storage/${form.logo}`} // adjust if needed
+                        alt="Logo"
+                        className="h-auto w-[96px] md:w-[110px]"
+                    />
+                )}
 
                 <ul className="hidden md:flex space-x-6 text-gray-800">
                     <li>

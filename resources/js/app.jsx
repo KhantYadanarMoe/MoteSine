@@ -5,12 +5,15 @@ import "../css/app.css";
 
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
+import { GeneralSettingProvider } from "./contexts/GeneralSettingContext";
 
 export default function App() {
     return (
         <AuthProvider>
             <CartProvider>
-                <RouterProvider router={routes} />
+                <GeneralSettingProvider>
+                    <RouterProvider router={routes} />
+                </GeneralSettingProvider>
             </CartProvider>
         </AuthProvider>
     );
