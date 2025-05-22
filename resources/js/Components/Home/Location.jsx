@@ -1,8 +1,10 @@
 import { DoorOpen, Smartphone } from "lucide-react";
 import HeroBg from "../../../images/hero-bg.jpg";
 import { motion } from "framer-motion";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 const Location = () => {
+    const { form } = useSetting();
     return (
         <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -37,8 +39,7 @@ const Location = () => {
                         </p>
                         <hr className="my-1" />
                         <p className="text-base :text-lg font-medium">
-                            1257 Lexington Avenue, Apt 4B, New York, NY 10028,
-                            USA
+                            {form.address}
                         </p>
                         <div className="flex gap-2 mt-4">
                             <div className="w-1/2 flex items-center gap-1">
@@ -59,7 +60,7 @@ const Location = () => {
                                         Phone{" "}
                                     </p>
                                     <p className="text-gray-900 text-sm lg:text-base">
-                                        (917) 555-4827
+                                        {form.phone}
                                     </p>
                                 </div>
                             </div>

@@ -1,7 +1,9 @@
+import { useSetting } from "@/contexts/GeneralSettingContext";
 import { motion } from "framer-motion";
 import { MapPin, Phone } from "lucide-react";
 
 export default function Banner() {
+    const { form } = useSetting();
     return (
         <div className="overflow-hidden w-[100%] bg-accentGreen text-white h-[60px] relative">
             <motion.div
@@ -19,15 +21,12 @@ export default function Banner() {
                     <div className="flex gap-2 items-center">
                         <MapPin size={20} />
                         <h1 className="text-xl">Location:</h1>
-                        <p>
-                            1257 Lexington Avenue, Apt 4B, New York, NY 10028,
-                            USA
-                        </p>
+                        <p>{form.address}</p>
                     </div>
                     <div className="flex gap-2 items-center">
                         <Phone size={20} />
                         <h1 className="text-xl">Phone:</h1>
-                        <p>(917) 555-4827, (646) 555-7391, (212) 555-1846</p>
+                        <p>{form.phone}</p>
                     </div>
                 </div>
             </motion.div>

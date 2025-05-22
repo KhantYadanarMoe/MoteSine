@@ -224,7 +224,7 @@ export default function ContactForm() {
                     <div className="flex gap-3 items-center mt-4">
                         <PhoneCall className="text-accentRed" size={20} />
                         <p className="font-medium text-accentRed">
-                            (917) 555-4827
+                            {generalForm.phone}
                         </p>
                     </div>
                 </div>
@@ -249,7 +249,7 @@ export default function ContactForm() {
                     <div className="flex gap-3 items-center mt-4">
                         <MapPin className="text-accentRed" size={20} />
                         <p className="font-medium text-accentRed">
-                            1257 Lexington Avenue, Apt 4B.
+                            {generalForm.address}
                         </p>
                     </div>
                 </div>

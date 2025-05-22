@@ -418,8 +418,7 @@ export default function ReservationInfo() {
                     <div className="flex gap-2 font-medium">
                         <MapPin size={28} />
                         <h1 className="text-sm md:text-xs lg:text-sm">
-                            1257 Lexington Avenue, Apt 4B, New York, NY 10028,
-                            USA
+                            {generalForm.address}
                         </h1>
                     </div>
                 </motion.div>
