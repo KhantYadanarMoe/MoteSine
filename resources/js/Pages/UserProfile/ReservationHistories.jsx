@@ -48,6 +48,29 @@ export default function ReservationHistories() {
         const options = { weekday: "long", day: "numeric", month: "long" };
         return new Date(dateStr).toLocaleDateString(undefined, options);
     }
+
+    const handleStatusChange = async (id, newStatus) => {
+        try {
+            const response = await axios.post(
+                `/api/reservations/${id}/status`,
+                {
+                    status: newStatus,
+                }
+            );
+
+            setReservations((prev) =>
+                prev.map((r) =>
+                    r.id === id ? { ...r, status: response.data.status } : r
+                )
+            );
+        } catch (error) {
+            console.error(
+                "Error updating status:",
+                error.response?.data || error
+            );
+            alert("Failed to update reservation status.");
+        }
+    };
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -114,16 +137,23 @@ export default function ReservationHistories() {
                                         </div>
 
                                         <div className="md:basis-[15%] hidden md:block">
-                                            {reservation.status ===
-                                            "confirmed" ? (
-                                                <span className="px-1 py-1 rounded-md bg-green-100 text-accentGreen text-sm">
-                                                    Confirmed
-                                                </span>
-                                            ) : (
-                                                <span className="px-1 py-1 rounded-md bg-yellow-100 text-yellow-700 text-sm">
-                                                    Reserved
-                                                </span>
-                                            )}
+                                            <span
+                                                className={`px-1 py-1 rounded-md text-sm ${
+                                                    reservation.status ===
+                                                    "Confirmed"
+                                                        ? "bg-green-100 text-accentGreen"
+                                                        : reservation.status ===
+                                                          "Canceled"
+                                                        ? "bg-red-100 text-red-600"
+                                                        : reservation.status ===
+                                                          "Reserved"
+                                                        ? "bg-yellow-100 text-yellow-700"
+                                                        : "bg-gray-100 text-gray-600"
+                                                }`}
+                                            >
+                                                {reservation.status ||
+                                                    "Pending"}
+                                            </span>
                                         </div>
 
                                         <div className="basis-[8%] md:basis-[10%]">
@@ -148,16 +178,23 @@ export default function ReservationHistories() {
                                                         View Details
                                                     </DropdownMenuItem>
 
-                                                    <DropdownMenuItem
-                                                        onClick={() =>
-                                                            alert(
-                                                                `Cancel Reservation ${reservation.code}`
-                                                            )
-                                                        }
-                                                        className="text-accentRed hover:text-hoverRed"
-                                                    >
-                                                        Cancel Reservation
-                                                    </DropdownMenuItem>
+                                                    {reservation.status !==
+                                                        "Reserved" &&
+                                                        reservation.status !==
+                                                            "Canceled" && (
+                                                            <DropdownMenuItem
+                                                                onClick={() =>
+                                                                    handleStatusChange(
+                                                                        reservation.id,
+                                                                        "Canceled"
+                                                                    )
+                                                                }
+                                                                className="text-accentRed"
+                                                            >
+                                                                Cancel
+                                                                Reservation
+                                                            </DropdownMenuItem>
+                                                        )}
                                                 </DropdownMenuContent>
                                             </DropdownMenu>
                                             {/* Detail Sheet */}

@@ -158,19 +158,28 @@ class ReservationController extends Controller
         ]);
     }
 
-    public function updateStatus(Request $request, $id){
-        $reservation = Reservation::find($id);
+   public function updateStatus(Request $request, $id){
+        $reservation = Reservation::findOrFail($id);
 
-        if (!$reservation) {
-            return response()->json(['message' => 'Reservation not found'], 404);
-        }
+        $validated = $request->validate([
+            'status' => 'required|in:Pending,Confirmed,Reserved,Canceled',
+        ]);
 
-        // Accept status from request and update
-        $reservation->status = $request->status;
-        $reservation->save();
+        // Map internal status to human-readable status
+        $statusMap = [
+            'Pending' => 'Pending',
+            'Confirmed' => 'Confirmed',
+            "Reserved" => 'Reserved',
+            'Canceled' => 'Canceled',
+        ];
 
-        return response()->json(['message' => 'Reservation status updated successfully']);
+        // Set the human-readable status
+        $reservation->status = $statusMap[$validated['status']];
+            $reservation->save();
+
+            return response()->json(['success' => true, 'status' => $reservation->status]);
     }
+
 
     public function getByDate($date){
         $reservations = Reservation::whereDate('date', $date)->get();

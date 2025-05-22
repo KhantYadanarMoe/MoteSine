@@ -64,24 +64,28 @@ export default function ReservationList() {
         setCurrentPage(page);
     };
 
-    const updateReservationStatus = async (id, currentStatus) => {
+    const STATUS = ["Pending", "Confirmed", "Reserved", "Canceled"];
+
+    const handleStatusChange = async (id, newStatus) => {
         try {
-            let newStatus =
-                currentStatus === "confirmed" ? "reserved" : "confirmed";
+            const response = await axios.post(
+                `/api/reservations/${id}/status`,
+                {
+                    status: newStatus,
+                }
+            );
 
-            let res = await axios.post(`/api/reservations/${id}/status`, {
-                status: newStatus,
-            });
-
-            setReservations((prevReservations) =>
-                prevReservations.map((reservation) =>
-                    reservation.id === id
-                        ? { ...reservation, status: newStatus }
-                        : reservation
+            setReservations((prev) =>
+                prev.map((r) =>
+                    r.id === id ? { ...r, status: response.data.status } : r
                 )
             );
         } catch (error) {
-            console.error("Failed to update status:", error);
+            console.error(
+                "Error updating status:",
+                error.response?.data || error
+            );
+            alert("Failed to update reservation status.");
         }
     };
 
@@ -154,15 +158,21 @@ export default function ReservationList() {
                                     </h1>
                                 </li>
                                 <li className="basis-[13%]">
-                                    {reservation.status === "confirmed" ? (
-                                        <span className="px-1 py-1 rounded-md bg-green-100 text-accentGreen text-sm">
-                                            Confirmed
-                                        </span>
-                                    ) : (
-                                        <span className="px-1 py-1 rounded-md bg-yellow-100 text-yellow-700 text-sm">
-                                            Reserved
-                                        </span>
-                                    )}
+                                    <span
+                                        className={`px-1 py-1 rounded-md text-sm ${
+                                            reservation.status === "Confirmed"
+                                                ? "bg-green-100 text-accentGreen"
+                                                : reservation.status ===
+                                                  "Canceled"
+                                                ? "bg-red-100 text-red-600"
+                                                : reservation.status ===
+                                                  "Reserved"
+                                                ? "bg-yellow-100 text-yellow-700"
+                                                : "bg-gray-100 text-gray-600"
+                                        }`}
+                                    >
+                                        {reservation.status || "Pending"}
+                                    </span>
                                 </li>
                                 <li className="basis-[5%]">
                                     <DropdownMenu modal={false}>
@@ -176,7 +186,7 @@ export default function ReservationList() {
                                             className="w-40"
                                         >
                                             <DropdownMenuItem
-                                                className="text-accentGreen"
+                                                className="text-accentYellow"
                                                 onClick={() =>
                                                     setSelectedReservationId(
                                                         reservation.id
@@ -185,9 +195,33 @@ export default function ReservationList() {
                                             >
                                                 View Details
                                             </DropdownMenuItem>
-                                            <DropdownMenuItem className="text-accentRed">
-                                                Canceled
-                                            </DropdownMenuItem>
+                                            {reservation.status !==
+                                                "Reserved" && (
+                                                <div>
+                                                    <DropdownMenuItem
+                                                        onClick={() =>
+                                                            handleStatusChange(
+                                                                reservation.id,
+                                                                "Confirmed"
+                                                            )
+                                                        }
+                                                        className="text-accentGreen"
+                                                    >
+                                                        Confirm
+                                                    </DropdownMenuItem>
+                                                    <DropdownMenuItem
+                                                        onClick={() =>
+                                                            handleStatusChange(
+                                                                reservation.id,
+                                                                "Canceled"
+                                                            )
+                                                        }
+                                                        className="text-accentRed"
+                                                    >
+                                                        Cancel
+                                                    </DropdownMenuItem>
+                                                </div>
+                                            )}
                                         </DropdownMenuContent>
                                     </DropdownMenu>
                                     <Sheet
@@ -318,19 +352,24 @@ export default function ReservationList() {
                                             </div>
                                             <div className="flex justify-end">
                                                 <Button
-                                                    type="submit"
-                                                    className="text-white bg-accentRed"
+                                                    type="button"
+                                                    className={`text-white ${
+                                                        reservation.status ===
+                                                        "Reserved"
+                                                            ? "bg-gray-400 cursor-not-allowed"
+                                                            : "bg-yellow-600"
+                                                    }`}
                                                     onClick={() =>
-                                                        updateReservationStatus(
+                                                        handleStatusChange(
                                                             reservation.id,
-                                                            reservation.status
+                                                            "Reserved"
                                                         )
                                                     }
                                                 >
                                                     {reservation.status ===
-                                                    "confirmed"
-                                                        ? "Mark as Reserved"
-                                                        : "Mark as Confirmed"}
+                                                    "Reserved"
+                                                        ? "Already Reserved"
+                                                        : "Mark as Reserved"}
                                                 </Button>
                                             </div>
                                         </SheetContent>
