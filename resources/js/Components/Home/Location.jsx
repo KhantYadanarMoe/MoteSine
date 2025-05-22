@@ -49,7 +49,7 @@ const Location = () => {
                                         Open Daily{" "}
                                     </p>
                                     <p className="text-gray-900 text-sm lg:text-base">
-                                        9:00 AM-10:30 PM
+                                        {form.from}-{form.to}
                                     </p>
                                 </div>
                             </div>
