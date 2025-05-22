@@ -21,8 +21,10 @@ import {
 import TimePicker from "../TimePicker";
 import DatePicker from "../DatePicker";
 import { format } from "date-fns";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 export default function ReservationInfo() {
+    const { form: generalForm } = useSetting();
     // prepare state to store form data
     const [form, setForm] = useState({
         guest: "",
@@ -394,11 +396,13 @@ export default function ReservationInfo() {
                     transition={{ duration: 0.6, ease: "easeOut" }}
                     viewport={{ once: false, amount: 0.05 }}
                 >
-                    <img
-                        src={Logo}
-                        alt="logo"
-                        className="w-28 md:w-24 lg:w-32 h-auto "
-                    />
+                    {generalForm.logo && (
+                        <img
+                            src={`/storage/${generalForm.logo}`} // adjust if needed
+                            alt="Logo"
+                            className="w-28 md:w-24 lg:w-32 h-auto"
+                        />
+                    )}
                     <p className="text-gray-800 text-xs lg:text-sm mt-2">
                         Reserve a table to make sure your unforgettable eat out
                         memories! You can reserve with just one click. You can

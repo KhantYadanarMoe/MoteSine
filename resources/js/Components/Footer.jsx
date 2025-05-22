@@ -1,14 +1,22 @@
 import { Link } from "react-router-dom";
 import Logo from "../../images/logo.png";
 import { Instagram, Facebook } from "lucide-react";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 export default function Footer() {
+    const { form } = useSetting();
     return (
         <>
             <hr className="border-t-gray-400 mt-4" />
             <div className="flex flex-wrap  px-3 py-6">
                 <div className="mb-8 md:mb-10 w-full md:w-1/2 lg:w-1/4 px-1">
-                    <img src={Logo} alt="" className="w-[120px] " />
+                    {form.logo && (
+                        <img
+                            src={`/storage/${form.logo}`} // adjust if needed
+                            alt="Logo"
+                            className="w-[120px]"
+                        />
+                    )}
                     <h3 className="text-base text-gray-800 mt-3 rw-[90%]">
                         Feel the taste of your home with our dishes just in your
                         house!

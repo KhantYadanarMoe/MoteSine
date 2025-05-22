@@ -28,8 +28,10 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Input } from "../../Components/ui/input";
 import { motion } from "framer-motion";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 export default function AdminSidebar() {
+    const { form } = useSetting();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
@@ -45,7 +47,13 @@ export default function AdminSidebar() {
                 } xl:left-0 z-50`}
             >
                 <div className="flex justify-between items-center px-6 pb-6">
-                    <img src={logo} alt="" className="w-28 h-auto" />
+                    {form.logo && (
+                        <img
+                            src={`/storage/${form.logo}`} // adjust if needed
+                            alt="Logo"
+                            className="w-28 h-auto"
+                        />
+                    )}
                     <button onClick={() => setIsSidebarOpen(false)}>
                         <ChevronsLeft size={24} />
                     </button>

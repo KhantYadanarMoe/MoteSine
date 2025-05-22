@@ -12,7 +12,7 @@ const Navbar = () => {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const { user, setUser } = useAuth();
     const { cartItems } = useCart();
-    const { form, image } = useSetting();
+    const { form } = useSetting();
 
     const toggleMenu = () => {
         setIsOpen(!isOpen);
