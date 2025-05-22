@@ -1,4 +1,3 @@
-import logo from "../../../images/Logo.png";
 import {
     ChevronsLeft,
     LayoutDashboard,

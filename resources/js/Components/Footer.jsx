@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import Logo from "../../images/logo.png";
 import { Instagram, Facebook } from "lucide-react";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 

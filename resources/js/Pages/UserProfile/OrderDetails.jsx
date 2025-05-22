@@ -1,12 +1,12 @@
-import Mohinga from "../../../images/Mohinga.png";
-import Logo from "../../../images/Logo.png";
 import { motion } from "framer-motion";
 import { useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 export default function OrderDetails() {
+    const { form } = useSetting();
     // take id for edit feature
     let { id } = useParams();
 
@@ -149,11 +149,13 @@ export default function OrderDetails() {
                     </div>
                 </div>
                 <div className="md:w-2/5">
-                    <img
-                        src={Logo}
-                        alt="Mote Sine"
-                        className="w-24 h-auto my-3"
-                    />
+                    {form.logo && (
+                        <img
+                            src={`/storage/${form.logo}`} // adjust if needed
+                            alt="Logo"
+                            className="w-24 h-auto my-3"
+                        />
+                    )}
                     <p className="text-sm text-gray-700">
                         If you want to change something for this order, contact
                         us via phone.

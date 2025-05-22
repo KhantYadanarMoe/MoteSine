@@ -1,14 +1,15 @@
 import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Logo from "../../../images/Logo.png";
 import AuthBg from "../../../images/auth-bg.jpg";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
+import { useSetting } from "@/contexts/GeneralSettingContext";
 
 export default function Login() {
+    const { form: generalForm } = useSetting();
     const [form, setForm] = useState({
         email: "",
         password: "",
@@ -88,7 +89,13 @@ export default function Login() {
                 className="md:w-3/5 lg:w-1/2 px-5 flex items-center lg:pt-20 overflow-y-auto py-6"
             >
                 <div className="w-[97%] md:w-[90%] lg:w-[87%] mx-auto">
-                    <img src={Logo} alt="" className="w-28 h-auto mb-2" />
+                    {generalForm.logo && (
+                        <img
+                            src={`/storage/${generalForm.logo}`} // adjust if needed
+                            alt="Logo"
+                            className="w-28 h-auto mb-2"
+                        />
+                    )}
                     <p className="text-sm text-gray-800">
                         Order the food that can make your taste bud feel like
                         you're HOME.

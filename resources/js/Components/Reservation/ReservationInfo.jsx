@@ -1,4 +1,3 @@
-import Logo from "../../../images/logo.png";
 import { MapPin } from "lucide-react";
 import { Button } from "../ui/button";
 import { motion } from "framer-motion";

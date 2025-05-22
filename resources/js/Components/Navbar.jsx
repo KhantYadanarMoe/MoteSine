@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { Menu, X, ShoppingBag, LogIn, ChevronDown } from "lucide-react"; // Import ChevronDown
-import Logo from "../../images/logo.png";
+import { Menu, X, ShoppingBag, LogIn, ChevronDown } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
