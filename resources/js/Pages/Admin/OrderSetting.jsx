@@ -134,9 +134,9 @@ export default function OrderSetting() {
                                 <SelectValue placeholder="Select approval type" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Auto Approve">
+                                {/* <SelectItem value="Auto Approve">
                                     Auto-Accept
-                                </SelectItem>
+                                </SelectItem> */}
                                 <SelectItem value="Manual Approve">
                                     Manual Approval
                                 </SelectItem>
