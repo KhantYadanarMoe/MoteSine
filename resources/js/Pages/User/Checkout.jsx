@@ -13,6 +13,17 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { useOrderSetting } from "@/contexts/OrderSettingContext";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 
 export default function Checkout() {
     const { form: orderSetting } = useOrderSetting();
@@ -33,7 +44,7 @@ export default function Checkout() {
     const [errors, setErrors] = useState({});
     // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
-
+    const [showDialog, setShowDialog] = useState(false);
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
 
@@ -55,7 +66,7 @@ export default function Checkout() {
     };
 
     const submit = async (e) => {
-        e.preventDefault();
+        e?.preventDefault();
 
         const formData = new FormData();
 
@@ -142,6 +153,20 @@ export default function Checkout() {
         const price = item.finalPrice ?? item.originalPrice; // fallback if no finalPrice
         return acc + item.quantity * parseFloat(price);
     }, 0);
+
+    const tax = subtotal * 0.1;
+    const deliveryFee = parseFloat(orderSetting?.deliveryFee ?? 0);
+
+    const total = subtotal + tax + deliveryFee;
+
+    const handleConfirmOrder = () => {
+        const minAmount = parseFloat(orderSetting?.minOrder ?? 0);
+        if (total < minAmount) {
+            setShowDialog(true);
+        } else {
+            submit();
+        }
+    };
 
     return (
         <div className="px-4 md:px-6 py-7 bg-lightBackground lg:flex gap-5">
@@ -409,14 +434,12 @@ export default function Checkout() {
                         <div className="flex justify-between my-2">
                             <h1 className="text-sm">Total - </h1>
                             <p className="text-gray-800 font-medium">
-                                $
-                                {subtotal +
-                                    subtotal * 0.1 +
-                                    orderSetting.deliveryFee}
+                                ${total.toFixed(2)}
                             </p>
                         </div>
                         <Button
-                            onClick={submit}
+                            onClick={handleConfirmOrder}
+                            type="button"
                             variant="default"
                             className="rounded-lg w-full mt-5 bg-accentRed text-white hover:bg-hoverRed duration-300"
                         >
@@ -424,6 +447,24 @@ export default function Checkout() {
                         </Button>
                     </div>
                 </div>
+                <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>We are sorry!</AlertDialogTitle>
+                            <AlertDialogDescription>
+                                We do not accept orders under $
+                                {orderSetting?.minOrder ?? 0}. Please add more
+                                items to your cart.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter className="mt-3">
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction>
+                                <Link to="/menu">Add More</Link>
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </motion.div>
         </div>
     );
