@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class ReservationController extends Controller
@@ -79,6 +80,10 @@ class ReservationController extends Controller
         // Generate a unique order number (e.g., ORD-20230512-1234)
         $reservationID = '#' . mt_rand(1000, 9999);
 
+        $approvalType = DB::table('reservation_settings')->value('type') ?? 'Manual Approve';
+
+        $status = ($approvalType === 'Auto Approve') ? 'Confirmed' : 'Pending';
+
         // Define available tables by capacity
         $tableMap = [
             1 => ['1A', '1B'],
@@ -121,6 +126,7 @@ class ReservationController extends Controller
             'reservation_code' => $reservationID, 
             'table_no' => $assignedTable,
             'message' => request('message'),
+            'status' => $status,
         ]);
 
         // return when the data is successfully created.

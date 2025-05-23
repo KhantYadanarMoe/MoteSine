@@ -123,10 +123,10 @@ export default function ReservationSetting() {
                                 <SelectValue placeholder="Select approval type" />
                             </SelectTrigger>
                             <SelectContent>
-                                <SelectItem value="Auto-Accept">
+                                <SelectItem value="Auto Approve">
                                     Auto-Accept
                                 </SelectItem>
-                                <SelectItem value="Manual Approval">
+                                <SelectItem value="Manual Approve">
                                     Manual Approval
                                 </SelectItem>
                             </SelectContent>
