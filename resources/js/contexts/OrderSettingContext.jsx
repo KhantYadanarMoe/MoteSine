@@ -7,7 +7,6 @@ export const OrderSettingProvider = ({ children }) => {
     const [form, setForm] = useState({
         deliveryFee: "",
         minOrder: "",
-        prepTime: "",
         type: "",
         allow: true,
     });
@@ -20,7 +19,6 @@ export const OrderSettingProvider = ({ children }) => {
                 setForm({
                     deliveryFee: setting.deliveryFee || "",
                     minOrder: setting.minOrder || "",
-                    prepTime: setting.prepTime || "",
                     type: setting.type || "",
                     allow: setting.allow || "",
                 });

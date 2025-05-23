@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 class OrderSetting extends Model
 {
     protected $fillable = [
-        'deliveryFee', 'minOrder', 'prepTime', 'type', 'allow'
+        'deliveryFee', 'minOrder', 'type', 'allow'
     ];
 }

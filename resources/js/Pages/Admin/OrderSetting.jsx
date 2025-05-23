@@ -48,7 +48,6 @@ export default function OrderSetting() {
 
         formData.append("deliveryFee", form.deliveryFee);
         formData.append("minOrder", form.minOrder);
-        formData.append("prepTime", form.prepTime);
         formData.append("type", form.type);
         formData.append("allow", form.allow ? "1" : "0");
 
@@ -119,23 +118,6 @@ export default function OrderSetting() {
                 </div>
                 <div className="md:flex gap-4">
                     <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                        <Label htmlFor="prepTime">Order Preparation Time</Label>
-                        <div className="relative w-full max-w-sm">
-                            <span className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500">
-                                Mins
-                            </span>
-                            <Input
-                                id="prepTime"
-                                name="prepTime"
-                                value={form.prepTime}
-                                onChange={handleInputChange}
-                                type="number"
-                                placeholder="20"
-                                className="border-gray-500"
-                            />
-                        </div>
-                    </div>
-                    <div className="my-5 md:my-3 md:w-1/2 space-y-2">
                         <Label htmlFor="type">Order Accepting Type</Label>
                         <Select
                             defaultValue=""
@@ -161,18 +143,20 @@ export default function OrderSetting() {
                             </SelectContent>
                         </Select>
                     </div>
-                </div>
-                <div className="my-5 md:my-3 space-y-2">
-                    <Label htmlFor="allow">Enable/Disable Online Orders</Label>
-                    <div>
-                        <Switch
-                            id="allow"
-                            name="allow"
-                            checked={form.allow}
-                            onCheckedChange={(checked) =>
-                                handleCustomChange("allow", checked)
-                            }
-                        />
+                    <div className="my-5 md:my-3 md:w-1/2 space-y-2">
+                        <Label htmlFor="allow">
+                            Enable/Disable Online Orders
+                        </Label>
+                        <div>
+                            <Switch
+                                id="allow"
+                                name="allow"
+                                checked={form.allow}
+                                onCheckedChange={(checked) =>
+                                    handleCustomChange("allow", checked)
+                                }
+                            />
+                        </div>
                     </div>
                 </div>
                 <div className="flex justify-end gap-2 mt-7">

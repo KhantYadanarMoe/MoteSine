@@ -15,7 +15,6 @@ return new class extends Migration
             $table->id();
             $table->integer('deliveryFee')->nullable();
             $table->integer('minOrder')->nullable();
-            $table->integer('prepTime')->nullable();
             $table->string('type')->nullable();
             $table->boolean('allow')->nullable();  
             $table->timestamps();

@@ -12,7 +12,6 @@ class OrderSettingController extends Controller
         $validator = Validator::make(request()->all(), [
             "deliveryFee" => ["nullable", "numeric"],
             "minOrder" => ["nullable"],
-            "prepTime" => ["nullable"],
             "type" => ["nullable"],
             "allow" => ["nullable", "boolean"],
         ]);
@@ -33,7 +32,6 @@ class OrderSettingController extends Controller
         $setting->fill([
             'deliveryFee' => request('deliveryFee'),
             'minOrder' => request('minOrder'),
-            'prepTime' => request('prepTime'),
             'type' => request('type'),
             'allow' => request('allow'),
         ])->save();
