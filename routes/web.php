@@ -12,6 +12,7 @@ use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\ReservationSettingController;
 use App\Http\Controllers\ReviewsController;
 use App\Http\Controllers\WishlistController;
 use Illuminate\Foundation\Application;
@@ -126,3 +127,6 @@ Route::post('/api/logout', [AuthController::class, 'logout']);
 
 Route::post('/api/setting/general', [GeneralSettingController::class, 'updateSetting']);
 Route::get('/api/setting/general', [GeneralSettingController::class, 'getSetting']);
+
+Route::post('/api/setting/reservation', [ReservationSettingController::class, 'updateSetting']);
+Route::get('/api/setting/reservation', [ReservationSettingController::class, 'getSetting']);

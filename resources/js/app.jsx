@@ -6,13 +6,16 @@ import "../css/app.css";
 import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { GeneralSettingProvider } from "./contexts/GeneralSettingContext";
+import { ReservationSettingProvider } from "./contexts/ReservationSettingContext";
 
 export default function App() {
     return (
         <AuthProvider>
             <CartProvider>
                 <GeneralSettingProvider>
-                    <RouterProvider router={routes} />
+                    <ReservationSettingProvider>
+                        <RouterProvider router={routes} />
+                    </ReservationSettingProvider>
                 </GeneralSettingProvider>
             </CartProvider>
         </AuthProvider>

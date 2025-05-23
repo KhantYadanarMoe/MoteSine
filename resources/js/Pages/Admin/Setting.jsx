@@ -14,6 +14,7 @@ import {
 import { Switch } from "../../Components/ui/switch";
 import { motion } from "framer-motion";
 import GeneralSetting from "./GeneralSetting";
+import ReservationSetting from "./ReservationSetting";
 
 export default function Setting() {
     return (
@@ -123,72 +124,7 @@ export default function Setting() {
                     </div>
                 </form>
             </div>
-            <div className="mb-6 p-4 border border-gray-300 bg-white shadow-lg rounded-md">
-                <h1 className="flex gap-1 items-center font-medium text-accentRed">
-                    <Store size={20} />
-                    Reservation Settings
-                </h1>
-                <form action="" className="mt-8">
-                    <div className="md:flex gap-4">
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="maxGuests">
-                                Maximum Guests Per Reservation
-                            </Label>
-                            <div className="relative w-full max-w-sm">
-                                <span className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500">
-                                    Guest
-                                </span>
-                                <Input
-                                    id="maxGuests"
-                                    type="number"
-                                    placeholder="12"
-                                    className="border-gray-500"
-                                />
-                            </div>
-                        </div>
-                        <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                            <Label htmlFor="acceptType">
-                                Reservation Confirmation Type
-                            </Label>
-                            <Select defaultValue="">
-                                <SelectTrigger className="w-full max-w-sm border-gray-500">
-                                    <SelectValue placeholder="Select approval type" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="auto">
-                                        Auto-Accept
-                                    </SelectItem>
-                                    <SelectItem value="manual">
-                                        Manual Approval
-                                    </SelectItem>
-                                </SelectContent>
-                            </Select>
-                        </div>
-                    </div>
-                    <div className="my-5 md:my-3 space-y-2">
-                        <Label htmlFor="onlineOrder">
-                            Enable/Disable Online Orders
-                        </Label>
-                        <div>
-                            <Switch defaultChecked />
-                        </div>
-                    </div>
-                    <div className="flex justify-end gap-2 mt-7">
-                        <Button
-                            variant="outline"
-                            className="rounded-lg bg-white text-accentRed border border-accentRed hover:bg-gray-100 hover:text-hoverRed hover:border-hoverRed duration-300"
-                        >
-                            Cancel
-                        </Button>
-                        <Button
-                            variant="default"
-                            className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
-                        >
-                            Save Changes
-                        </Button>
-                    </div>
-                </form>
-            </div>
+            <ReservationSetting />
             <div className="mb-6 p-4 border border-gray-300 bg-white shadow-lg rounded-md">
                 <h1 className="flex gap-1 items-center font-medium text-accentRed">
                     <SquarePen size={20} />
