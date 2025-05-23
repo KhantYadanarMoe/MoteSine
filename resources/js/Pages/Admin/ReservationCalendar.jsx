@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/popover";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useReservationSetting } from "@/contexts/ReservationSettingContext";
+import Unavailable from "../../../images/Unavailable.jpg";
 
 export default function ReservationCalendar() {
     const { form: reservationSetting } = useReservationSetting();
@@ -153,151 +154,171 @@ export default function ReservationCalendar() {
         >
             <div className="md:w-[60%] lg:w-[70%] mb-4 md:mb-0">
                 <div className="px-4 py-6 border border-gray-300 bg-white  shadow-lg rounded-md">
-                    <form action="">
-                        <h1 className="text-lg font-medium text-accentRed">
-                            Reserve a table
-                        </h1>
-                        <p className="text-sm text-gray-800 mb-6">
-                            Fill the form to reserve table.
-                        </p>
-                        <div className="md:flex gap-3">
-                            <div className="my-2 md:w-1/2">
-                                <Label htmlFor="firstName">First Name</Label>
+                    {reservationSetting.allow ? (
+                        <form action="">
+                            <h1 className="text-lg font-medium text-accentRed">
+                                Reserve a table
+                            </h1>
+                            <p className="text-sm text-gray-800 mb-6">
+                                Fill the form to reserve table.
+                            </p>
+                            <div className="md:flex gap-3">
+                                <div className="my-2 md:w-1/2">
+                                    <Label htmlFor="firstName">
+                                        First Name
+                                    </Label>
+                                    <Input
+                                        id="firstName"
+                                        name="firstName"
+                                        type="firstName"
+                                        value={form.firstName}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter customer's first name"
+                                        className="mt-1 border-gray-500"
+                                    />
+                                </div>
+                                <div className="my-2 md:w-1/2">
+                                    <Label htmlFor="lastName">Last Name</Label>
+                                    <Input
+                                        id="lastName"
+                                        name="lastName"
+                                        type="lastName"
+                                        value={form.lastName}
+                                        onChange={handleInputChange}
+                                        placeholder="Enter customer's last name"
+                                        className="mt-1 border-gray-500"
+                                    />
+                                </div>
+                            </div>
+                            <div className="my-2">
+                                <Label htmlFor="guest">Guest</Label>
+                                <Popover>
+                                    <PopoverTrigger asChild>
+                                        <Button
+                                            variant="outline"
+                                            className="w-full border-b text-left justify-start text-gray-600 border-gray-500"
+                                        >
+                                            {form.guest
+                                                ? `${form.guest} guests`
+                                                : "Select Guest Number"}
+                                        </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-36 p-0 bg-white shadow-lg rounded-md z-50">
+                                        <ScrollArea className="h-48">
+                                            <div className="p-2">
+                                                {Array.from(
+                                                    {
+                                                        length: reservationSetting.maxGuests,
+                                                    },
+                                                    (_, i) => i + 1
+                                                ).map((guest) => (
+                                                    <div
+                                                        key={guest}
+                                                        className="p-2 cursor-pointer hover:bg-gray-100 rounded-md"
+                                                        onClick={() =>
+                                                            handleCustomChange(
+                                                                "guest",
+                                                                guest
+                                                            )
+                                                        }
+                                                    >
+                                                        {guest}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </ScrollArea>
+                                    </PopoverContent>
+                                </Popover>
+                            </div>
+                            <div className="md:flex gap-3">
+                                <div className="my-2 md:w-1/2">
+                                    <Label htmlFor="date">Date</Label>
+                                    <DatePicker
+                                        id="date"
+                                        name="date"
+                                        selectedDate={form.date}
+                                        onDateChange={(date) =>
+                                            handleCustomChange("date", date)
+                                        }
+                                    />
+                                </div>
+                                <div className="my-2 md:w-1/2">
+                                    <Label htmlFor="time">Time</Label>
+                                    <TimePicker
+                                        minTime={540}
+                                        maxTime={1320}
+                                        id="time"
+                                        name="time"
+                                        selectedTime={form.time}
+                                        onTimeChange={(time) =>
+                                            handleCustomChange("time", time)
+                                        }
+                                    />
+                                </div>
+                            </div>
+                            <div className="my-2">
+                                <Label htmlFor="email">Email</Label>
                                 <Input
-                                    id="firstName"
-                                    name="firstName"
-                                    type="firstName"
-                                    value={form.firstName}
+                                    id="email"
+                                    name="email"
+                                    type="email"
+                                    value={form.email}
                                     onChange={handleInputChange}
-                                    placeholder="Enter customer's first name"
+                                    placeholder="Enter customer's email"
                                     className="mt-1 border-gray-500"
                                 />
                             </div>
-                            <div className="my-2 md:w-1/2">
-                                <Label htmlFor="lastName">Last Name</Label>
+                            <div className="my-2">
+                                <Label htmlFor="phone">Phone</Label>
                                 <Input
-                                    id="lastName"
-                                    name="lastName"
-                                    type="lastName"
-                                    value={form.lastName}
+                                    id="phone"
+                                    name="phone"
+                                    type="text"
+                                    value={form.phone}
                                     onChange={handleInputChange}
-                                    placeholder="Enter customer's last name"
+                                    placeholder="Enter customer's phone"
                                     className="mt-1 border-gray-500"
                                 />
                             </div>
-                        </div>
-                        <div className="my-2">
-                            <Label htmlFor="guest">Guest</Label>
-                            <Popover>
-                                <PopoverTrigger asChild>
-                                    <Button
-                                        variant="outline"
-                                        className="w-full border-b text-left justify-start text-gray-600 border-gray-500"
-                                    >
-                                        {form.guest
-                                            ? `${form.guest} guests`
-                                            : "Select Guest Number"}
-                                    </Button>
-                                </PopoverTrigger>
-                                <PopoverContent className="w-36 p-0 bg-white shadow-lg rounded-md z-50">
-                                    <ScrollArea className="h-48">
-                                        <div className="p-2">
-                                            {Array.from(
-                                                {
-                                                    length: reservationSetting.maxGuests,
-                                                },
-                                                (_, i) => i + 1
-                                            ).map((guest) => (
-                                                <div
-                                                    key={guest}
-                                                    className="p-2 cursor-pointer hover:bg-gray-100 rounded-md"
-                                                    onClick={() =>
-                                                        handleCustomChange(
-                                                            "guest",
-                                                            guest
-                                                        )
-                                                    }
-                                                >
-                                                    {guest}
-                                                </div>
-                                            ))}
-                                        </div>
-                                    </ScrollArea>
-                                </PopoverContent>
-                            </Popover>
-                        </div>
-                        <div className="md:flex gap-3">
-                            <div className="my-2 md:w-1/2">
-                                <Label htmlFor="date">Date</Label>
-                                <DatePicker
-                                    id="date"
-                                    name="date"
-                                    selectedDate={form.date}
-                                    onDateChange={(date) =>
-                                        handleCustomChange("date", date)
-                                    }
-                                />
+                            <div className="my-2">
+                                <Label htmlFor="message">Message</Label>
+                                <Textarea
+                                    id="message"
+                                    name="message"
+                                    type="text"
+                                    value={form.message}
+                                    onChange={handleInputChange}
+                                    placeholder="Enter customer's message"
+                                    className="mt-1 border-gray-500"
+                                ></Textarea>
                             </div>
-                            <div className="my-2 md:w-1/2">
-                                <Label htmlFor="time">Time</Label>
-                                <TimePicker
-                                    minTime={540}
-                                    maxTime={1320}
-                                    id="time"
-                                    name="time"
-                                    selectedTime={form.time}
-                                    onTimeChange={(time) =>
-                                        handleCustomChange("time", time)
-                                    }
-                                />
+                            <div className="flex mt-5 justify-end">
+                                <Button
+                                    variant="default"
+                                    className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                                    onClick={submit}
+                                >
+                                    Reserve
+                                </Button>
                             </div>
-                        </div>
-                        <div className="my-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                name="email"
-                                type="email"
-                                value={form.email}
-                                onChange={handleInputChange}
-                                placeholder="Enter customer's email"
-                                className="mt-1 border-gray-500"
+                        </form>
+                    ) : (
+                        <div className="h-[85vh] flex flex-col justify-center items-center">
+                            <img
+                                src={Unavailable}
+                                alt=""
+                                className="w-48 mb-8"
                             />
+                            <h2 className="md:text-xl font-semibold text-gray-700 mb-2 text-center">
+                                Table Reservation is not available now!
+                            </h2>
+                            <p className="text-gray-500 mb-4 text-xs md:text-sm text-center">
+                                We are sorry! Table reservation service is
+                                temporarily unavailable. We will come back
+                                later.
+                            </p>
                         </div>
-                        <div className="my-2">
-                            <Label htmlFor="phone">Phone</Label>
-                            <Input
-                                id="phone"
-                                name="phone"
-                                type="text"
-                                value={form.phone}
-                                onChange={handleInputChange}
-                                placeholder="Enter customer's phone"
-                                className="mt-1 border-gray-500"
-                            />
-                        </div>
-                        <div className="my-2">
-                            <Label htmlFor="message">Message</Label>
-                            <Textarea
-                                id="message"
-                                name="message"
-                                type="text"
-                                value={form.message}
-                                onChange={handleInputChange}
-                                placeholder="Enter customer's message"
-                                className="mt-1 border-gray-500"
-                            ></Textarea>
-                        </div>
-                        <div className="flex mt-5 justify-end">
-                            <Button
-                                variant="default"
-                                className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
-                                onClick={submit}
-                            >
-                                Reserve
-                            </Button>
-                        </div>
-                    </form>
+                    )}
                 </div>
             </div>
             <div className="md:w-[40%] lg:w-[30%]">
