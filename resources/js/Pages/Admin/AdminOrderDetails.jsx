@@ -9,8 +9,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
+import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
 export default function AdminOrderDetails() {
+    const { form: orderSetting } = useOrderSetting();
     const [progress, setProgress] = React.useState(13);
 
     React.useEffect(() => {
@@ -282,7 +284,9 @@ export default function AdminOrderDetails() {
                     <div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Sub Total - </p>
-                            <p className=" text-black">{subtotal} $ </p>
+                            <p className=" text-black">
+                                {subtotal?.toFixed(2)} ${" "}
+                            </p>
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Discount - </p>
@@ -290,7 +294,9 @@ export default function AdminOrderDetails() {
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Delivery Charge - </p>
-                            <p className=" text-black">0.00 $ </p>
+                            <p className=" text-black">
+                                {orderSetting.deliveryFee.toFixed(2)} ${" "}
+                            </p>
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Tax (10%) - </p>
@@ -302,7 +308,10 @@ export default function AdminOrderDetails() {
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Total - </p>
                             <p className=" text-black">
-                                {subtotal + subtotal * 0.1} ${" "}
+                                {subtotal +
+                                    subtotal * 0.1 +
+                                    orderSetting.deliveryFee}{" "}
+                                ${" "}
                             </p>
                         </div>
                     </div>

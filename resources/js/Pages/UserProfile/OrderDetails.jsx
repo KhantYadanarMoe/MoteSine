@@ -4,8 +4,10 @@ import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useSetting } from "@/contexts/GeneralSettingContext";
+import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
 export default function OrderDetails() {
+    const { form: orderSetting } = useOrderSetting();
     const { form } = useSetting();
     // take id for edit feature
     let { id } = useParams();
@@ -222,7 +224,9 @@ export default function OrderDetails() {
                                 <h1 className="text-sm font-medium">
                                     Delivery fee -
                                 </h1>
-                                <p className="text-sm">0 $</p>
+                                <p className="text-sm">
+                                    {orderSetting.deliveryFee.toFixed(2)} $
+                                </p>
                             </div>
                             <div className="flex justify-between items-center mb-3">
                                 <h1 className="text-sm font-medium">Tax - </h1>
@@ -235,7 +239,12 @@ export default function OrderDetails() {
                         <div className="flex justify-between items-center my-3">
                             <h1 className="text-sm font-medium">Total - </h1>
                             <p className="text-sm">
-                                {(subtotal + subtotal * 0.1).toFixed(2)} $
+                                {(
+                                    subtotal +
+                                    subtotal * 0.1 +
+                                    orderSetting.deliveryFee
+                                ).toFixed(2)}{" "}
+                                $
                             </p>
                         </div>
                     </div>

@@ -6,8 +6,10 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
 export default function OrderHistories() {
+    const { form: orderSetting } = useOrderSetting();
     // state to store orders
     let [orders, setOrders] = useState([]);
 
@@ -99,7 +101,11 @@ export default function OrderHistories() {
                                                         item.quantity ?? 1
                                                     ),
                                             0
-                                        ) * 1.1
+                                        ) *
+                                            1.1 +
+                                        parseFloat(
+                                            orderSetting.deliveryFee ?? 0
+                                        )
                                     ).toFixed(2)}{" "}
                                     $
                                 </li>

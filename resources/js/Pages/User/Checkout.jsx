@@ -12,8 +12,10 @@ import { format } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
+import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
 export default function Checkout() {
+    const { form: orderSetting } = useOrderSetting();
     const { cartItems, updateQuantity, clearCart } = useCart();
     const { user } = useAuth();
 
@@ -389,7 +391,12 @@ export default function Checkout() {
                         <hr className="border-t-gray-400" />
                         <div className="flex justify-between my-3">
                             <h1 className="text-sm">Shipping - </h1>
-                            <p className="text-gray-800 font-medium">$0.00</p>
+                            <p className="text-gray-800 font-medium">
+                                $
+                                {parseFloat(orderSetting.deliveryFee)?.toFixed(
+                                    2
+                                )}
+                            </p>
                         </div>
                         <div className="flex justify-between my-2">
                             <h1 className="text-sm">Tax (10%) - </h1>
@@ -402,7 +409,10 @@ export default function Checkout() {
                         <div className="flex justify-between my-2">
                             <h1 className="text-sm">Total - </h1>
                             <p className="text-gray-800 font-medium">
-                                ${subtotal + subtotal * 0.1}
+                                $
+                                {subtotal +
+                                    subtotal * 0.1 +
+                                    orderSetting.deliveryFee}
                             </p>
                         </div>
                         <Button
