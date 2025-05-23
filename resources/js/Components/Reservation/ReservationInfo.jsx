@@ -21,6 +21,14 @@ import TimePicker from "../TimePicker";
 import DatePicker from "../DatePicker";
 import { format } from "date-fns";
 import { useSetting } from "@/contexts/GeneralSettingContext";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useReservationSetting } from "@/contexts/ReservationSettingContext";
+import { Label } from "../ui/label";
 
 export default function ReservationInfo() {
     const { form: generalForm } = useSetting();
@@ -43,6 +51,8 @@ export default function ReservationInfo() {
 
     // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+    const { form: reservationSetting } = useReservationSetting();
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -204,24 +214,52 @@ export default function ReservationInfo() {
                 </div>
                 <form className="flex flex-col md:flex-row gap-4 md:items-end">
                     <div className="flex flex-col gap-1 px-2">
-                        <label htmlFor="guest" className="font-medium">
+                        <Label htmlFor="guest" className="font-medium">
                             Guest
-                        </label>
-                        <Input
-                            id="guest"
-                            name="guest"
-                            type="number"
-                            value={form.guest}
-                            onChange={handleInputChange}
-                            placeholder="Enter guest number"
-                            className="mt-1 border-gray-500"
-                        />
+                        </Label>
+                        <Popover>
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    className="w-full border-b text-left justify-start text-gray-600 border-gray-500"
+                                >
+                                    {form.guest
+                                        ? `${form.guest} guests`
+                                        : "Select Guest Number"}
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-36 p-0 bg-white shadow-lg rounded-md z-50">
+                                <ScrollArea className="h-48">
+                                    <div className="p-2">
+                                        {Array.from(
+                                            {
+                                                length: reservationSetting.maxGuests,
+                                            },
+                                            (_, i) => i + 1
+                                        ).map((guest) => (
+                                            <div
+                                                key={guest}
+                                                className="p-2 cursor-pointer hover:bg-gray-100 rounded-md"
+                                                onClick={() =>
+                                                    handleCustomChange(
+                                                        "guest",
+                                                        guest
+                                                    )
+                                                }
+                                            >
+                                                {guest}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </ScrollArea>
+                            </PopoverContent>
+                        </Popover>
                     </div>
 
                     <div className="flex flex-col gap-1 px-2">
-                        <label htmlFor="Time" className="font-medium">
+                        <Label htmlFor="Time" className="font-medium">
                             Time
-                        </label>
+                        </Label>
                         <TimePicker
                             minTime={540}
                             maxTime={1320}
@@ -235,9 +273,9 @@ export default function ReservationInfo() {
                     </div>
 
                     <div className="flex flex-col gap-1 px-2">
-                        <label htmlFor="Date" className="font-medium">
+                        <Label htmlFor="Date" className="font-medium">
                             Date
-                        </label>
+                        </Label>
                         <DatePicker
                             id="date"
                             name="date"
@@ -288,7 +326,7 @@ export default function ReservationInfo() {
                     <form action="">
                         <div className="md:flex gap-4">
                             <div className="md:w-1/2 mb-5">
-                                <label htmlFor="firstName">First Name</label>
+                                <Label htmlFor="firstName">First Name</Label>
                                 <Input
                                     id="firstName"
                                     name="firstName"
@@ -300,7 +338,7 @@ export default function ReservationInfo() {
                                 />
                             </div>
                             <div className="md:w-1/2 mb-5">
-                                <label htmlFor="lastName">Last Name</label>
+                                <Label htmlFor="lastName">Last Name</Label>
                                 <Input
                                     id="lastName"
                                     name="lastName"
@@ -314,7 +352,7 @@ export default function ReservationInfo() {
                         </div>
                         <div className="md:flex gap-4">
                             <div className="md:w-1/2 mb-5">
-                                <label htmlFor="email">Email</label>
+                                <Label htmlFor="email">Email</Label>
                                 <Input
                                     id="email"
                                     name="email"
@@ -326,7 +364,7 @@ export default function ReservationInfo() {
                                 />
                             </div>
                             <div className="md:w-1/2 mb-5">
-                                <label htmlFor="phone">Phone</label>
+                                <Label htmlFor="phone">Phone</Label>
                                 <Input
                                     id="phone"
                                     name="phone"
@@ -339,7 +377,7 @@ export default function ReservationInfo() {
                             </div>
                         </div>
                         <div className="mb-5">
-                            <label htmlFor="message">Message</label>
+                            <Label htmlFor="message">Message</Label>
                             <Textarea
                                 id="message"
                                 name="message"

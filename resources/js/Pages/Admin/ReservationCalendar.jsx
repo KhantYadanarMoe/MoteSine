@@ -11,8 +11,16 @@ import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useEffect } from "react";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { useReservationSetting } from "@/contexts/ReservationSettingContext";
 
 export default function ReservationCalendar() {
+    const { form: reservationSetting } = useReservationSetting();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [reservations, setReservations] = useState([]);
 
@@ -180,15 +188,43 @@ export default function ReservationCalendar() {
                         </div>
                         <div className="my-2">
                             <Label htmlFor="guest">Guest</Label>
-                            <Input
-                                id="guest"
-                                name="guest"
-                                type="number"
-                                value={form.guest}
-                                onChange={handleInputChange}
-                                placeholder="Choose guest number"
-                                className="mt-1 border-gray-500"
-                            />
+                            <Popover>
+                                <PopoverTrigger asChild>
+                                    <Button
+                                        variant="outline"
+                                        className="w-full border-b text-left justify-start text-gray-600 border-gray-500"
+                                    >
+                                        {form.guest
+                                            ? `${form.guest} guests`
+                                            : "Select Guest Number"}
+                                    </Button>
+                                </PopoverTrigger>
+                                <PopoverContent className="w-36 p-0 bg-white shadow-lg rounded-md z-50">
+                                    <ScrollArea className="h-48">
+                                        <div className="p-2">
+                                            {Array.from(
+                                                {
+                                                    length: reservationSetting.maxGuests,
+                                                },
+                                                (_, i) => i + 1
+                                            ).map((guest) => (
+                                                <div
+                                                    key={guest}
+                                                    className="p-2 cursor-pointer hover:bg-gray-100 rounded-md"
+                                                    onClick={() =>
+                                                        handleCustomChange(
+                                                            "guest",
+                                                            guest
+                                                        )
+                                                    }
+                                                >
+                                                    {guest}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </ScrollArea>
+                                </PopoverContent>
+                            </Popover>
                         </div>
                         <div className="md:flex gap-3">
                             <div className="my-2 md:w-1/2">
