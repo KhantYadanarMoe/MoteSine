@@ -7,6 +7,7 @@ import { AuthProvider } from "./contexts/AuthContext";
 import { CartProvider } from "./contexts/CartContext";
 import { GeneralSettingProvider } from "./contexts/GeneralSettingContext";
 import { ReservationSettingProvider } from "./contexts/ReservationSettingContext";
+import { OrderSettingProvider } from "./contexts/OrderSettingContext";
 
 export default function App() {
     return (
@@ -14,7 +15,9 @@ export default function App() {
             <CartProvider>
                 <GeneralSettingProvider>
                     <ReservationSettingProvider>
-                        <RouterProvider router={routes} />
+                        <OrderSettingProvider>
+                            <RouterProvider router={routes} />
+                        </OrderSettingProvider>
                     </ReservationSettingProvider>
                 </GeneralSettingProvider>
             </CartProvider>

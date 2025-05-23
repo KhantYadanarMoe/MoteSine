@@ -8,6 +8,7 @@ use App\Http\Controllers\GeneralSettingController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrdersController;
+use App\Http\Controllers\OrderSettingController;
 use App\Http\Controllers\PartnershipController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\ProfileController;
@@ -130,3 +131,6 @@ Route::get('/api/setting/general', [GeneralSettingController::class, 'getSetting
 
 Route::post('/api/setting/reservation', [ReservationSettingController::class, 'updateSetting']);
 Route::get('/api/setting/reservation', [ReservationSettingController::class, 'getSetting']);
+
+Route::post('/api/setting/order', [OrderSettingController::class, 'updateSetting']);
+Route::get('/api/setting/order', [OrderSettingController::class, 'getSetting']);

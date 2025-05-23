@@ -1,9 +1,7 @@
-import { Settings, Utensils, Store, SquarePen } from "lucide-react";
+import { Utensils } from "lucide-react";
 import { Label } from "../../Components/ui/label";
 import { Input } from "../../Components/ui/input";
-import { Textarea } from "../../Components/ui/textarea";
 import { Button } from "../../Components/ui/button";
-import TimePicker from "../../Components/TimePicker";
 import {
     Select,
     SelectContent,
@@ -15,10 +13,10 @@ import { Switch } from "../../Components/ui/switch";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useReservationSetting } from "@/contexts/ReservationSettingContext";
+import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
-export default function ReservationSetting() {
-    const { form, setForm, getReservationSetting } = useReservationSetting();
+export default function OrderSetting() {
+    const { form, setForm } = useOrderSetting();
     // store errors state
     const [errors, setErrors] = useState({});
 
@@ -48,7 +46,9 @@ export default function ReservationSetting() {
 
         let formData = new FormData();
 
-        formData.append("maxGuests", form.maxGuests);
+        formData.append("deliveryFee", form.deliveryFee);
+        formData.append("minOrder", form.minOrder);
+        formData.append("prepTime", form.prepTime);
         formData.append("type", form.type);
         formData.append("allow", form.allow ? "1" : "0");
 
@@ -57,16 +57,14 @@ export default function ReservationSetting() {
                 .querySelector('meta[name="csrf-token"]')
                 ?.getAttribute("content");
 
-            const res = await axios.post("/api/setting/reservation", formData, {
+            const res = await axios.post("/api/setting/order", formData, {
                 headers: {
                     "X-CSRF-TOKEN": csrfToken,
                     "Content-Type": "multipart/form-data",
                 },
             });
 
-            if (
-                res.data.message === "Reservation Setting updated successfully."
-            ) {
+            if (res.data.message === "Order Setting updated successfully.") {
                 navigate("/admin/settings");
             }
         } catch (error) {
@@ -76,38 +74,69 @@ export default function ReservationSetting() {
             }
         }
     };
-
     return (
         <div className="mb-6 p-4 border border-gray-300 bg-white shadow-lg rounded-md">
             <h1 className="flex gap-1 items-center font-medium text-accentRed">
-                <Store size={20} />
-                Reservation Settings
+                <Utensils size={20} />
+                Online Order Settings
             </h1>
             <form action="" className="mt-8">
                 <div className="md:flex gap-4">
                     <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                        <Label htmlFor="maxGuests">
-                            Maximum Guests Per Reservation
-                        </Label>
+                        <Label htmlFor="deliveryFee">Delivery Fee</Label>
                         <div className="relative w-full max-w-sm">
                             <span className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500">
-                                Guest
+                                $
                             </span>
                             <Input
-                                id="maxGuests"
-                                name="maxGuests"
-                                value={form.maxGuests}
+                                id="deliveryFee"
+                                name="deliveryFee"
+                                value={form.deliveryFee}
                                 onChange={handleInputChange}
                                 type="number"
-                                placeholder="12"
+                                placeholder="0.00"
                                 className="border-gray-500"
                             />
                         </div>
                     </div>
                     <div className="my-5 md:my-3 md:w-1/2 space-y-2">
-                        <Label htmlFor="acceptType">
-                            Reservation Confirmation Type
-                        </Label>
+                        <Label htmlFor="minOrder">Minimum Order Amount</Label>
+                        <div className="relative w-full max-w-sm">
+                            <span className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500">
+                                $
+                            </span>
+                            <Input
+                                id="minOrder"
+                                name="minOrder"
+                                value={form.minOrder}
+                                onChange={handleInputChange}
+                                type="number"
+                                placeholder="30.00"
+                                className="border-gray-500"
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="md:flex gap-4">
+                    <div className="my-5 md:my-3 md:w-1/2 space-y-2">
+                        <Label htmlFor="prepTime">Order Preparation Time</Label>
+                        <div className="relative w-full max-w-sm">
+                            <span className="absolute right-8 top-1/2 -translate-y-1/2 text-gray-500">
+                                Mins
+                            </span>
+                            <Input
+                                id="prepTime"
+                                name="prepTime"
+                                value={form.prepTime}
+                                onChange={handleInputChange}
+                                type="number"
+                                placeholder="20"
+                                className="border-gray-500"
+                            />
+                        </div>
+                    </div>
+                    <div className="my-5 md:my-3 md:w-1/2 space-y-2">
+                        <Label htmlFor="type">Order Accepting Type</Label>
                         <Select
                             defaultValue=""
                             value={form.type}
@@ -134,7 +163,7 @@ export default function ReservationSetting() {
                     </div>
                 </div>
                 <div className="my-5 md:my-3 space-y-2">
-                    <Label htmlFor="allow">Enable/Disable Reservation</Label>
+                    <Label htmlFor="allow">Enable/Disable Online Orders</Label>
                     <div>
                         <Switch
                             id="allow"
