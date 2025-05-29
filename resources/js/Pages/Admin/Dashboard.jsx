@@ -37,16 +37,6 @@ import { useOrderSetting } from "@/contexts/OrderSettingContext";
 import { Link } from "react-router-dom";
 import { Button } from "@/Components/ui/button";
 
-const data1 = [
-    { name: "Jan", value: 400 },
-    { name: "Feb", value: 300 },
-    { name: "Mar", value: 200 },
-    { name: "Apr", value: 278 },
-    { name: "May", value: 189 },
-    { name: "Jun", value: 239 },
-    { name: "Jul", value: 349 },
-];
-
 export default function Dashboard() {
     const { form: orderSetting } = useOrderSetting();
     // state to store orders
@@ -136,6 +126,37 @@ export default function Dashboard() {
 
     const COLORS = ["#DC143C", "#FF8C00", "#008000"];
     const total = data.reduce((acc, item) => acc + item.value, 0);
+
+    const now = dayjs();
+    const last7Days = Array.from(
+        { length: 7 },
+        (_, i) => now.subtract(6 - i, "day") // oldest to newest
+    );
+
+    const data1 = last7Days.map((date) => {
+        const dayOrders = orders.filter((order) =>
+            dayjs(order.created_at).isSame(date, "day")
+        );
+
+        const dailyRevenue = dayOrders.reduce((acc, order) => {
+            const orderTotal = (order.items ?? []).reduce((sum, item) => {
+                const price =
+                    parseFloat(item.finalPrice) ||
+                    parseFloat(item.originalPrice) ||
+                    parseFloat(item.price) ||
+                    0;
+                const quantity = parseInt(item.quantity ?? 1);
+                return sum + price * quantity;
+            }, 0);
+
+            return acc + orderTotal;
+        }, 0);
+
+        return {
+            name: date.format("MMM D"), // e.g. "May 23"
+            value: parseFloat(dailyRevenue.toFixed(2)),
+        };
+    });
 
     return (
         <motion.div
