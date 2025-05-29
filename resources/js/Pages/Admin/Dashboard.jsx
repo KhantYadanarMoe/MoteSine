@@ -47,16 +47,7 @@ const data1 = [
     { name: "Jul", value: 349 },
 ];
 
-const data = [
-    { name: "Food Delivery", value: 400 },
-    { name: "Products Delivery", value: 300 },
-    { name: "Dine-in", value: 300 },
-];
-
-const COLORS = ["#DC143C", "#FF8C00", "#008000"];
-
 export default function Dashboard() {
-    const total = data.reduce((acc, item) => acc + item.value, 0);
     const { form: orderSetting } = useOrderSetting();
     // state to store orders
     let [orders, setOrders] = useState([]);
@@ -125,6 +116,26 @@ export default function Dashboard() {
     }, 0);
 
     const sevenDaysAgo = dayjs().subtract(7, "day");
+
+    // Initialize counts
+    let foodCount = 0;
+    let productCount = 0;
+
+    orders.forEach((order) => {
+        (order.items ?? []).forEach((item) => {
+            if (item.menu_id) foodCount += 1;
+            else if (item.product_id) productCount += 1;
+        });
+    });
+
+    const data = [
+        { name: "Food Delivery", value: foodCount },
+        { name: "Products Delivery", value: productCount },
+        { name: "Reservations", value: reservations.length }, // keep using state here
+    ];
+
+    const COLORS = ["#DC143C", "#FF8C00", "#008000"];
+    const total = data.reduce((acc, item) => acc + item.value, 0);
 
     return (
         <motion.div
@@ -239,7 +250,7 @@ export default function Dashboard() {
                                 </h1>
                                 <span className="text-accentRed flex gap-1">
                                     <Circle size={20} />
-                                    <p className="font-medium">236</p>
+                                    <p className="font-medium">{foodCount}</p>
                                 </span>
                             </div>
                             <div className="space-y-1 my-3">
@@ -248,7 +259,9 @@ export default function Dashboard() {
                                 </h1>
                                 <span className="text-accentYellow flex gap-1">
                                     <Circle size={20} />
-                                    <p className="font-medium">187</p>
+                                    <p className="font-medium">
+                                        {productCount}
+                                    </p>
                                 </span>
                             </div>
                             <div className="space-y-1 my-3">
@@ -257,7 +270,9 @@ export default function Dashboard() {
                                 </h1>
                                 <span className="text-accentGreen flex gap-1">
                                     <Circle size={20} />
-                                    <p className="font-medium">189</p>
+                                    <p className="font-medium">
+                                        {reservations.length}
+                                    </p>
                                 </span>
                             </div>
                         </div>
