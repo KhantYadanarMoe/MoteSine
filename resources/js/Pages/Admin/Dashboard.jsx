@@ -66,8 +66,16 @@ export default function Dashboard() {
     // fetch data that send from backend
     let getOrders = async () => {
         let res = await axios.get("/api/orders");
-        let data = res.data;
-        setOrders(data.orders.slice(0, 3));
+        const now = new Date();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(now.getDate() - 7);
+
+        const filtered = res.data.orders.filter((order) => {
+            const createdAt = new Date(order.created_at);
+            return createdAt >= sevenDaysAgo && createdAt <= now;
+        });
+
+        setOrders(filtered);
     };
 
     // call data fetching function in useEffect to run when user enter the page
@@ -83,14 +91,40 @@ export default function Dashboard() {
     // fetch data that send from backend
     let getReservations = async () => {
         let res = await axios.get("/api/reservations");
-        let data = res.data;
-        setReservations(data.reservations.slice(0, 3));
+        const now = new Date();
+        const sevenDaysAgo = new Date();
+        sevenDaysAgo.setDate(now.getDate() - 7);
+
+        const filtered = res.data.reservations.filter((reservation) => {
+            const createdAt = new Date(reservation.created_at);
+            return createdAt >= sevenDaysAgo && createdAt <= now;
+        });
+
+        setReservations(filtered);
     };
 
     // call data fetching function in useEffect to run when user enter the page
     useEffect(() => {
         getReservations();
     }, []);
+
+    const totalRevenue = orders.reduce((acc, order) => {
+        const orderTotal = (order.items ?? []).reduce((sum, item) => {
+            const price =
+                parseFloat(item.finalPrice) ||
+                parseFloat(item.originalPrice) ||
+                parseFloat(item.price) ||
+                0;
+            const quantity = parseInt(item.quantity ?? 1);
+            return sum + price * quantity;
+        }, 0);
+
+        // Add 10% (1.1 multiplier) and delivery fee
+        const deliveryFee = parseFloat(orderSetting.deliveryFee) || 0;
+        return acc + orderTotal * 1.1 + deliveryFee;
+    }, 0);
+
+    const sevenDaysAgo = dayjs().subtract(7, "day");
 
     return (
         <motion.div
@@ -121,48 +155,44 @@ export default function Dashboard() {
                     <div className="flex justify-between border-l-2 border-l-accentRed px-2 py-1">
                         <div>
                             <h1 className="text-gray-600">Total Orders</h1>
-                            <p className="text-black">238</p>
+                            <p className="text-black">{orders.length}</p>
                         </div>
                         <Utensils className="text-accentRed" />
                     </div>
                     <span className="text-sm flex gap-1 pt-3">
-                        <p className="flex text-accentGreen">
-                            <MoveUp size={16} />
-                            +1.0%
+                        <p className="text-gray-600">
+                            Since {sevenDaysAgo.format("MMM D, YYYY")}
                         </p>
-                        <p className="text-gray-600">Since Last Week</p>
                     </span>
                 </div>
                 <div className="mb-6 p-3 border border-gray-300 bg-white shadow-lg rounded-md">
                     <div className="flex justify-between border-l-2 border-l-accentRed px-2 py-1">
                         <div>
                             <h1 className="text-gray-600">Total Reservation</h1>
-                            <p className="text-black">78</p>
+                            <p className="text-black">{reservations.length}</p>
                         </div>
                         <HandPlatter className="text-accentRed" />
                     </div>
                     <span className="text-sm flex gap-1 pt-3">
-                        <p className="flex text-accentRed">
-                            <MoveDown size={16} />
-                            -2.8%
+                        <p className="text-gray-600">
+                            Since {sevenDaysAgo.format("MMM D, YYYY")}
                         </p>
-                        <p className="text-gray-600">Since Last Week</p>
                     </span>
                 </div>
                 <div className="mb-6 p-3 border border-gray-300 bg-white shadow-lg rounded-md">
                     <div className="flex justify-between border-l-2 border-l-accentRed px-2 py-1">
                         <div>
                             <h1 className="text-gray-600">Total Revenue</h1>
-                            <p className="text-black">$ 73,28</p>
+                            <p className="text-black">
+                                $ {totalRevenue.toFixed(2)}
+                            </p>
                         </div>
                         <HandPlatter className="text-accentRed" />
                     </div>
                     <span className="text-sm flex gap-1 pt-3">
-                        <p className="flex text-accentGreen">
-                            <MoveUp size={16} />
-                            +8.2%
+                        <p className="text-gray-600">
+                            Since {sevenDaysAgo.format("MMM D, YYYY")}
                         </p>
-                        <p className="text-gray-600">Since Last Week</p>
                     </span>
                 </div>
             </div>
@@ -274,7 +304,7 @@ export default function Dashboard() {
                             <li className="basis-[5%]"></li>
                         </ul>
                         {orders.length > 0 ? (
-                            orders.map((order) => (
+                            orders.slice(0, 3).map((order) => (
                                 <ul
                                     key={order.id}
                                     className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
@@ -404,7 +434,7 @@ export default function Dashboard() {
                             <li className="basis-[5%]"></li>
                         </ul>
                         {reservations.length > 0 ? (
-                            reservations.map((reservation) => (
+                            reservations.slice(0, 3).map((reservation) => (
                                 <ul
                                     key={reservation.id}
                                     className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
