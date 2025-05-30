@@ -8,8 +8,14 @@ import Spark from "../../../images/spark.png";
 import HeroBg from "../../../images/hero-bg.jpg";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
+import { useSetting } from "@/contexts/HeroSettingContext";
 
 const Hero = () => {
+    const { form } = useSetting();
+    const heroImages = Array.isArray(form.heroImg)
+        ? form.heroImg
+        : JSON.parse(form.heroImg || "[]");
+
     return (
         <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
@@ -32,14 +38,10 @@ const Hero = () => {
                 <div className="flex flex-col md:flex-row items-center justify-center gap-5 lg:gap-8 relative z-10">
                     <div className="md:w-1/2 px-3 md:px-0 lg:px-6 md:text-left">
                         <h1 className="text-[3rem] md:text-[3.8rem] lg:text-[4.2rem] mb-4 leading-tight">
-                            Bring the taste of your home to you
+                            {form.header}
                         </h1>
                         <p className="text-gray-700 text-xs md:text-sm lg:text-base mb-6">
-                            Discover the authentic flavors of Burmese cuisine,
-                            delivered right to your doorstep or savored in our
-                            cozy restaurant. Traditional recipes with fresh
-                            ingredients – experience it with just a click or a
-                            visit.
+                            {form.body}
                         </p>
                         <div className="flex gap-2 md:justify-start">
                             <Link to="/reservation">
@@ -81,23 +83,29 @@ const Hero = () => {
                                         className="h-24 md:h-20 lg:h-24 object-cover rounded-lg"
                                     />
                                 </div>
-                                <img
-                                    src={Hero1}
-                                    alt="Hero 1"
-                                    className="w-32 h-32 lg:h-40 lg:w-40 object-cover mt-3 rounded-lg shadow-[8px_8px_0_rgba(246,197,0,0.9)]"
-                                />
+                                {heroImages[0] && (
+                                    <img
+                                        src={`/storage/${heroImages[0]}`}
+                                        alt="Hero 1"
+                                        className="w-32 h-32 lg:h-40 lg:w-40 object-cover mt-3 rounded-lg shadow-[8px_8px_0_rgba(246,197,0,0.9)]"
+                                    />
+                                )}
                             </div>
                             <div>
-                                <img
-                                    src={Hero2}
-                                    alt="Hero 2"
-                                    className="w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 mb-4 md:mb-5 object-cover rounded-lg shadow-[8px_8px_0_rgba(50,172,49,0.9)]"
-                                />
-                                <img
-                                    src={Hero3}
-                                    alt="Hero 3"
-                                    className="w-24 h-24 lg:w-32 lg:h-32 object-cover rounded-lg shadow-[8px_8px_0_rgba(233,41,62,0.9)]"
-                                />
+                                {heroImages[1] && (
+                                    <img
+                                        src={`/storage/${heroImages[1]}`}
+                                        alt="Hero 2"
+                                        className="w-40 h-40 md:w-48 md:h-48 lg:w-56 lg:h-56 mb-4 md:mb-5 object-cover rounded-lg shadow-[8px_8px_0_rgba(50,172,49,0.9)]"
+                                    />
+                                )}
+                                {heroImages[2] && (
+                                    <img
+                                        src={`/storage/${heroImages[2]}`}
+                                        alt="Hero 3"
+                                        className="w-24 h-24 lg:w-32 lg:h-32 object-cover rounded-lg shadow-[8px_8px_0_rgba(233,41,62,0.9)]"
+                                    />
+                                )}
                             </div>
                         </div>
                     </div>
