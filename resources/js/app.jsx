@@ -8,6 +8,7 @@ import { CartProvider } from "./contexts/CartContext";
 import { GeneralSettingProvider } from "./contexts/GeneralSettingContext";
 import { ReservationSettingProvider } from "./contexts/ReservationSettingContext";
 import { OrderSettingProvider } from "./contexts/OrderSettingContext";
+import { HeroSettingProvider } from "./contexts/HeroSettingContext";
 
 export default function App() {
     return (
@@ -16,7 +17,9 @@ export default function App() {
                 <GeneralSettingProvider>
                     <ReservationSettingProvider>
                         <OrderSettingProvider>
-                            <RouterProvider router={routes} />
+                            <HeroSettingProvider>
+                                <RouterProvider router={routes} />
+                            </HeroSettingProvider>
                         </OrderSettingProvider>
                     </ReservationSettingProvider>
                 </GeneralSettingProvider>

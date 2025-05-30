@@ -5,6 +5,7 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\GeneralSettingController;
+use App\Http\Controllers\HeroSettingController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\MenuController;
 use App\Http\Controllers\OrdersController;
@@ -134,3 +135,6 @@ Route::get('/api/setting/reservation', [ReservationSettingController::class, 'ge
 
 Route::post('/api/setting/order', [OrderSettingController::class, 'updateSetting']);
 Route::get('/api/setting/order', [OrderSettingController::class, 'getSetting']);
+
+Route::post('/api/setting/hero', [HeroSettingController::class, 'updateSetting']);
+Route::get('/api/setting/hero', [HeroSettingController::class, 'getSetting']);
