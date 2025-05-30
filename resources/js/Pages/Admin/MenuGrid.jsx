@@ -154,7 +154,7 @@ export default function MenuGrid() {
                                                     ]
                                                 }`}
                                             >
-                                                {menu.category}
+                                                {menu.category.category}
                                             </span>
                                         </Link>
                                     </div>

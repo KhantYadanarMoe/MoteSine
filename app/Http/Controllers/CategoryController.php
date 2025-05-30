@@ -36,7 +36,7 @@ class CategoryController extends Controller
 
     public function index(){
         // take data from backend database
-        $categories = Category::get();
+        $categories = Category::withCount('menus')->get();
 
         // send data to frontend
         return response()->json([

@@ -313,7 +313,9 @@ export default function Category() {
                                         }
                                     />
                                 </li>
-                                <li className="basis-[18%] pl-2">23</li>
+                                <li className="basis-[18%] pl-2">
+                                    {category.menus_count}
+                                </li>
                                 <li className="basis-[22%]">
                                     {dayjs(category.created_at).fromNow()}
                                 </li>

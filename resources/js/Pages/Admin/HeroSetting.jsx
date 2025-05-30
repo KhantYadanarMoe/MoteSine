@@ -69,10 +69,16 @@ export default function HeroSetting() {
         }
     };
 
-    const heroImages =
-        typeof form.heroImg === "string"
-            ? JSON.parse(form.heroImg)
-            : form.heroImg;
+    let heroImages;
+    try {
+        heroImages =
+            typeof form.heroImg === "string" && form.heroImg.trim() !== ""
+                ? JSON.parse(form.heroImg)
+                : form.heroImg;
+    } catch (e) {
+        console.error("Invalid JSON in heroImg:", e);
+        heroImages = [];
+    }
 
     return (
         <div className="mb-6 p-4 border border-gray-300 bg-white shadow-lg rounded-md">

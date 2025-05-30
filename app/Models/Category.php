@@ -9,4 +9,9 @@ class Category extends Model
     protected $fillable = [
         'category'
     ];
+
+    public function menus(){
+        return $this->hasMany(Menu::class);
+    }
+
 }

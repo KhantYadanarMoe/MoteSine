@@ -184,7 +184,7 @@ export default function MenuCards() {
                                                     ]
                                                 }`}
                                             >
-                                                {menu.category}
+                                                {menu.category.category}
                                             </span>
                                         </Link>
                                     </div>

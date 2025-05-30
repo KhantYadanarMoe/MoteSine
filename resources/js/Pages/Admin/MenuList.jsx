@@ -172,7 +172,7 @@ export default function MenuList() {
                                     )}
                                 </li>
                                 <li className="basis-[20%] capitalize">
-                                    {menu.category}
+                                    {menu.category?.category}
                                 </li>
                                 <li className="basis-[11%]">
                                     {menu.promotion

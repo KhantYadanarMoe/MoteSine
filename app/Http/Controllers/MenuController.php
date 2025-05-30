@@ -13,7 +13,7 @@ class MenuController extends Controller
         // validate all the data from frontend
         $validator = Validator::make(request()->all(), [
             "title" => ["required"],
-            "category" => ["required"],
+            "category_id" => ["required"],
             "desc" => ["required"],
             "price" => ["required"],
             "promotion" => ["nullable", "numeric"],
@@ -42,7 +42,7 @@ class MenuController extends Controller
         // store the rest of the data
         $menus = Menu::create([
             'title' => request('title'),
-            'category' => request('category'),
+            'category_id' => request('category_id'),
             'desc' => request('desc'),
             'price' => request('price'),
             'promotion' => request('promotion'),
@@ -64,7 +64,7 @@ class MenuController extends Controller
     public function index(){
 
         // take data from backend database
-        $menus = Menu::latest()->get();
+        $menus = Menu::with('category')->latest()->get();
 
         // send data to frontend
         return response()->json([
@@ -73,7 +73,7 @@ class MenuController extends Controller
     }
 
     public function show($id){
-        $menu = Menu::find($id); // Find menu by ID
+        $menu = Menu::with('category')->find($id); // Find menu by ID
 
         // Check if menu exists
         if ($menu) {
@@ -87,7 +87,7 @@ class MenuController extends Controller
     public function update(Menu $menu){
         $validator = Validator::make(request()->all(), [
             "title" => ["required"],
-            "category" => ["required"],
+            "category_id" => ["required"],
             "desc" => ["required"],
             "price" => ["required"],
             "promotion" => ["nullable", "numeric"],
@@ -121,7 +121,7 @@ class MenuController extends Controller
 
         $menu->update([
             'title' => request('title'),
-            'category' => request('category'),
+            'category_id' => request('category_id'),
             'desc' => request('desc'),
             'price' => request('price'),
             'promotion' => request('promotion'),

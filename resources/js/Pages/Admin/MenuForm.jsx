@@ -51,7 +51,7 @@ export default function MenuForm() {
     const [form, setForm] = useState({
         title: "",
         price: "",
-        category: "",
+        category_id: "",
         desc: "",
         promotion: "",
         startDate: "",
@@ -121,7 +121,7 @@ export default function MenuForm() {
                 : null;
             setForm({
                 title: menuDetail.title,
-                category: menuDetail.category,
+                category_id: menuDetail.category_id,
                 desc: menuDetail.desc,
                 price: menuDetail.price,
                 promotion: menuDetail.promotion,
@@ -131,7 +131,7 @@ export default function MenuForm() {
                 visibility: menuDetail.visibility,
             });
         }
-    }, [menuDetail]);
+    }, [menuDetail, categories]);
 
     // change to dynamic data after writing create category feature
     const categoryStyles = {
@@ -196,7 +196,7 @@ export default function MenuForm() {
 
         // store state data in object
         formData.append("title", form.title);
-        formData.append("category", form.category);
+        formData.append("category_id", form.category_id);
         formData.append("desc", form.desc);
         formData.append("price", form.price);
         formData.append("promotion", form.promotion || "");
@@ -360,29 +360,32 @@ export default function MenuForm() {
                                 )}
                             </div>
                             <div className="mt-3">
-                                <Label htmlFor="category">Category</Label>
+                                <Label htmlFor="category_id">Category</Label>
                                 <Select
-                                    value={form.category}
+                                    value={form.category_id}
                                     onValueChange={(value) =>
-                                        handleCustomChange("category", value)
+                                        handleCustomChange("category_id", value)
                                     }
                                 >
                                     <SelectTrigger
-                                        id="category"
-                                        name="category"
+                                        id="category_id"
+                                        name="category_id"
                                         className="mt-1 border-gray-500"
                                     >
                                         <span>
-                                            {form.category || "Select Category"}
+                                            {categories.find(
+                                                (c) =>
+                                                    c.id ===
+                                                    Number(form.category_id)
+                                            )?.category || "Select Category"}
                                         </span>{" "}
                                     </SelectTrigger>
 
                                     <SelectContent className="w-96 max-h-60">
-                                        <SelectItem value="all">All</SelectItem>
                                         {categories.map((category) => (
                                             <SelectItem
                                                 key={category.id}
-                                                value={category.category}
+                                                value={category.id}
                                             >
                                                 {category.category}
                                             </SelectItem>
@@ -633,8 +636,11 @@ export default function MenuForm() {
                                             ]
                                         }`}
                                     >
-                                        {form.category ||
-                                            "Snacks & Street Foods"}
+                                        {categories.find(
+                                            (c) =>
+                                                c.id ===
+                                                Number(form.category_id)
+                                        )?.category || "Snacks & Street Food"}
                                     </span>
                                 </Link>
                             </div>

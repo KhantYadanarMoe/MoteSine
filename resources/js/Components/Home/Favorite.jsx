@@ -203,7 +203,7 @@ export default function Favorite() {
                                                             ]
                                                         }`}
                                                     >
-                                                        {menu.category}
+                                                        {menu.category.category}
                                                     </span>
                                                 </Link>
                                             </div>
