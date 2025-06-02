@@ -183,10 +183,10 @@ export default function AdminOrderDetails() {
                     </div>
                     <hr className="border-t-gray-400 mt-6 mb-2" />
                     <div className="flex justify-between items-center">
-                        <span className="text-xs md:text-sm text-gray-800 flex gap-1 md:gap-2">
+                        {/* <span className="text-xs md:text-sm text-gray-800 flex gap-1 md:gap-2">
                             Estimated Time:{" "}
                             <p className="text-black">April 26, 2025</p>
-                        </span>
+                        </span> */}
                         {orderDetails?.status !== "delivered" && (
                             <button
                                 onClick={handleStatusChange}
