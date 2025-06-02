@@ -41,9 +41,9 @@ export default function AllBlogs() {
     const indexOfFirstBlog = indexOfLastBlog - rowsPerPage;
     const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
-    // function for pagination button
+    const totalPages = Math.ceil(blogs.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        const totalPages = Math.ceil(menus.length / rowsPerPage);
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
         }
@@ -154,7 +154,11 @@ export default function AllBlogs() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -182,7 +186,11 @@ export default function AllBlogs() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(blogs.length / rowsPerPage)

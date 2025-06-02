@@ -52,9 +52,12 @@ export default function AdminOrderHistories() {
     const indexOfFirstOrder = indexOfLastOrder - rowsPerPage;
     const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-    // function for pagination button
+    const totalPages = Math.ceil(orders.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     const [selectedFilter, setSelectedFilter] = useState("all");
