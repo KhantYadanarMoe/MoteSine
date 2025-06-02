@@ -13,8 +13,32 @@ export default function Liked() {
 
     const getWishlistItems = async () => {
         try {
-            const res = await axios.get(`/api/wishlist?filter=${filter}`);
-            setWishlistItems(res.data.items);
+            const [wishlistRes, menusRes] = await Promise.all([
+                axios.get(`/api/wishlist?filter=${filter}`),
+                axios.get("/api/menus"),
+            ]);
+
+            const visibilityMap = JSON.parse(
+                localStorage.getItem("categoryVisibility") || "{}"
+            );
+
+            const visibleMenuIds = new Set(
+                menusRes.data.menus
+                    .filter(
+                        (menu) =>
+                            menu.visibility === 1 &&
+                            visibilityMap[menu.category.id]
+                    )
+                    .map((menu) => menu.id)
+            );
+
+            const filteredWishlist = wishlistRes.data.items.filter(
+                (item) =>
+                    item.item_type !== "menu" ||
+                    visibleMenuIds.has(item.item_id)
+            );
+
+            setWishlistItems(filteredWishlist);
         } catch (error) {
             console.error("Failed to fetch wishlist items:", error);
         }
@@ -107,14 +131,14 @@ export default function Liked() {
                             >
                                 <div className="relative py-3 bg-white border border-gray-400 shadow-lg rounded-lg">
                                     <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        {item.product?.image ? (
+                                        {item.menu?.image ? (
                                             <img
-                                                src={`/storage/${item.product.image}`}
+                                                src={`/storage/${item.menu.image}`}
                                                 alt={
-                                                    item.product.title ||
+                                                    item.menu.title ||
                                                     "Product image"
                                                 }
-                                                className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
+                                                className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3 rounded-full"
                                             />
                                         ) : (
                                             <img

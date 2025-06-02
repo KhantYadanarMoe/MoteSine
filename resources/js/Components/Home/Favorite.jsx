@@ -24,11 +24,29 @@ export default function Favorite() {
     const [wishlistItems, setWishlistItems] = useState([]);
 
     // fetch data that send from backend
-    let getMenus = async () => {
-        let res = await axios.get("/api/menus");
-        let data = res.data;
-        const visibleMenus = data.menus.filter((menu) => menu.visibility === 1);
-        setMenus(visibleMenus);
+    // fetch data that send from backend
+    const getMenus = async () => {
+        try {
+            const res = await axios.get("/api/menus");
+            const data = res.data;
+            const visibleMenus = data.menus.filter(
+                (menu) => menu.visibility === 1
+            );
+
+            // Load category visibility map from localStorage
+            const visibilityMap = JSON.parse(
+                localStorage.getItem("categoryVisibility") || "{}"
+            );
+
+            // Filter out menus from hidden categories
+            const filteredMenus = visibleMenus.filter(
+                (menu) => visibilityMap[menu.category.id]
+            );
+
+            setMenus(filteredMenus);
+        } catch (error) {
+            console.error("Error fetching menus:", error);
+        }
     };
 
     // check featured (1 or 0) to show only featured menu
