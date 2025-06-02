@@ -3,16 +3,18 @@ import MenuCategories from "@/Components/Menu/MenuCategories";
 import MenuHeader from "@/Components/Menu/MenuHeader";
 import { useOrderSetting } from "@/contexts/OrderSettingContext";
 import Unavailable from "../../../images/Unavailable.jpg";
+import { useState } from "react";
 
 export default function Menu() {
+    const [selectedCategory, setSelectedCategory] = useState(null);
     const { form: orderSetting } = useOrderSetting();
     return (
         <div className="w-[96%] lg:w-[90%] mx-auto">
             {orderSetting.allow ? (
                 <>
-                    <MenuCategories />
+                    <MenuCategories onCategorySelect={setSelectedCategory} />
                     <MenuHeader />
-                    <MenuCards />
+                    <MenuCards selectedCategory={selectedCategory} />
                 </>
             ) : (
                 <div className="h-[85vh] flex flex-col justify-center items-center">

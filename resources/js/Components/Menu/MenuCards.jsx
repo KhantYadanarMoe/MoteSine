@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import Empty from "../../../images/Empty.png";
 import { useCart } from "@/contexts/CartContext";
 
-export default function MenuCards() {
+export default function MenuCards({ selectedCategory }) {
     // state to store menus
     let [menus, setMenus] = useState([]);
     // state for pagination
@@ -49,12 +49,15 @@ export default function MenuCards() {
         "drinks-beverages": "text-teal-800 bg-teal-200",
     };
 
-    // calculate the last items, first items and set menus to show
+    const filteredMenus = selectedCategory
+        ? menus.filter((menu) => menu.category.category === selectedCategory)
+        : menus;
+
     const indexOfLastMenu = currentPage * rowsPerPage;
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
-    const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
+    const currentMenus = filteredMenus.slice(indexOfFirstMenu, indexOfLastMenu);
 
-    const totalPages = Math.ceil(menus.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredMenus.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

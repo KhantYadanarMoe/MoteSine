@@ -4,7 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
 
-export default function MenuCategories() {
+export default function MenuCategories({ onCategorySelect }) {
     // Define state for categories
     const [categories, setCategories] = useState([]);
 
@@ -41,21 +41,29 @@ export default function MenuCategories() {
         >
             <div className="md:px-5 px-2 py-12 mx-auto w-[100%] md:w-[85%] lg:w-[70%]">
                 <ul className="flex flex-wrap justify-center md:text-base text-sm text-gray-800">
+                    <li className="md:py-4 md:px-4 py-3 px-2">
+                        <span
+                            onClick={() => onCategorySelect(null)}
+                            className="cursor-pointer relative hover:text-gray-950 group"
+                        >
+                            All
+                            <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-[#E32737] transition-all duration-300 group-hover:w-full"></span>
+                        </span>
+                    </li>
                     {categories.map((category) => (
                         <li
                             key={category.id}
                             className="md:py-4 md:px-4 py-3 px-2"
                         >
-                            <Link
-                                to={
-                                    category.link ||
-                                    `/categories/${category.slug}`
+                            <span
+                                onClick={() =>
+                                    onCategorySelect(category.category)
                                 }
-                                className="relative hover:text-gray-950 group"
+                                className="cursor-pointer relative hover:text-gray-950 group"
                             >
                                 {category.category}
                                 <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-[#E32737] transition-all duration-300 group-hover:w-full"></span>
-                            </Link>
+                            </span>
                         </li>
                     ))}
                 </ul>
