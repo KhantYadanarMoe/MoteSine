@@ -51,9 +51,12 @@ export default function ProductsGrid() {
         indexOfLastProduct
     );
 
-    // function for pagination button
+    const totalPages = Math.ceil(products.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
     return (
         <motion.div
@@ -178,7 +181,11 @@ export default function ProductsGrid() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -206,7 +213,11 @@ export default function ProductsGrid() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(products.length / rowsPerPage)

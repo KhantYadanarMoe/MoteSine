@@ -57,9 +57,9 @@ export default function MenuList() {
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
     const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
 
-    // function for pagination button
+    const totalPages = Math.ceil(menus.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        const totalPages = Math.ceil(menus.length / rowsPerPage);
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
         }
@@ -272,7 +272,11 @@ export default function MenuList() {
                                     handlePageChange(currentPage - 1)
                                 }
                                 disabled={currentPage === 1}
-                                className="cursor-pointer"
+                                className={`cursor-pointer ${
+                                    currentPage === 1
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
                             />
                         </PaginationItem>
                         {Array.from(
@@ -296,7 +300,11 @@ export default function MenuList() {
                                 onClick={() =>
                                     handlePageChange(currentPage + 1)
                                 }
-                                className="cursor-pointer"
+                                className={`cursor-pointer ${
+                                    currentPage === totalPages
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
                                 disabled={
                                     currentPage ===
                                     Math.ceil(menus.length / rowsPerPage)

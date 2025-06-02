@@ -154,9 +154,12 @@ export default function Category() {
         indexOfLastCategory
     );
 
-    // function for pagination button
+    const totalPages = Math.ceil(categories.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     // setting format for created_at date
@@ -455,7 +458,11 @@ export default function Category() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -483,7 +490,11 @@ export default function Category() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(

@@ -60,9 +60,12 @@ export default function MenuGrid() {
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
     const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
 
-    // function for pagination button
+    const totalPages = Math.ceil(menus.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
     return (
         <motion.div
@@ -206,7 +209,11 @@ export default function MenuGrid() {
                                     handlePageChange(currentPage - 1)
                                 }
                                 disabled={currentPage === 1}
-                                className="cursor-pointer"
+                                className={`cursor-pointer ${
+                                    currentPage === 1
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
                             />
                         </PaginationItem>
                         {Array.from(
@@ -230,7 +237,11 @@ export default function MenuGrid() {
                                 onClick={() =>
                                     handlePageChange(currentPage + 1)
                                 }
-                                className="cursor-pointer"
+                                className={`cursor-pointer ${
+                                    currentPage === totalPages
+                                        ? "opacity-50 cursor-not-allowed"
+                                        : ""
+                                }`}
                                 disabled={
                                     currentPage ===
                                     Math.ceil(menus.length / rowsPerPage)

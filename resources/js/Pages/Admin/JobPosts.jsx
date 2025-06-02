@@ -57,9 +57,12 @@ export default function JobPosts() {
     const indexOfFirstJob = indexOfLastJob - rowsPerPage;
     const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
 
-    // function for pagination button
+    const totalPages = Math.ceil(jobs.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     let deleteJob = async (id) => {
@@ -211,7 +214,11 @@ export default function JobPosts() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -239,7 +246,11 @@ export default function JobPosts() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(jobs.length / rowsPerPage)

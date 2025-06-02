@@ -62,9 +62,12 @@ export default function ProductsList() {
         indexOfLastProduct
     );
 
-    // function for pagination button
+    const totalPages = Math.ceil(products.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     // Delete function
@@ -273,7 +276,11 @@ export default function ProductsList() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -301,7 +308,11 @@ export default function ProductsList() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(products.length / rowsPerPage)

@@ -56,9 +56,12 @@ export default function UsersList() {
     const indexOfFirstUser = indexOfLastUser - rowsPerPage;
     const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
 
-    // function for pagination button
+    const totalPages = Math.ceil(users.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     const banUser = async (id, currentStatus) => {
@@ -321,7 +324,11 @@ export default function UsersList() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -349,7 +356,11 @@ export default function UsersList() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(users.length / rowsPerPage)

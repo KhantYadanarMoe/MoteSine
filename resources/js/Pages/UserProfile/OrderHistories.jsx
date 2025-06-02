@@ -4,6 +4,15 @@ import { Input } from "../../Components/ui/input";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import {
+    Pagination,
+    PaginationContent,
+    PaginationEllipsis,
+    PaginationItem,
+    PaginationLink,
+    PaginationNext,
+    PaginationPrevious,
+} from "../../Components/ui/pagination";
 import { useEffect } from "react";
 import dayjs from "dayjs";
 import { useOrderSetting } from "@/contexts/OrderSettingContext";
@@ -36,9 +45,12 @@ export default function OrderHistories() {
     const indexOfFirstOrder = indexOfLastOrder - rowsPerPage;
     const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-    // function for pagination button
+    const totalPages = Math.ceil(orders.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
     return (
         <motion.div
@@ -232,6 +244,64 @@ export default function OrderHistories() {
                         Loading...
                     </p> //add lazy loading after complete
                 )}
+            </div>
+
+            <div className="mt-8 flex">
+                <div className="ml-auto">
+                    <Pagination className="text-accentRed">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
+                                />
+                            </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        orders.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(orders.length / rowsPerPage)
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
             </div>
         </motion.div>
     );

@@ -37,7 +37,7 @@ export default function ProductCards() {
     // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
-    const rowsPerPage = 9;
+    const rowsPerPage = 6;
 
     // calculate the last items, first items and set products to show
     const indexOfLastProduct = currentPage * rowsPerPage;
@@ -47,9 +47,12 @@ export default function ProductCards() {
         indexOfLastProduct
     );
 
-    // function for pagination button
+    const totalPages = Math.ceil(products.length / rowsPerPage);
+
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     // Fetch wishlist to know liked items
@@ -139,7 +142,7 @@ export default function ProductCards() {
                 </div>
 
                 <div className="my-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-[97%] xl:w-[93%] mx-auto">
-                    {products.map((product) => (
+                    {currentProducts.map((product) => (
                         <div
                             key={product.id}
                             className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl"
@@ -214,7 +217,11 @@ export default function ProductCards() {
                                         handlePageChange(currentPage - 1)
                                     }
                                     disabled={currentPage === 1}
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                 />
                             </PaginationItem>
                             {Array.from(
@@ -242,7 +249,11 @@ export default function ProductCards() {
                                     onClick={() =>
                                         handlePageChange(currentPage + 1)
                                     }
-                                    className="cursor-pointer"
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
                                     disabled={
                                         currentPage ===
                                         Math.ceil(products.length / rowsPerPage)
