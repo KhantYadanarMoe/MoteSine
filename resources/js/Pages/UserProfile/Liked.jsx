@@ -107,15 +107,22 @@ export default function Liked() {
                             >
                                 <div className="relative py-3 bg-white border border-gray-400 shadow-lg rounded-lg">
                                     <div className="absolute -top-10 mr-3 right-0 flex justify-end">
-                                        <img
-                                            src={
-                                                item.menu.image
-                                                    ? `/storage/${item.menu.image}`
-                                                    : Mohinga
-                                            }
-                                            alt={item.menu.title}
-                                            className="w-[130px] md:w-[150px] object-cover rounded-full border-4 border-white shadow-md"
-                                        />
+                                        {item.product?.image ? (
+                                            <img
+                                                src={`/storage/${item.product.image}`}
+                                                alt={
+                                                    item.product.title ||
+                                                    "Product image"
+                                                }
+                                                className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
+                                            />
+                                        ) : (
+                                            <img
+                                                src={Mohinga} // fallback image
+                                                alt="Default product"
+                                                className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
+                                            />
+                                        )}
                                     </div>
                                     <div className="pt-5 px-6">
                                         <div className="flex items-center justify-between mb-3">

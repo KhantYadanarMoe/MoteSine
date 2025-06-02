@@ -12,6 +12,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Empty from "../../../images/Empty.png";
 import { useCart } from "@/contexts/CartContext";
 
 export default function MenuCards() {
@@ -229,9 +230,21 @@ export default function MenuCards() {
                         </div>
                     ))
                 ) : (
-                    <p className="text-center font-medium text-accentRed">
-                        Loading...
-                    </p> //add lazy loading after complete
+                    <div className="w-full flex justify-center py-6">
+                        <div className="text-center font-medium text-accentRed">
+                            <img
+                                src={Empty}
+                                alt="No data"
+                                className="mx-auto w-60"
+                            />
+                            <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                                No data to show.
+                            </h2>
+                            <p className="text-gray-500 mb-4 text-sm">
+                                The data you are looking for is empty.
+                            </p>
+                        </div>
+                    </div>
                 )}
             </div>
             <div className="mt-8 mx-auto">
