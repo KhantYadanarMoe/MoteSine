@@ -156,7 +156,9 @@ export default function ReviewsList() {
             viewport={{ once: false, amount: 0.2 }}
             className="mx-2 md:mx-4 my-8"
         >
-            <h1 className="md:text-lg font-medium">27 Reviews Found</h1>
+            <h1 className="md:text-lg font-medium">
+                {reviews.length} Reviews Found
+            </h1>
             <div className="mt-8 overflow-x-auto">
                 <div className="min-w-[920px] lg:min-w-[880px]">
                     <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">

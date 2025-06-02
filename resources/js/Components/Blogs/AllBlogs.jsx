@@ -43,7 +43,10 @@ export default function AllBlogs() {
 
     // function for pagination button
     const handlePageChange = (page) => {
-        setCurrentPage(page);
+        const totalPages = Math.ceil(menus.length / rowsPerPage);
+        if (page >= 1 && page <= totalPages) {
+            setCurrentPage(page);
+        }
     };
 
     return (
