@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import Empty from "../../../images/Empty.png";
 
 export default function AllBlogs() {
     // state to store blogs
@@ -140,9 +141,21 @@ export default function AllBlogs() {
                             </div>
                         ))
                     ) : (
-                        <p className="text-center font-medium text-accentRed">
-                            Loading...
-                        </p> //add lazy loading after complete
+                        <div className="col-span-full flex justify-center py-6">
+                            <div className="text-center font-medium text-accentRed">
+                                <img
+                                    src={Empty}
+                                    alt="No data"
+                                    className="mx-auto w-60"
+                                />
+                                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                                    No data to show.
+                                </h2>
+                                <p className="text-gray-500 mb-4 text-sm">
+                                    The data you are looking for is empty.
+                                </p>
+                            </div>
+                        </div>
                     )}
                 </div>
                 <div className="mt-4">

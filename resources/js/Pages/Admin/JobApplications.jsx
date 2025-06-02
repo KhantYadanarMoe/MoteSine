@@ -30,17 +30,25 @@ import { Link } from "react-router-dom";
 import { Button } from "../../Components/ui/button";
 import { useState } from "react";
 import { useEffect } from "react";
+import Empty from "../.././../images/Empty.png";
 import axios from "axios";
 
 export default function JobApplications() {
+    const [loading, setLoading] = useState(true);
     // state to store applications
     let [applications, setApplications] = useState([]);
 
     // fetch data that send from backend
     let getApplications = async () => {
-        let res = await axios.get("/api/jobs/applications");
-        let data = res.data;
-        setApplications(data.applications);
+        try {
+            let res = await axios.get("/api/jobs/applications");
+            let data = res.data;
+            setApplications(data.applications);
+        } catch (error) {
+            console.error("Failed to fetch applications:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // call data fetching function in useEffect to run when user enter the page
@@ -110,208 +118,236 @@ export default function JobApplications() {
     };
 
     return (
-        <motion.div
-            initial={{ x: 100, opacity: 0 }}
-            whileInView={{ x: 0, opacity: 1 }}
-            transition={{ duration: 0.6, ease: "easeOut" }}
-            viewport={{ once: false, amount: 0.2 }}
-            className="mx-2 md:mx-4 my-8"
-        >
-            <div className="flex justify-between md:items-center">
-                <h1 className="md:text-lg font-medium">
-                    {applications.length} Applications Found
-                </h1>
-                <Link to="/admin/jobs/create">
-                    <Button
-                        variant="default"
-                        className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300 order-1 md:order-2"
-                    >
-                        <Plus size={16} /> Upload Job
-                    </Button>
-                </Link>
-            </div>
-            <div className="mt-8 overflow-x-auto">
-                <div className="min-w-[920px] lg:min-w-[880px]">
-                    <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">
-                        <li className="basis-[4%]"></li>
-                        <li className="basis-[4%]">ID</li>
-                        <li className="basis-[18%]">Name</li>
-                        <li className="basis-[23%] pl-2">Email</li>
-                        <li className="basis-[13%]">Phone</li>
-                        <li className="basis-[13%]">Position</li>
-                        <li className="basis-[20%]">Resume</li>
-                        <li className="basis-[5%]"></li>
-                    </ul>
-                    {currentApplications.length > 0 ? (
-                        currentApplications.map((application) => (
-                            <ul
-                                key={application.id}
-                                className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+        <div>
+            {loading ? (
+                <p className="text-center font-medium text-accentRed">
+                    Loading...
+                </p>
+            ) : applications.length === 0 ? (
+                <div className="text-center font-medium text-accentRed flex flex-col items-center justify-center h-[80vh]">
+                    <img src={Empty} alt="No data" className="mx-auto w-60" />
+                    <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                        No data to show.
+                    </h2>
+                    <p className="text-gray-500 mb-4 text-sm">
+                        The table you are looking for is empty.
+                    </p>
+                </div>
+            ) : (
+                <motion.div
+                    initial={{ x: 100, opacity: 0 }}
+                    whileInView={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    viewport={{ once: false, amount: 0.2 }}
+                    className="mx-2 md:mx-4 my-8"
+                >
+                    <div className="flex justify-between md:items-center">
+                        <h1 className="md:text-lg font-medium">
+                            {applications.length} Applications Found
+                        </h1>
+                        <Link to="/admin/jobs/create">
+                            <Button
+                                variant="default"
+                                className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300 order-1 md:order-2"
                             >
-                                <li className="basis-[4%]">
-                                    {application.checked === 1 && (
-                                        <CircleCheckBig
-                                            size={24}
-                                            className="text-green-600"
-                                        />
-                                    )}
-                                </li>
-                                <li className="basis-[4%]">{application.id}</li>
-                                <li className="basis-[18%]">
-                                    {application.firstName}{" "}
-                                    {application.lastName}
-                                </li>
-                                <li className="basis-[23%] text-sm">
-                                    {application.email}
-                                </li>
-                                <li className="basis-[13%] text-sm">
-                                    {application.phone}
-                                </li>
-                                <li className="basis-[13%]">
-                                    {application.position}
-                                </li>
-                                <li className="basis-[20%] text-sm">
-                                    <a
-                                        href={`/storage/${application.resume}`}
-                                        className="text-blue-600 underline"
-                                        download
-                                    >
-                                        {application.firstName}
-                                    </a>
-                                </li>
-                                <li className="basis-[5%]">
-                                    <DropdownMenu modal={false}>
-                                        <DropdownMenuTrigger asChild>
-                                            <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
-                                                <Ellipsis size={20} />
-                                            </button>
-                                        </DropdownMenuTrigger>
-                                        <DropdownMenuContent
-                                            align="end"
-                                            className="w-40"
-                                        >
-                                            <DropdownMenuItem
-                                                onClick={() =>
-                                                    checked(
-                                                        application.id,
-                                                        application.checked
-                                                    )
-                                                }
-                                                className="text-accentGreen"
-                                            >
-                                                {application.checked
-                                                    ? "Unchecked"
-                                                    : "Checked"}
-                                            </DropdownMenuItem>
-                                            <DropdownMenuItem asChild>
-                                                <AlertDialog>
-                                                    <AlertDialogTrigger asChild>
-                                                        <button className="text-accentRed bg-white w-full text-left px-2 py-2">
-                                                            Delete
-                                                        </button>
-                                                    </AlertDialogTrigger>
-                                                    <AlertDialogContent>
-                                                        <AlertDialogHeader>
-                                                            <AlertDialogTitle>
-                                                                Are you sure you
-                                                                want to delete
-                                                                this job
-                                                                application?
-                                                            </AlertDialogTitle>
-                                                            <AlertDialogDescription>
-                                                                This action
-                                                                cannot be
-                                                                undone.
-                                                            </AlertDialogDescription>
-                                                        </AlertDialogHeader>
-                                                        <AlertDialogFooter>
-                                                            <AlertDialogCancel>
-                                                                Cancel
-                                                            </AlertDialogCancel>
-                                                            <AlertDialogAction
-                                                                onClick={() =>
-                                                                    deleteApplication(
-                                                                        application.id
-                                                                    )
-                                                                }
-                                                            >
-                                                                Delete
-                                                            </AlertDialogAction>
-                                                        </AlertDialogFooter>
-                                                    </AlertDialogContent>
-                                                </AlertDialog>
-                                            </DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </li>
+                                <Plus size={16} /> Upload Job
+                            </Button>
+                        </Link>
+                    </div>
+                    <div className="mt-8 overflow-x-auto">
+                        <div className="min-w-[920px] lg:min-w-[880px]">
+                            <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">
+                                <li className="basis-[4%]"></li>
+                                <li className="basis-[4%]">ID</li>
+                                <li className="basis-[18%]">Name</li>
+                                <li className="basis-[23%] pl-2">Email</li>
+                                <li className="basis-[13%]">Phone</li>
+                                <li className="basis-[13%]">Position</li>
+                                <li className="basis-[20%]">Resume</li>
+                                <li className="basis-[5%]"></li>
                             </ul>
-                        ))
-                    ) : (
-                        <p className="text-center font-medium text-accentRed">
-                            Loading...
-                        </p> //add lazy loading after complete
-                    )}
-                </div>
-            </div>
-            <div className="mt-8 flex">
-                <div className="ml-auto">
-                    <Pagination className="text-accentREbg-accentRed">
-                        <PaginationContent>
-                            <PaginationItem>
-                                <PaginationPrevious
-                                    onClick={() =>
-                                        handlePageChange(currentPage - 1)
-                                    }
-                                    disabled={currentPage === 1}
-                                    className={`cursor-pointer ${
-                                        currentPage === 1
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : ""
-                                    }`}
-                                />
-                            </PaginationItem>
-                            {Array.from(
-                                {
-                                    length: Math.ceil(
-                                        applications.length / rowsPerPage
-                                    ),
-                                },
-                                (_, index) => (
-                                    <PaginationItem key={index}>
-                                        <PaginationLink
-                                            onClick={() =>
-                                                handlePageChange(index + 1)
-                                            }
-                                            isActive={currentPage === index + 1}
-                                            className="cursor-pointer"
+                            {currentApplications.map((application) => (
+                                <ul
+                                    key={application.id}
+                                    className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
+                                >
+                                    <li className="basis-[4%]">
+                                        {application.checked === 1 && (
+                                            <CircleCheckBig
+                                                size={24}
+                                                className="text-green-600"
+                                            />
+                                        )}
+                                    </li>
+                                    <li className="basis-[4%]">
+                                        {application.id}
+                                    </li>
+                                    <li className="basis-[18%]">
+                                        {application.firstName}{" "}
+                                        {application.lastName}
+                                    </li>
+                                    <li className="basis-[23%] text-sm">
+                                        {application.email}
+                                    </li>
+                                    <li className="basis-[13%] text-sm">
+                                        {application.phone}
+                                    </li>
+                                    <li className="basis-[13%]">
+                                        {application.position}
+                                    </li>
+                                    <li className="basis-[20%] text-sm">
+                                        <a
+                                            href={`/storage/${application.resume}`}
+                                            className="text-blue-600 underline"
+                                            download
                                         >
-                                            {index + 1}
-                                        </PaginationLink>
+                                            {application.firstName}
+                                        </a>
+                                    </li>
+                                    <li className="basis-[5%]">
+                                        <DropdownMenu modal={false}>
+                                            <DropdownMenuTrigger asChild>
+                                                <button className="p-1 rounded-md hover:bg-gray-100 outline-none">
+                                                    <Ellipsis size={20} />
+                                                </button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent
+                                                align="end"
+                                                className="w-40"
+                                            >
+                                                <DropdownMenuItem
+                                                    onClick={() =>
+                                                        checked(
+                                                            application.id,
+                                                            application.checked
+                                                        )
+                                                    }
+                                                    className="text-accentGreen"
+                                                >
+                                                    {application.checked
+                                                        ? "Unchecked"
+                                                        : "Checked"}
+                                                </DropdownMenuItem>
+                                                <DropdownMenuItem asChild>
+                                                    <AlertDialog>
+                                                        <AlertDialogTrigger
+                                                            asChild
+                                                        >
+                                                            <button className="text-accentRed bg-white w-full text-left px-2 py-2">
+                                                                Delete
+                                                            </button>
+                                                        </AlertDialogTrigger>
+                                                        <AlertDialogContent>
+                                                            <AlertDialogHeader>
+                                                                <AlertDialogTitle>
+                                                                    Are you sure
+                                                                    you want to
+                                                                    delete this
+                                                                    job
+                                                                    application?
+                                                                </AlertDialogTitle>
+                                                                <AlertDialogDescription>
+                                                                    This action
+                                                                    cannot be
+                                                                    undone.
+                                                                </AlertDialogDescription>
+                                                            </AlertDialogHeader>
+                                                            <AlertDialogFooter>
+                                                                <AlertDialogCancel>
+                                                                    Cancel
+                                                                </AlertDialogCancel>
+                                                                <AlertDialogAction
+                                                                    onClick={() =>
+                                                                        deleteApplication(
+                                                                            application.id
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Delete
+                                                                </AlertDialogAction>
+                                                            </AlertDialogFooter>
+                                                        </AlertDialogContent>
+                                                    </AlertDialog>
+                                                </DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </li>
+                                </ul>
+                            ))}
+                        </div>
+                    </div>
+                    <div className="mt-8 flex">
+                        <div className="ml-auto">
+                            <Pagination className="text-accentREbg-accentRed">
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage - 1
+                                                )
+                                            }
+                                            disabled={currentPage === 1}
+                                            className={`cursor-pointer ${
+                                                currentPage === 1
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : ""
+                                            }`}
+                                        />
                                     </PaginationItem>
-                                )
-                            )}
-                            <PaginationItem>
-                                <PaginationNext
-                                    onClick={() =>
-                                        handlePageChange(currentPage + 1)
-                                    }
-                                    className={`cursor-pointer ${
-                                        currentPage === totalPages
-                                            ? "opacity-50 cursor-not-allowed"
-                                            : ""
-                                    }`}
-                                    disabled={
-                                        currentPage ===
-                                        Math.ceil(
-                                            applications.length / rowsPerPage
+                                    {Array.from(
+                                        {
+                                            length: Math.ceil(
+                                                applications.length /
+                                                    rowsPerPage
+                                            ),
+                                        },
+                                        (_, index) => (
+                                            <PaginationItem key={index}>
+                                                <PaginationLink
+                                                    onClick={() =>
+                                                        handlePageChange(
+                                                            index + 1
+                                                        )
+                                                    }
+                                                    isActive={
+                                                        currentPage ===
+                                                        index + 1
+                                                    }
+                                                    className="cursor-pointer"
+                                                >
+                                                    {index + 1}
+                                                </PaginationLink>
+                                            </PaginationItem>
                                         )
-                                    }
-                                />
-                            </PaginationItem>
-                        </PaginationContent>
-                    </Pagination>
-                </div>
-            </div>
-        </motion.div>
+                                    )}
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage + 1
+                                                )
+                                            }
+                                            className={`cursor-pointer ${
+                                                currentPage === totalPages
+                                                    ? "opacity-50 cursor-not-allowed"
+                                                    : ""
+                                            }`}
+                                            disabled={
+                                                currentPage ===
+                                                Math.ceil(
+                                                    applications.length /
+                                                        rowsPerPage
+                                                )
+                                            }
+                                        />
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
+        </div>
     );
 }
