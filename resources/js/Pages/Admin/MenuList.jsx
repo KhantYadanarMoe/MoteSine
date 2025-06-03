@@ -189,7 +189,10 @@ export default function MenuList() {
                                         </h1>
                                     </li>
                                     <li className="basis-[18%]">
-                                        {menu.promotion ? (
+                                        {menu.promotion &&
+                                        new Date() >=
+                                            new Date(menu.startDate) &&
+                                        new Date() <= new Date(menu.endDate) ? (
                                             <div className="flex items-center gap-1">
                                                 <span className="text-red-600 font-semibold">
                                                     {(
@@ -212,7 +215,10 @@ export default function MenuList() {
                                         {menu.category?.category}
                                     </li>
                                     <li className="basis-[11%]">
-                                        {menu.promotion
+                                        {menu.promotion &&
+                                        new Date() >=
+                                            new Date(menu.startDate) &&
+                                        new Date() <= new Date(menu.endDate)
                                             ? `${menu.promotion}%`
                                             : "-"}
                                     </li>

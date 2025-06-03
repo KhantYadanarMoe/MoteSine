@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import Empty from "../../../images/Empty.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 
 export default function MenuGrid() {
     const [loading, setLoading] = useState(true);
@@ -135,7 +136,7 @@ export default function MenuGrid() {
                     <div className="mt-6 flex flex-wrap">
                         {currentMenus.map((menu) => (
                             <div className="w-[100%] lg:mx-0 mx-auto md:w-1/2 lg:w-1/3 p-1 mt-16">
-                                <div className="py-3 relative bg-white border h-[270px] border-gray-400 shadow-lg rounded-lg">
+                                <div className="py-3 relative bg-white border h-[280px] border-gray-400 shadow-lg rounded-lg">
                                     <div className="absolute -top-10 mr-3 right-0 flex justify-end">
                                         <img
                                             src={`/storage/${menu.image}`}
@@ -188,7 +189,11 @@ export default function MenuGrid() {
                                             {menu.desc}
                                         </p>
                                         <div className="flex items-center justify-between mt-6">
-                                            {menu.promotion ? (
+                                            {menu.promotion &&
+                                            new Date() >=
+                                                new Date(menu.startDate) &&
+                                            new Date() <=
+                                                new Date(menu.endDate) ? (
                                                 <div className="flex items-center gap-1">
                                                     <span className="text-red-600 font-semibold">
                                                         {(
@@ -213,6 +218,22 @@ export default function MenuGrid() {
                                                 />
                                             </button>
                                         </div>
+                                        {menu.promotion &&
+                                            new Date() >=
+                                                new Date(menu.startDate) &&
+                                            new Date() <=
+                                                new Date(menu.endDate) && (
+                                                <p className="text-xs text-gray-500">
+                                                    Promo period:{" "}
+                                                    {dayjs(
+                                                        menu.startDate
+                                                    ).format("MMM D")}{" "}
+                                                    -{" "}
+                                                    {dayjs(menu.endDate).format(
+                                                        "MMM D"
+                                                    )}
+                                                </p>
+                                            )}
                                     </div>
                                 </div>
                             </div>
