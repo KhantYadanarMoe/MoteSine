@@ -5,6 +5,7 @@ import { Input } from "../../Components/ui/input";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
+import dayjs from "dayjs";
 
 export default function Liked() {
     const [wishlistItems, setWishlistItems] = useState([]);
@@ -129,7 +130,7 @@ export default function Liked() {
                                 key={item.id}
                                 className="md:w-1/2 w-[99%] md:mx-0 mx-auto p-1 mt-10"
                             >
-                                <div className="relative py-3 bg-white border border-gray-400 shadow-lg rounded-lg">
+                                <div className="relative py-3 bg-white border h-[270px] border-gray-400 shadow-lg rounded-lg">
                                     <div className="absolute -top-10 mr-3 right-0 flex justify-end">
                                         {item.menu?.image ? (
                                             <img
@@ -186,13 +187,39 @@ export default function Liked() {
                                                 "No description available."}
                                         </p>
                                         <div className="flex items-center justify-between mt-4 md:mt-6">
-                                            <span className="md:text-lg font-bold text-gray-800">
-                                                {item.menu.price
-                                                    ? `${Number(
-                                                          item.menu.price
-                                                      ).toFixed(2)} $`
-                                                    : "N/A"}
-                                            </span>
+                                            <p className="text-sm font-medium">
+                                                {item.menu.promotion &&
+                                                new Date() >=
+                                                    new Date(
+                                                        item.menu.startDate
+                                                    ) &&
+                                                new Date() <=
+                                                    new Date(
+                                                        item.menu.endDate
+                                                    ) ? (
+                                                    <div className="flex items-center gap-1">
+                                                        <span className="text-red-600 font-semibold">
+                                                            {(
+                                                                item.menu
+                                                                    .price -
+                                                                (item.menu
+                                                                    .price *
+                                                                    item.menu
+                                                                        .promotion) /
+                                                                    100
+                                                            ).toFixed(2)}{" "}
+                                                            $
+                                                        </span>
+                                                        <span className="line-through text-sm text-gray-500">
+                                                            {item.menu.price} $
+                                                        </span>
+                                                    </div>
+                                                ) : (
+                                                    <span>
+                                                        {item.menu.price} $
+                                                    </span>
+                                                )}
+                                            </p>
                                             <button
                                                 onClick={() =>
                                                     addToCart(item.menu, "menu")
@@ -204,6 +231,22 @@ export default function Liked() {
                                                 />
                                             </button>
                                         </div>
+                                        {item.menu.promotion &&
+                                            new Date() >=
+                                                new Date(item.menu.startDate) &&
+                                            new Date() <=
+                                                new Date(item.menu.endDate) && (
+                                                <p className="text-xs text-gray-500">
+                                                    Promo period:{" "}
+                                                    {dayjs(
+                                                        item.menu.startDate
+                                                    ).format("MMM D")}{" "}
+                                                    -{" "}
+                                                    {dayjs(
+                                                        item.menu.endDate
+                                                    ).format("MMM D")}
+                                                </p>
+                                            )}
                                     </div>
                                 </div>
                             </div>
@@ -243,7 +286,36 @@ export default function Liked() {
                                             {item.product.name}
                                         </h1>
                                         <p className="text-sm font-medium">
-                                            {item.product.price} $
+                                            {item.product.promotion &&
+                                            new Date() >=
+                                                new Date(
+                                                    item.product.startDate
+                                                ) &&
+                                            new Date() <=
+                                                new Date(
+                                                    item.product.endDate
+                                                ) ? (
+                                                <div className="flex items-center gap-1">
+                                                    <span className="text-red-600 font-semibold">
+                                                        {(
+                                                            item.product.price -
+                                                            (item.product
+                                                                .price *
+                                                                item.product
+                                                                    .promotion) /
+                                                                100
+                                                        ).toFixed(2)}{" "}
+                                                        $
+                                                    </span>
+                                                    <span className="line-through text-sm text-gray-500">
+                                                        {item.product.price} $
+                                                    </span>
+                                                </div>
+                                            ) : (
+                                                <span>
+                                                    {item.product.price} $
+                                                </span>
+                                            )}
                                         </p>
                                     </div>
                                     <button
@@ -258,6 +330,22 @@ export default function Liked() {
                                         />
                                     </button>
                                 </div>
+                                {item.product.promotion &&
+                                    new Date() >=
+                                        new Date(item.product.startDate) &&
+                                    new Date() <=
+                                        new Date(item.product.endDate) && (
+                                        <p className="text-xs text-gray-500">
+                                            Promo period:{" "}
+                                            {dayjs(
+                                                item.product.startDate
+                                            ).format("MMM D")}{" "}
+                                            -{" "}
+                                            {dayjs(item.product.endDate).format(
+                                                "MMM D"
+                                            )}
+                                        </p>
+                                    )}
                             </div>
                         )
                     )
