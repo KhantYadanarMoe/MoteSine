@@ -1,4 +1,4 @@
-import { Ellipsis, Plus, CircleCheckBig } from "lucide-react";
+import { Ellipsis, Plus, CircleCheckBig, StickyNote } from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -145,14 +145,24 @@ export default function JobApplications() {
                         <h1 className="md:text-lg font-medium">
                             {applications.length} Applications Found
                         </h1>
-                        <Link to="/admin/jobs/create">
-                            <Button
-                                variant="default"
-                                className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300 order-1 md:order-2"
-                            >
-                                <Plus size={16} /> Upload Job
-                            </Button>
-                        </Link>
+                        <div className="flex gap-2 mt-2">
+                            <Link to="/admin/jobs">
+                                <Button
+                                    variant="default"
+                                    className="rounded-lg border bg-lightBackground border-accentRed text-accentRed hover:border-hoverRed hover:text-accentRed hover:bg-gray-200 duration-300 order-1 md:order-2"
+                                >
+                                    <StickyNote size={16} /> Job Posts
+                                </Button>
+                            </Link>
+                            <Link to="/admin/jobs/create">
+                                <Button
+                                    variant="default"
+                                    className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300 order-1 md:order-2"
+                                >
+                                    <Plus size={16} /> Upload Job
+                                </Button>
+                            </Link>
+                        </div>
                     </div>
                     <div className="mt-8 overflow-x-auto">
                         <div className="min-w-[920px] lg:min-w-[880px]">
