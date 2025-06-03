@@ -9,6 +9,16 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from "@/components/ui/pagination";
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
@@ -23,6 +33,9 @@ export default function ProductCards() {
     const { addToCart } = useCart();
 
     const [wishlistItems, setWishlistItems] = useState([]);
+
+    const [openOutOfStock, setOpenOutOfStock] = useState(false);
+    const [outOfStockProduct, setOutOfStockProduct] = useState(null);
 
     // fetch data that send from backend
     let getProducts = async () => {
@@ -227,9 +240,12 @@ export default function ProductCards() {
                                             </button>
                                         ) : (
                                             <button
-                                                onClick={() =>
-                                                    addToCart(null, "product")
-                                                }
+                                                onClick={() => {
+                                                    setOpenOutOfStock(true);
+                                                    setOutOfStockProduct(
+                                                        product
+                                                    );
+                                                }}
                                                 className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2 opacity-50"
                                             >
                                                 <ShoppingCart
@@ -240,6 +256,30 @@ export default function ProductCards() {
                                         )}
                                     </div>
                                 </div>
+                                <AlertDialog
+                                    open={openOutOfStock}
+                                    onOpenChange={setOpenOutOfStock}
+                                >
+                                    <AlertDialogContent>
+                                        <AlertDialogHeader>
+                                            <AlertDialogTitle>
+                                                Out of Stock
+                                            </AlertDialogTitle>
+                                            <AlertDialogDescription>
+                                                {outOfStockProduct?.name} is
+                                                currently out of stock. We’re
+                                                working to restock it as quickly
+                                                as possible. Thank you for your
+                                                patience!
+                                            </AlertDialogDescription>
+                                        </AlertDialogHeader>
+                                        <AlertDialogFooter>
+                                            <AlertDialogCancel>
+                                                Okay
+                                            </AlertDialogCancel>
+                                        </AlertDialogFooter>
+                                    </AlertDialogContent>
+                                </AlertDialog>
                             </div>
                         </div>
                     ))}

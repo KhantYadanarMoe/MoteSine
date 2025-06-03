@@ -3,6 +3,16 @@ import Mohinga from "../../../images/mohinga.png";
 import { motion } from "framer-motion";
 import { Input } from "../../Components/ui/input";
 import { useState, useEffect } from "react";
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
@@ -11,6 +21,9 @@ export default function Liked() {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [filter, setFilter] = useState("menu");
     const { addToCart } = useCart();
+
+    const [openOutOfStock, setOpenOutOfStock] = useState(false);
+    const [outOfStockProduct, setOutOfStockProduct] = useState(null);
 
     const getWishlistItems = async () => {
         try {
@@ -344,12 +357,12 @@ export default function Liked() {
                                                 </button>
                                             ) : (
                                                 <button
-                                                    onClick={() =>
-                                                        addToCart(
-                                                            null,
-                                                            "product"
-                                                        )
-                                                    }
+                                                    onClick={() => {
+                                                        setOpenOutOfStock(true);
+                                                        setOutOfStockProduct(
+                                                            item.product
+                                                        );
+                                                    }}
                                                     className="p-2"
                                                 >
                                                     <ShoppingCart
@@ -360,6 +373,30 @@ export default function Liked() {
                                             )}
                                         </div>
                                     </div>
+                                    <AlertDialog
+                                        open={openOutOfStock}
+                                        onOpenChange={setOpenOutOfStock}
+                                    >
+                                        <AlertDialogContent>
+                                            <AlertDialogHeader>
+                                                <AlertDialogTitle>
+                                                    Out of Stock
+                                                </AlertDialogTitle>
+                                                <AlertDialogDescription>
+                                                    {outOfStockProduct?.name} is
+                                                    currently out of stock.
+                                                    We’re working to restock it
+                                                    as quickly as possible.
+                                                    Thank you for your patience!
+                                                </AlertDialogDescription>
+                                            </AlertDialogHeader>
+                                            <AlertDialogFooter>
+                                                <AlertDialogCancel>
+                                                    Okay
+                                                </AlertDialogCancel>
+                                            </AlertDialogFooter>
+                                        </AlertDialogContent>
+                                    </AlertDialog>
                                 </div>
                                 {item.product.promotion &&
                                     new Date() >=

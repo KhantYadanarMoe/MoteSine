@@ -10,6 +10,16 @@ import { Heart, Star, ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogTrigger,
+    AlertDialogContent,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogCancel,
+} from "@/components/ui/alert-dialog";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
 
@@ -20,6 +30,9 @@ export default function Promotions() {
     const { addToCart } = useCart();
 
     const [wishlistItems, setWishlistItems] = useState([]);
+
+    const [openOutOfStock, setOpenOutOfStock] = useState(false);
+    const [outOfStockProduct, setOutOfStockProduct] = useState(null);
 
     // fetch data that send from backend
     let getProducts = async () => {
@@ -228,7 +241,7 @@ export default function Promotions() {
                                                         </p>
                                                     )}
                                             </div>
-                                            <div className="flex flex-col items-end">
+                                            <div className="flex flex-col items-end gap-2">
                                                 <div>
                                                     {product.stock === 0 && (
                                                         <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
@@ -254,12 +267,14 @@ export default function Promotions() {
                                                         </button>
                                                     ) : (
                                                         <button
-                                                            onClick={() =>
-                                                                addToCart(
-                                                                    null,
-                                                                    "product"
-                                                                )
-                                                            }
+                                                            onClick={() => {
+                                                                setOpenOutOfStock(
+                                                                    true
+                                                                );
+                                                                setOutOfStockProduct(
+                                                                    product
+                                                                );
+                                                            }}
                                                             className="p-2"
                                                         >
                                                             <ShoppingCart
@@ -270,6 +285,34 @@ export default function Promotions() {
                                                     )}
                                                 </div>
                                             </div>
+                                            <AlertDialog
+                                                open={openOutOfStock}
+                                                onOpenChange={setOpenOutOfStock}
+                                            >
+                                                <AlertDialogContent>
+                                                    <AlertDialogHeader>
+                                                        <AlertDialogTitle>
+                                                            Out of Stock
+                                                        </AlertDialogTitle>
+                                                        <AlertDialogDescription>
+                                                            {
+                                                                outOfStockProduct?.name
+                                                            }{" "}
+                                                            is currently out of
+                                                            stock. We’re working
+                                                            to restock it as
+                                                            quickly as possible.
+                                                            Thank you for your
+                                                            patience!
+                                                        </AlertDialogDescription>
+                                                    </AlertDialogHeader>
+                                                    <AlertDialogFooter>
+                                                        <AlertDialogCancel>
+                                                            Okay
+                                                        </AlertDialogCancel>
+                                                    </AlertDialogFooter>
+                                                </AlertDialogContent>
+                                            </AlertDialog>
                                         </div>
                                     </div>
                                 </CarouselItem>
