@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -51,6 +52,23 @@ class OrdersController extends Controller
         ]);
 
         foreach (request('items') as $item) {
+            if ($item['type'] === 'product') {
+            $product = Product::find($item['id']);
+
+            if (!$product) {
+                return response()->json([
+                    'message' => "Product not found (ID {$item['id']})."
+                ], 400);
+            }
+
+            if ($product->stock < $item['quantity']) {
+                return response()->json([
+                    'message' => "Not enough stock for '{$product->name}'. Only {$product->stock} left."
+                ], 400);
+            }
+
+            $product->decrement('stock', $item['quantity']);
+        }
             $order->items()->create([
                 'menu_id' => $item['type'] === 'menu' ? $item['id'] : null,
                 'product_id' => $item['type'] === 'product' ? $item['id'] : null,
