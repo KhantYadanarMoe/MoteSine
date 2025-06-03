@@ -43,10 +43,10 @@ export default function Checkout() {
     // store errors state
     const [errors, setErrors] = useState({});
     // use state to check dialog open or not and control
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [showDialog, setShowDialog] = useState(false);
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
+    const [stockErrorMessage, setStockErrorMessage] = useState("");
 
     // Handle HTML inputs
     const handleInputChange = (e) => {
@@ -143,8 +143,14 @@ export default function Checkout() {
             }
         } catch (error) {
             console.error("Failed to submit order:", error);
+
             if (error.response?.status === 422) {
                 setErrors(error.response.data.errors);
+            } else if (
+                error.response?.status === 400 &&
+                error.response.data?.message?.includes("Not enough stock")
+            ) {
+                setStockErrorMessage(error.response.data.message);
             }
         }
     };
@@ -446,6 +452,26 @@ export default function Checkout() {
                             Confirm Order
                         </Button>
                     </div>
+                    <AlertDialog
+                        open={!!stockErrorMessage}
+                        onOpenChange={() => setStockErrorMessage("")}
+                    >
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>Stock Error</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    {stockErrorMessage}
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter className="mt-3">
+                                <AlertDialogCancel
+                                    onClick={() => setStockErrorMessage("")}
+                                >
+                                    Close
+                                </AlertDialogCancel>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
                 <AlertDialog open={showDialog} onOpenChange={setShowDialog}>
                     <AlertDialogContent>
