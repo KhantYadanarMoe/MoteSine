@@ -197,8 +197,22 @@ export default function ProductForm() {
     };
 
     // calculating discounts
-    const getDiscountedPrice = (price, promo) => {
-        if (!promo || isNaN(promo)) return price;
+    const getDiscountedPrice = (price, promo, startDate, endDate) => {
+        const now = new Date();
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+
+        if (
+            !promo ||
+            isNaN(promo) ||
+            !startDate ||
+            !endDate ||
+            now < start ||
+            now > end
+        ) {
+            return price;
+        }
+
         return (price - (price * promo) / 100).toFixed(2);
     };
 
@@ -521,15 +535,19 @@ export default function ProductForm() {
                                 {form.name || "Eain Chat Mote Hti"}
                             </h1>
                             <p className="text-sm font-medium">
-                                {form.promotion ? (
+                                {form.promotion &&
+                                new Date() >= new Date(form.startDate) &&
+                                new Date() <= new Date(form.endDate) ? (
                                     <div className="flex items-center gap-2">
                                         <span className="line-through text-sm text-gray-500">
                                             {form.price || 6.12} $
                                         </span>
                                         <span className="font-bold text-red-600">
                                             {getDiscountedPrice(
-                                                form.price || 6.12,
-                                                form.promotion
+                                                form.price,
+                                                form.promotion,
+                                                form.startDate,
+                                                form.endDate
                                             )}{" "}
                                             $
                                         </span>

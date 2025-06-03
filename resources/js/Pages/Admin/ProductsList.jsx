@@ -195,7 +195,11 @@ export default function ProductsList() {
                                         </h1>
                                     </li>
                                     <li className="basis-[17%] pl-2">
-                                        {product.promotion ? (
+                                        {product.promotion &&
+                                        new Date() >=
+                                            new Date(product.startDate) &&
+                                        new Date() <=
+                                            new Date(product.endDate) ? (
                                             <div className="flex items-center gap-1">
                                                 <span className="text-red-600 font-semibold">
                                                     {(
@@ -226,7 +230,10 @@ export default function ProductsList() {
                                         </span>
                                     </li>
                                     <li className="basis-[10%]">
-                                        {product.promotion
+                                        {product.promotion &&
+                                        new Date() >=
+                                            new Date(product.startDate) &&
+                                        new Date() <= new Date(product.endDate)
                                             ? `${product.promotion}%`
                                             : "-"}
                                     </li>

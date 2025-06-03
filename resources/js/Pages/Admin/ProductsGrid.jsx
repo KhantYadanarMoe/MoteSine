@@ -21,6 +21,7 @@ import { Button } from "../../Components/ui/button";
 import Empty from "../../../images/Empty.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 
 export default function ProductsGrid() {
     const [loading, setLoading] = useState(true);
@@ -158,7 +159,11 @@ export default function ProductsGrid() {
                                             {product.name}
                                         </h1>
                                         <p className="font-medium">
-                                            {product.promotion ? (
+                                            {product.promotion &&
+                                            new Date() >=
+                                                new Date(product.startDate) &&
+                                            new Date() <=
+                                                new Date(product.endDate) ? (
                                                 <div className="flex items-center gap-1">
                                                     <span className="text-red-600 font-semibold">
                                                         {(
@@ -177,6 +182,22 @@ export default function ProductsGrid() {
                                                 <span>{product.price} $</span>
                                             )}
                                         </p>
+                                        {product.promotion &&
+                                            new Date() >=
+                                                new Date(product.startDate) &&
+                                            new Date() <=
+                                                new Date(product.endDate) && (
+                                                <p className="text-xs text-gray-500">
+                                                    Promo period:{" "}
+                                                    {dayjs(
+                                                        product.startDate
+                                                    ).format("MMM D")}{" "}
+                                                    -{" "}
+                                                    {dayjs(
+                                                        product.endDate
+                                                    ).format("MMM D")}
+                                                </p>
+                                            )}
                                     </div>
                                     <button className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2">
                                         <ShoppingCart

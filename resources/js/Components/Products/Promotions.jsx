@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
+import dayjs from "dayjs";
 
 export default function Promotions() {
     // state to store products
@@ -24,9 +25,16 @@ export default function Promotions() {
     let getProducts = async () => {
         let res = await axios.get("/api/products");
         let data = res.data;
-        let promotionProducts = data.products.filter(
-            (product) => product.promotion && product.visibility === 1
-        );
+        const today = dayjs();
+
+        const promotionProducts = data.products.filter((product) => {
+            return (
+                product.promotion &&
+                product.visibility === 1 &&
+                dayjs(product.startDate).isBefore(today) &&
+                dayjs(product.endDate).isAfter(today)
+            );
+        });
 
         setProducts(promotionProducts);
     };
@@ -165,7 +173,15 @@ export default function Promotions() {
                                                     {product.name}
                                                 </h1>
                                                 <p className="text-sm font-medium">
-                                                    {product.promotion ? (
+                                                    {product.promotion &&
+                                                    new Date() >=
+                                                        new Date(
+                                                            product.startDate
+                                                        ) &&
+                                                    new Date() <=
+                                                        new Date(
+                                                            product.endDate
+                                                        ) ? (
                                                         <div className="flex items-center gap-1">
                                                             <span className="text-red-600 font-semibold">
                                                                 {(
@@ -189,6 +205,28 @@ export default function Promotions() {
                                                         </span>
                                                     )}
                                                 </p>
+                                                {product.promotion &&
+                                                    new Date() >=
+                                                        new Date(
+                                                            product.startDate
+                                                        ) &&
+                                                    new Date() <=
+                                                        new Date(
+                                                            product.endDate
+                                                        ) && (
+                                                        <p className="text-xs text-gray-500">
+                                                            Promo period:{" "}
+                                                            {dayjs(
+                                                                product.startDate
+                                                            ).format(
+                                                                "MMM D"
+                                                            )}{" "}
+                                                            -{" "}
+                                                            {dayjs(
+                                                                product.endDate
+                                                            ).format("MMM D")}
+                                                        </p>
+                                                    )}
                                             </div>
                                             <button
                                                 onClick={() =>

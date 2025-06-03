@@ -14,6 +14,7 @@ import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
+import dayjs from "dayjs";
 
 export default function ProductCards() {
     // state to store products
@@ -27,11 +28,18 @@ export default function ProductCards() {
     let getProducts = async () => {
         let res = await axios.get("/api/products");
         let data = res.data;
-        let promotionProducts = data.products.filter(
-            (product) => !product.promotion && product.visibility === 1
-        );
+        const today = dayjs();
 
-        setProducts(promotionProducts);
+        const nonPromoOrExpiredProducts = data.products.filter((product) => {
+            const hasValidPromotion =
+                product.promotion &&
+                dayjs(product.startDate).isBefore(today) &&
+                dayjs(product.endDate).isAfter(today);
+
+            return product.visibility === 1 && !hasValidPromotion;
+        });
+
+        setProducts(nonPromoOrExpiredProducts);
     };
 
     // state for pagination
