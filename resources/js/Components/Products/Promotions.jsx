@@ -228,20 +228,48 @@ export default function Promotions() {
                                                         </p>
                                                     )}
                                             </div>
-                                            <button
-                                                onClick={() =>
-                                                    addToCart(
-                                                        product,
-                                                        "product"
-                                                    )
-                                                }
-                                                className="p-2"
-                                            >
-                                                <ShoppingCart
-                                                    size={20}
-                                                    className="text-accentRed"
-                                                />
-                                            </button>
+                                            <div className="flex flex-col items-end">
+                                                <div>
+                                                    {product.stock === 0 && (
+                                                        <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
+                                                            Out of Stock
+                                                        </span>
+                                                    )}
+                                                </div>
+                                                <div className="">
+                                                    {product.stock > 0 ? (
+                                                        <button
+                                                            onClick={() =>
+                                                                addToCart(
+                                                                    product,
+                                                                    "product"
+                                                                )
+                                                            }
+                                                            className="p-2"
+                                                        >
+                                                            <ShoppingCart
+                                                                size={20}
+                                                                className="text-accentRed"
+                                                            />
+                                                        </button>
+                                                    ) : (
+                                                        <button
+                                                            onClick={() =>
+                                                                addToCart(
+                                                                    null,
+                                                                    "product"
+                                                                )
+                                                            }
+                                                            className="p-2"
+                                                        >
+                                                            <ShoppingCart
+                                                                size={20}
+                                                                className="text-accentRed opacity-50"
+                                                            />
+                                                        </button>
+                                                    )}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </CarouselItem>

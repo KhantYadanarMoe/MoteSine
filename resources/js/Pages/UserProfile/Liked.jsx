@@ -318,17 +318,48 @@ export default function Liked() {
                                             )}
                                         </p>
                                     </div>
-                                    <button
-                                        onClick={() =>
-                                            addToCart(item.product, "product")
-                                        }
-                                        className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2"
-                                    >
-                                        <ShoppingCart
-                                            size={16}
-                                            className="text-white"
-                                        />
-                                    </button>
+                                    <div className="flex flex-col items-end gap-2">
+                                        <div>
+                                            {item.product.stock === 0 && (
+                                                <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
+                                                    Out of Stock
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="">
+                                            {item.product.stock > 0 ? (
+                                                <button
+                                                    onClick={() =>
+                                                        addToCart(
+                                                            item.product,
+                                                            "product"
+                                                        )
+                                                    }
+                                                    className="p-2"
+                                                >
+                                                    <ShoppingCart
+                                                        size={20}
+                                                        className="text-accentRed"
+                                                    />
+                                                </button>
+                                            ) : (
+                                                <button
+                                                    onClick={() =>
+                                                        addToCart(
+                                                            null,
+                                                            "product"
+                                                        )
+                                                    }
+                                                    className="p-2"
+                                                >
+                                                    <ShoppingCart
+                                                        size={20}
+                                                        className="text-accentRed opacity-50"
+                                                    />
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
                                 </div>
                                 {item.product.promotion &&
                                     new Date() >=

@@ -225,9 +225,15 @@ export default function ProductsList() {
                                         {product.stock}
                                     </li>
                                     <li className="basis-[11%]">
-                                        <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
-                                            Out of Stock
-                                        </span>
+                                        {product.stock === 0 ? (
+                                            <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
+                                                Out of Stock
+                                            </span>
+                                        ) : (
+                                            <span className="px-1 py-1 text-xs bg-green-100 text-green-600 rounded-md">
+                                                Instock
+                                            </span>
+                                        )}
                                     </li>
                                     <li className="basis-[10%]">
                                         {product.promotion &&

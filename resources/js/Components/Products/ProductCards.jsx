@@ -201,17 +201,45 @@ export default function ProductCards() {
                                         {product.price} $
                                     </p>
                                 </div>
-                                <button
-                                    onClick={() =>
-                                        addToCart(product, "product")
-                                    }
-                                    className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2"
-                                >
-                                    <ShoppingCart
-                                        size={16}
-                                        className="text-white"
-                                    />
-                                </button>
+                                <div className="flex flex-col items-end gap-2">
+                                    <div>
+                                        {product.stock === 0 && (
+                                            <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
+                                                Out of Stock
+                                            </span>
+                                        )}
+                                    </div>
+                                    <div className="">
+                                        {product.stock > 0 ? (
+                                            <button
+                                                onClick={() =>
+                                                    addToCart(
+                                                        product,
+                                                        "product"
+                                                    )
+                                                }
+                                                className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2"
+                                            >
+                                                <ShoppingCart
+                                                    size={16}
+                                                    className="text-white"
+                                                />
+                                            </button>
+                                        ) : (
+                                            <button
+                                                onClick={() =>
+                                                    addToCart(null, "product")
+                                                }
+                                                className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2 opacity-50"
+                                            >
+                                                <ShoppingCart
+                                                    size={16}
+                                                    className="text-white"
+                                                />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))}
