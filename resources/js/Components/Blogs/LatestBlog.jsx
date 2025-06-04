@@ -1,4 +1,4 @@
-import Blog from "../../../images/cooking.jpg";
+import Empty from "../../../images/Empty.png";
 import { CalendarFold, Clock, ArrowRight, Search } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
@@ -14,7 +14,8 @@ export default function LatestBlog() {
     let getBlogs = async () => {
         let res = await axios.get("/api/blogs");
         let data = res.data;
-        setBlog(data.blogs[0]);
+        const visibleBlogs = data.blogs.filter((blog) => blog.visibility === 1);
+        setBlog(visibleBlogs[0] || null); // handle case if no visible blogs
     };
 
     // call data fetching function in useEffect to run when user enter the page
@@ -35,46 +36,70 @@ export default function LatestBlog() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
         >
-            <div className="block md:flex gap-3 lg:gap-0 my-6">
-                <div className="md:w-1/2">
-                    {blog.blog_images?.length > 0 && (
-                        <img
-                            src={`/storage/${blog.blog_images[0].url}`}
-                            alt="Cover"
-                            className="w-[97%] h-52 md:h-64 lg:h-72 xl:h-80 object-cover rounded-md"
-                        />
-                    )}
-                </div>
-                <div className="md:w-1/2 flex flex-col justify-end py-3">
-                    <h1 className="text-xl lg:text-2xl font-medium mb-3">
-                        {blog.title}
-                    </h1>
-                    <p className="text-gray-700 text-xs lg:text-sm">
-                        {stripHtml(blog.paragraph)
-                            ?.split(" ")
-                            .slice(0, 45)
-                            .join(" ") + "..."}
-                    </p>
-                    <div className="flex gap-5 mt-4">
-                        <div className="flex gap-1 items-center text-sm lg:text-base">
-                            <CalendarFold size={20} className="text-gray-800" />
-                            <p className="text-gray-800">
-                                {dayjs(blog?.created_at).format("DD.MM.YYYY")}
-                            </p>
-                        </div>
-                        <div className="flex gap-1 items-center text-sm lg:text-base">
-                            <Clock size={20} className="text-gray-800" />
-                            <p className="text-gray-800">3 mins read</p>
-                        </div>
+            {blog ? (
+                <div className="block md:flex gap-3 lg:gap-0 my-6">
+                    <div className="md:w-1/2">
+                        {blog?.blog_images?.length > 0 && (
+                            <img
+                                src={`/storage/${blog.blog_images[0].url}`}
+                                alt="Cover"
+                                className="w-[97%] h-52 md:h-64 lg:h-72 xl:h-80 object-cover rounded-md"
+                            />
+                        )}
                     </div>
-                    <Link to="/blog">
-                        <button className="text-accentRed bg-white shadow-none hover:text-hoverRed duration-300 flex gap-1 items-center mt-4">
-                            Read More{" "}
-                            <ArrowRight size={16} className=" -mb-1" />
-                        </button>
-                    </Link>
+                    <div className="md:w-1/2 flex flex-col justify-end py-3">
+                        <h1 className="text-xl lg:text-2xl font-medium mb-3">
+                            {blog.title}
+                        </h1>
+                        <p className="text-gray-700 text-xs lg:text-sm">
+                            {stripHtml(blog.paragraph)
+                                ?.split(" ")
+                                .slice(0, 45)
+                                .join(" ") + "..."}
+                        </p>
+                        <div className="flex gap-5 mt-4">
+                            <div className="flex gap-1 items-center text-sm lg:text-base">
+                                <CalendarFold
+                                    size={20}
+                                    className="text-gray-800"
+                                />
+                                <p className="text-gray-800">
+                                    {dayjs(blog.created_at).format(
+                                        "DD.MM.YYYY"
+                                    )}
+                                </p>
+                            </div>
+                            <div className="flex gap-1 items-center text-sm lg:text-base">
+                                <Clock size={20} className="text-gray-800" />
+                                <p className="text-gray-800">3 mins read</p>
+                            </div>
+                        </div>
+                        <Link to={`/blog/${blog.id}`}>
+                            <button className="text-accentRed bg-white shadow-none hover:text-hoverRed duration-300 flex gap-1 items-center mt-4">
+                                Read More{" "}
+                                <ArrowRight size={16} className=" -mb-1" />
+                            </button>
+                        </Link>
+                    </div>
                 </div>
-            </div>
+            ) : (
+                <div className="col-span-full flex justify-center py-6">
+                    <div className="text-center font-medium text-accentRed">
+                        <img
+                            src={Empty}
+                            alt="No data"
+                            className="mx-auto w-60"
+                        />
+                        <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                            No latest blog available.
+                        </h2>
+                        <p className="text-gray-500 mb-4 text-sm">
+                            There are no blogs marked as visible at the moment.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             <hr className="border-t-gray-400" />
         </motion.div>
     );
