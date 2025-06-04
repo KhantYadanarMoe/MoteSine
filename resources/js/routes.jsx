@@ -49,6 +49,8 @@ import PartnershipApproved from "./Pages/Admin/PartnershipApproved";
 import PartnershipRejected from "./Pages/Admin/PartnershipRejected";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import UserSidebar from "./Pages/User/UserSidebar";
+import Banned from "./Components/Home/Banned";
+import BannedRedirect from "./Components/BannedRedirect";
 
 const routes = createBrowserRouter([
     {
@@ -57,7 +59,11 @@ const routes = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Home />,
+                element: (
+                    <BannedRedirect>
+                        <Home />
+                    </BannedRedirect>
+                ),
             },
             {
                 path: "/products",
@@ -104,6 +110,10 @@ const routes = createBrowserRouter([
                 element: <Partnership />,
             },
         ],
+    },
+    {
+        path: "/banned",
+        element: <Banned />,
     },
     {
         path: "/user",
