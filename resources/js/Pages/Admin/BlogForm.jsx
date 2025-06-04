@@ -316,7 +316,12 @@ export default function BlogForm() {
                                 <Label htmlFor="paragraph">Paragraph</Label>
                                 <TextEditor
                                     value={form.paragraph}
-                                    onChange={handleInputChange}
+                                    onChange={(e) =>
+                                        handleCustomChange(
+                                            "paragraph",
+                                            e.target.value
+                                        )
+                                    }
                                 />
 
                                 {errors.paragraph && (
