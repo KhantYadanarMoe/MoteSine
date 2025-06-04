@@ -251,14 +251,40 @@ export default function BlogForm() {
                                         {images
                                             .slice(0, 3)
                                             .map((image, index) => (
-                                                <img
+                                                <div
                                                     key={index}
-                                                    src={URL.createObjectURL(
-                                                        image
-                                                    )}
-                                                    alt={`Preview ${index + 1}`}
-                                                    className="max-w-[130px] max-h-[130px] rounded-lg"
-                                                />
+                                                    className="relative"
+                                                >
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setImages(
+                                                                (prevImages) =>
+                                                                    prevImages.filter(
+                                                                        (
+                                                                            _,
+                                                                            i
+                                                                        ) =>
+                                                                            i !==
+                                                                            index
+                                                                    )
+                                                            )
+                                                        }
+                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center text-sm shadow-md border border-gray-300 hover:bg-red-700 hover:text-white transition"
+                                                        title="Remove image"
+                                                    >
+                                                        <X />
+                                                    </button>
+                                                    <img
+                                                        src={URL.createObjectURL(
+                                                            image
+                                                        )}
+                                                        alt={`Preview ${
+                                                            index + 1
+                                                        }`}
+                                                        className="max-w-[130px] max-h-[130px] rounded-lg"
+                                                    />
+                                                </div>
                                             ))}
                                     </div>
                                 )}
