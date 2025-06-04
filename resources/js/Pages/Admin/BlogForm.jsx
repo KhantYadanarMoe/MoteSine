@@ -1,9 +1,9 @@
-import { Upload, CalendarFold, Clock } from "lucide-react";
+import { Upload, CalendarFold, Clock, X } from "lucide-react";
 import Blog2 from "../../../images/fresh.jpg";
 import { Switch } from "../../Components/ui/switch";
 import { Button } from "../../Components/ui/button";
 import { Input } from "../../Components/ui/input";
-import { Textarea } from "../../Components/ui/textarea";
+import TextEditor from "../../Components/ui/TextEditor";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -314,15 +314,11 @@ export default function BlogForm() {
                             </div>
                             <div className="mt-3">
                                 <Label htmlFor="paragraph">Paragraph</Label>
-                                <Textarea
-                                    id="paragraph"
-                                    name="paragraph"
+                                <TextEditor
                                     value={form.paragraph}
                                     onChange={handleInputChange}
-                                    type="text"
-                                    placeholder="Write your blog here..."
-                                    className="mt-1 border-gray-500"
-                                ></Textarea>
+                                />
+
                                 {errors.paragraph && (
                                     <p className="text-red-500 mt-1 text-sm">
                                         {errors.paragraph[0]}

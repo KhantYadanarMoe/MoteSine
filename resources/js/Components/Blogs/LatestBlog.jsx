@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import dayjs from "dayjs";
 
 export default function LatestBlog() {
     // state to store blogs
@@ -20,6 +21,12 @@ export default function LatestBlog() {
     useEffect(() => {
         getBlogs();
     }, []);
+
+    function stripHtml(html) {
+        const tmp = document.createElement("div");
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || "";
+    }
 
     return (
         <motion.div
@@ -43,14 +50,16 @@ export default function LatestBlog() {
                         {blog.title}
                     </h1>
                     <p className="text-gray-700 text-xs lg:text-sm">
-                        {blog.paragraph?.split(" ").slice(0, 45).join(" ") +
-                            "..."}
+                        {stripHtml(blog.paragraph)
+                            ?.split(" ")
+                            .slice(0, 45)
+                            .join(" ") + "..."}
                     </p>
                     <div className="flex gap-5 mt-4">
                         <div className="flex gap-1 items-center text-sm lg:text-base">
                             <CalendarFold size={20} className="text-gray-800" />
                             <p className="text-gray-800">
-                                {new Date(blog.created_at).toLocaleDateString()}
+                                {dayjs(blog?.created_at).format("DD.MM.YYYY")}
                             </p>
                         </div>
                         <div className="flex gap-1 items-center text-sm lg:text-base">

@@ -1,8 +1,32 @@
 import BlogImg from "../../../images/Vegetables.jpg";
 import { CalendarFold, Clock } from "lucide-react";
 import { motion } from "framer-motion";
+import { useParams } from "react-router-dom";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
+import dayjs from "dayjs";
 
 export default function Details() {
+    const { id } = useParams();
+    const [blog, setBlog] = useState(null);
+
+    let getDetails = async (id) => {
+        try {
+            let res = await axios.get("/api/blog/" + id);
+            let data = res.data;
+            setBlog(data.blog);
+        } catch (err) {
+            console.error("Error fetching blog:", err);
+        }
+    };
+
+    useEffect(() => {
+        getDetails(id);
+    }, [id]);
+
+    console.log(blog);
+
     return (
         <motion.div
             initial={{ y: -100, opacity: 0 }}
@@ -14,22 +38,21 @@ export default function Details() {
                 <div className="flex gap-6 justify-center">
                     <p className="text-gray-700 flex items-center gap-1">
                         <CalendarFold size={16} />
-                        23.4.2025
+                        {dayjs(blog?.created_at).format("DD.MM.YYYY")}
                     </p>
                     <p className="text-gray-700 flex items-center gap-1">
                         <Clock size={16} />
-                        12:11 PM
+                        {dayjs(blog?.created_at).format("hh:mm A")}
                     </p>
                 </div>
                 <h1 className="text-xl md:text-3xl lg:text-4xl font-medium my-3 text-center">
-                    How we take our ingredients and prepare to cook
+                    {blog?.title}
                 </h1>
-                <p className="text-center text-gray-700 text-sm md:text-base">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Error in vero nulla optio, reiciendis rerum accusamus
-                    aliquid tempore accusantium, aperiam obcaecati ipsum!
-                    Praesentium, dolore eos.
-                </p>
+                <div
+                    className="text-center text-gray-700 text-sm md:text-base"
+                    dangerouslySetInnerHTML={{ __html: blog?.paragraph }}
+                ></div>
+
                 <img
                     src={BlogImg}
                     alt=""

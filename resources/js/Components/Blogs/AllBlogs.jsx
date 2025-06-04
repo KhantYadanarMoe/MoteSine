@@ -15,6 +15,7 @@ import { Input } from "../ui/input";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import Empty from "../../../images/Empty.png";
+import dayjs from "dayjs";
 
 export default function AllBlogs() {
     // state to store blogs
@@ -49,6 +50,12 @@ export default function AllBlogs() {
             setCurrentPage(page);
         }
     };
+
+    function stripHtml(html) {
+        const tmp = document.createElement("div");
+        tmp.innerHTML = html;
+        return tmp.textContent || tmp.innerText || "";
+    }
 
     return (
         <motion.div
@@ -100,11 +107,12 @@ export default function AllBlogs() {
                                             {blog.title}
                                         </h1>
                                         <p className="text-gray-700 mt-2 text-sm">
-                                            {blog.paragraph
-                                                ?.split(" ")
+                                            {stripHtml(blog.paragraph)
+                                                .split(" ")
                                                 .slice(0, 18)
                                                 .join(" ") + "..."}
                                         </p>
+
                                         <div className="flex gap-5 mt-4">
                                             <div className="flex gap-1 items-center text-sm">
                                                 <CalendarFold
@@ -112,9 +120,9 @@ export default function AllBlogs() {
                                                     className="text-gray-800"
                                                 />
                                                 <p className="text-gray-800">
-                                                    {new Date(
-                                                        blog.created_at
-                                                    ).toLocaleDateString()}
+                                                    {dayjs(
+                                                        blog?.created_at
+                                                    ).format("DD.MM.YYYY")}
                                                 </p>
                                             </div>
                                             <div className="flex gap-1 items-center text-sm">
@@ -127,7 +135,7 @@ export default function AllBlogs() {
                                                 </p>
                                             </div>
                                         </div>
-                                        <Link to="/blog">
+                                        <Link to={`/blog/${blog.id}`}>
                                             <button className="text-accentRed hover:text-hoverRed bg-white shadow-none duration-300 flex gap-1 items-center mt-4">
                                                 Read More{" "}
                                                 <ArrowRight

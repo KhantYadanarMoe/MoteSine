@@ -40,6 +40,7 @@
         "date-fns": "^2.30.0",
         "dayjs": "^1.11.13",
         "embla-carousel-react": "^8.6.0",
+        "html-entities": "^2.6.0",
         "lucide-react": "^0.487.0",
         "motion": "^12.6.3",
         "react-day-picker": "^8.10.1",
