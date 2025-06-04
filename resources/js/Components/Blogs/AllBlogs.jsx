@@ -57,6 +57,13 @@ export default function AllBlogs() {
         return tmp.textContent || tmp.innerText || "";
     }
 
+    function getReadingTime(content) {
+        const wordsPerMinute = 200;
+        const words = content.trim().split(/\s+/).length;
+        const minutes = Math.ceil(words / wordsPerMinute);
+        return `${minutes} min${minutes > 1 ? "s" : ""} read`;
+    }
+
     return (
         <motion.div
             initial={{ y: 100, opacity: 0 }}
@@ -131,7 +138,9 @@ export default function AllBlogs() {
                                                     className="text-gray-800"
                                                 />
                                                 <p className="text-gray-800">
-                                                    3 mins read
+                                                    {getReadingTime(
+                                                        blog?.paragraph
+                                                    )}
                                                 </p>
                                             </div>
                                         </div>

@@ -29,6 +29,13 @@ export default function LatestBlog() {
         return tmp.textContent || tmp.innerText || "";
     }
 
+    function getReadingTime(content) {
+        const wordsPerMinute = 200;
+        const words = content?.trim().split(/\s+/).length;
+        const minutes = Math.ceil(words / wordsPerMinute);
+        return `${minutes} min${minutes > 1 ? "s" : ""} read`;
+    }
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -71,7 +78,9 @@ export default function LatestBlog() {
                             </div>
                             <div className="flex gap-1 items-center text-sm lg:text-base">
                                 <Clock size={20} className="text-gray-800" />
-                                <p className="text-gray-800">3 mins read</p>
+                                <p className="text-gray-800">
+                                    {getReadingTime(blog?.paragraph)}
+                                </p>
                             </div>
                         </div>
                         <Link to={`/blog/${blog.id}`}>
