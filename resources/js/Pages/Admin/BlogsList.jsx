@@ -185,7 +185,9 @@ export default function BlogsList() {
                                             </span>
                                         )}
                                     </li>
-                                    <li className="basis-[12%]">234</li>
+                                    <li className="basis-[12%]">
+                                        {blog?.view}
+                                    </li>
                                     <li className="basis-[15%]">
                                         <p className="text-sm">
                                             {new Date(

@@ -105,31 +105,42 @@ class BlogController extends Controller
         ]);
 
         // Store new images if they exist
-    $imagePaths = [];
-    if (request()->hasFile('images')) {
-        // Delete existing images from the blog_images table if needed (optional step)
-        BlogImage::where('blog_id', $blog->id)->delete();  // Deletes previous images associated with this blog (optional step)
+        $imagePaths = [];
+        if (request()->hasFile('images')) {
+            // Delete existing images from the blog_images table if needed (optional step)
+            BlogImage::where('blog_id', $blog->id)->delete();  // Deletes previous images associated with this blog (optional step)
 
-        // Store new images
-        foreach (request()->file('images') as $image) {
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('blogs', $imageName, 'public');
-            $imagePaths[] = $imagePath;  // Collect image paths
-        }
+            // Store new images
+            foreach (request()->file('images') as $image) {
+                $imageName = time() . '_' . $image->getClientOriginalName();
+                $imagePath = $image->storeAs('blogs', $imageName, 'public');
+                $imagePaths[] = $imagePath;  // Collect image paths
+            }
 
-        // Store image paths in the blog_images table
-        foreach ($imagePaths as $path) {
-            BlogImage::create([
-                'blog_id' => $blog->id,
-                'url' => $path,
-            ]);
+            // Store image paths in the blog_images table
+            foreach ($imagePaths as $path) {
+                BlogImage::create([
+                    'blog_id' => $blog->id,
+                    'url' => $path,
+                ]);
+            }
         }
+        return response()->json([
+            'message' => 'Blog updated successfully.',
+            'blog' => $blog,
+            'image_urls' => array_map(fn($path) => asset('storage/' . $path), $imagePaths)  // Return image URLs
+        ]);
     }
-    return response()->json([
-        'message' => 'Blog updated successfully.',
-        'blog' => $blog,
-        'image_urls' => array_map(fn($path) => asset('storage/' . $path), $imagePaths)  // Return image URLs
-    ]);
+
+    public function incrementView($id){
+        $blog = Blog::find($id);
+
+        if ($blog) {
+            $blog->increment('view');
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Blog not found'], 404);
     }
 
     public function delete(Blog $blog){

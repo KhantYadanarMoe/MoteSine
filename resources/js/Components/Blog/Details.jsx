@@ -21,8 +21,17 @@ export default function Details() {
         }
     };
 
+    const incrementView = async (id) => {
+        try {
+            await axios.post(`/api/blog/${id}/view`);
+        } catch (err) {
+            console.error("Error incrementing view:", err);
+        }
+    };
+
     useEffect(() => {
         getDetails(id);
+        incrementView(id);
     }, [id]);
 
     console.log(blog);
