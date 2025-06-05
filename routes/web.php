@@ -86,6 +86,7 @@ Route::get('/api/reservations/by-date/{date}', [ReservationController::class, 'g
 
 Route::get('/api/users', [AuthController::class, 'index']);
 Route::middleware('auth:sanctum')->put('/api/user/{user}', [AuthController::class, 'updateUser']);
+Route::middleware('auth:sanctum')->put('/api/user/{user}/changePassword', [AuthController::class, 'changePassword']);
 Route::post('/api/users/banned/{id}', [AuthController::class, 'ban']);
 Route::delete('/api/user/{user}', [AuthController::class, 'delete']);
 

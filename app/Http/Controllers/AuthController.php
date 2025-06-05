@@ -110,47 +110,28 @@ class AuthController extends Controller
         ]);
     }
 
-    public function updateUser(User $user){
-        $validator = Validator::make(request()->all(), [
-            "name" => ["required"],
-            "email" => ["required"],
-            "phone" => ["nullable", "numeric"],
-            "address" => ["nullable"],
-            "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],
+    public function changePassword(Request $request, $id){
+        $request->validate([
+            'currentPassword' => 'required|string',
+            'newPassword' => 'required|string|min:8|confirmed',
         ]);
 
-        // condition for failed validation
-        if ($validator->fails()) {
-            return response()->json([
-                'errors' => $validator->errors()->messages()
-            ], 422);
+        $user = User::findOrFail($id);
+
+        if ($request->user()->id !== $user->id) {
+            return response()->json(['message' => 'Unauthorized.'], 403);
         }
 
-        // store image
-        $imagePath = null;
-        if (request()->hasFile('image')) {
-            $image = request()->file('image');
-            $imageName = time() . '_' . $image->getClientOriginalName();
-            $imagePath = $image->storeAs('users', $imageName, 'public'); 
-        }else {
-            // Retain the old image if no new image is provided
-            $imagePath = $user->image;
+        // Verify current password
+        if (!Hash::check($request->currentPassword, $user->password)) {
+            return response()->json(['message' => 'Current password is incorrect.'], 422);
         }
 
-        Log::info(request()->all()); // Log all incoming data
+        // Update password
+        $user->password = Hash::make($request->newPassword);
+        $user->save();
 
-
-        $user->update([
-            'name' => request('name'),
-            'email' => request('email'),
-            'phone' => request('phone'),
-            'address' => request('address'),
-            'image' => $imagePath, // Save image path if any
-        ]);
-        return response()->json([
-            'message' => 'User updated successfully.',
-            'user' => $user
-        ]);
+        return response()->json(['message' => 'Password updated successfully.']);
     }
 
     public function ban(Request $request, $id){

@@ -110,6 +110,61 @@ export default function AdminProfile() {
         }
     };
 
+    const [passwordForm, setPasswordForm] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+
+    const [passwordErrors, setPasswordErrors] = useState({});
+
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswordForm((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            setPasswordErrors({
+                confirmPassword: ["Password and Confirm Password don't match."],
+            });
+            return;
+        }
+
+        try {
+            const res = await axios.put(`/api/user/${user.id}/changePassword`, {
+                currentPassword: passwordForm.currentPassword,
+                newPassword: passwordForm.newPassword,
+                newPassword_confirmation: passwordForm.confirmPassword,
+            });
+
+            alert("Password changed successfully.");
+            setPasswordForm({
+                currentPassword: "",
+                newPassword: "",
+                confirmPassword: "",
+            });
+        } catch (error) {
+            if (error.response && error.response.data) {
+                const data = error.response.data;
+
+                if (data.errors) {
+                    setPasswordErrors(data.errors); // Object with field errors
+                } else if (data.message) {
+                    // Wrap single message into an object keyed by a general field or 'form'
+                    setPasswordErrors({ general: [data.message] });
+                } else {
+                    setPasswordErrors({});
+                }
+            }
+        }
+    };
+
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}
@@ -232,19 +287,35 @@ export default function AdminProfile() {
                             </label>
                             <Input
                                 id="currentPassword"
+                                name="currentPassword"
                                 type="password"
                                 placeholder="Enter your password"
+                                value={passwordForm.currentPassword}
+                                onChange={handlePasswordChange}
                                 className="mt-1 border-gray-500"
                             />
+                            {passwordErrors.general && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {passwordErrors.general[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="mb-4">
                             <label htmlFor="newPassword">New Password</label>
                             <Input
                                 id="newPassword"
+                                name="newPassword"
                                 type="password"
+                                value={passwordForm.newPassword}
+                                onChange={handlePasswordChange}
                                 placeholder="Enter your new password"
                                 className="mt-1 border-gray-500"
                             />
+                            {passwordErrors.confirmPassword && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {passwordErrors.confirmPassword}
+                                </p>
+                            )}
                         </div>
                         <div className="mb-4">
                             <label htmlFor="confirmPassword">
@@ -252,13 +323,19 @@ export default function AdminProfile() {
                             </label>
                             <Input
                                 id="confirmPassword"
+                                name="confirmPassword"
                                 type="password"
+                                value={passwordForm.confirmPassword}
+                                onChange={handlePasswordChange}
                                 placeholder="Confirm your password"
                                 className="mt-1 border-gray-500"
                             />
                         </div>
                         <div className="mt-6 flex justify-end">
-                            <button className="px-2 py-2 text-sm bg-accentGreen hover:bg-hoverGreen duration-300 text-white rounded-md">
+                            <button
+                                className="px-2 py-2 text-sm bg-accentGreen hover:bg-hoverGreen duration-300 text-white rounded-md"
+                                onClick={handlePasswordSubmit}
+                            >
                                 Change
                             </button>
                         </div>
