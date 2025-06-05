@@ -31,11 +31,13 @@ import { Link } from "react-router-dom";
 import Empty from "../../../images/Empty.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function JobPosts() {
     const [loading, setLoading] = useState(true);
     // state to store jobs
     let [jobs, setJobs] = useState([]);
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getJobs = async () => {
@@ -60,12 +62,15 @@ export default function JobPosts() {
     // rows to show in a page
     const rowsPerPage = 10;
 
-    // calculate the last items, first items and set jobs to show
+    const filteredJobs = jobs.filter((job) =>
+        job.title?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastJob = currentPage * rowsPerPage;
     const indexOfFirstJob = indexOfLastJob - rowsPerPage;
-    const currentJobs = jobs.slice(indexOfFirstJob, indexOfLastJob);
+    const currentJobs = filteredJobs.slice(indexOfFirstJob, indexOfLastJob);
 
-    const totalPages = Math.ceil(jobs.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredJobs.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

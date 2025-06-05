@@ -28,6 +28,7 @@ import axios from "axios";
 import Empty from "../../../images/Empty.png";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function ReservationList() {
     const [loading, setLoading] = useState(true);
@@ -35,6 +36,8 @@ export default function ReservationList() {
     let [reservations, setReservations] = useState([]);
 
     const [selectedReservationId, setSelectedReservationId] = useState(null);
+
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getReservations = async () => {
@@ -59,15 +62,25 @@ export default function ReservationList() {
     // rows to show in a page
     const rowsPerPage = 10;
 
-    // calculate the last items, first items and set reservations to show
+    const filteredReservations = reservations.filter(
+        (reservation) =>
+            reservation.reservation_code
+                ?.toLowerCase()
+                .includes(query.toLowerCase()) ||
+            reservation.firstName
+                ?.toLowerCase()
+                .includes(query.toLowerCase()) ||
+            reservation.lastName?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastReservation = currentPage * rowsPerPage;
     const indexOfFirstReservation = indexOfLastReservation - rowsPerPage;
-    const currentReservations = reservations.slice(
+    const currentReservations = filteredReservations.slice(
         indexOfFirstReservation,
         indexOfLastReservation
     );
 
-    const totalPages = Math.ceil(reservations.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredReservations.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

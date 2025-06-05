@@ -31,6 +31,7 @@ import { useState } from "react";
 import Empty from "../../../images/Empty.png";
 import axios from "axios";
 import { useEffect } from "react";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function UsersList() {
     const [loading, setLoading] = useState(true);
@@ -40,6 +41,7 @@ export default function UsersList() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 10;
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getUsers = async () => {
@@ -59,12 +61,15 @@ export default function UsersList() {
         getUsers();
     }, []);
 
-    // calculate the last items, first items and set users to show
+    const filteredUsers = users.filter((user) =>
+        user.name?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastUser = currentPage * rowsPerPage;
     const indexOfFirstUser = indexOfLastUser - rowsPerPage;
-    const currentUsers = users.slice(indexOfFirstUser, indexOfLastUser);
+    const currentUsers = filteredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
-    const totalPages = Math.ceil(users.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredUsers.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

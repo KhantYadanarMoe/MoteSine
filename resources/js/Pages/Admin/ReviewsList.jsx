@@ -42,6 +42,7 @@ import { useState } from "react";
 import Empty from "../../../images/Empty.png";
 import axios from "axios";
 import { useEffect } from "react";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function ReviewsList() {
     const [loading, setLoading] = useState(true);
@@ -51,6 +52,7 @@ export default function ReviewsList() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 10;
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getReviews = async () => {
@@ -70,13 +72,18 @@ export default function ReviewsList() {
         getReviews();
     }, []);
 
-    // calculate the last items, first items and set reviews to show
+    const filteredReviews = reviews.filter((review) =>
+        review.name?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastReview = currentPage * rowsPerPage;
     const indexOfFirstReview = indexOfLastReview - rowsPerPage;
-    const currentReviews = reviews.slice(indexOfFirstReview, indexOfLastReview);
+    const currentReviews = filteredReviews.slice(
+        indexOfFirstReview,
+        indexOfLastReview
+    );
 
-    const totalPages = Math.ceil(reviews.length / rowsPerPage);
-
+    const totalPages = Math.ceil(filteredReviews.length / rowsPerPage);
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);

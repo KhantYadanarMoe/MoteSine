@@ -30,6 +30,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Empty from "../../../images/Empty.png";
 import axios from "axios";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function BlogsList() {
     const [loading, setLoading] = useState(true);
@@ -39,6 +40,7 @@ export default function BlogsList() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 10;
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getBlogs = async () => {
@@ -58,12 +60,15 @@ export default function BlogsList() {
         getBlogs();
     }, []);
 
-    // calculate the last items, first items and set blogs to show
+    const filteredBlogs = blogs.filter((blog) =>
+        blog.title?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastBlog = currentPage * rowsPerPage;
     const indexOfFirstBlog = indexOfLastBlog - rowsPerPage;
-    const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+    const currentBlogs = filteredBlogs.slice(indexOfFirstBlog, indexOfLastBlog);
 
-    const totalPages = Math.ceil(blogs.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredBlogs.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

@@ -32,11 +32,13 @@ import { useState } from "react";
 import { useEffect } from "react";
 import Empty from "../.././../images/Empty.png";
 import axios from "axios";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function JobApplications() {
     const [loading, setLoading] = useState(true);
     // state to store applications
     let [applications, setApplications] = useState([]);
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getApplications = async () => {
@@ -61,15 +63,23 @@ export default function JobApplications() {
     // rows to show in a page
     const rowsPerPage = 10;
 
-    // calculate the last items, first items and set applications to show
+    const filteredApplications = applications.filter(
+        (application) =>
+            application.firstName
+                ?.toLowerCase()
+                .includes(query.toLowerCase()) ||
+            application.lastName?.toLowerCase().includes(query.toLowerCase()) ||
+            application.position?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastApplication = currentPage * rowsPerPage;
     const indexOfFirstApplication = indexOfLastApplication - rowsPerPage;
-    const currentApplications = applications.slice(
+    const currentApplications = filteredApplications.slice(
         indexOfFirstApplication,
         indexOfLastApplication
     );
 
-    const totalPages = Math.ceil(applications.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredApplications.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
