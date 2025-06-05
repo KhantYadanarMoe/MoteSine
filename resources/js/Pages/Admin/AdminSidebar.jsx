@@ -29,11 +29,26 @@ import { Input } from "../../Components/ui/input";
 import { motion } from "framer-motion";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 import { useSearch } from "@/contexts/SearchContext";
+import axios from "axios";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function AdminSidebar() {
     const { form } = useSetting();
     const { setQuery } = useSearch();
+    const { user, setUser } = useAuth();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+    const logout = async () => {
+        try {
+            await axios.post("http://localhost:8000/api/logout", null, {
+                withCredentials: true,
+            });
+            setUser(null);
+            navigate("/login");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     return (
         <motion.div
@@ -167,7 +182,10 @@ export default function AdminSidebar() {
                                     Profile
                                 </DropdownMenuItem>
                             </Link>
-                            <DropdownMenuItem className="cursor-pointer">
+                            <DropdownMenuItem
+                                onClick={logout}
+                                className="cursor-pointer"
+                            >
                                 Logout
                             </DropdownMenuItem>
                         </DropdownMenuContent>
