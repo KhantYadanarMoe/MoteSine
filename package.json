@@ -41,6 +41,8 @@
         "dayjs": "^1.11.13",
         "embla-carousel-react": "^8.6.0",
         "html-entities": "^2.6.0",
+        "html-react-parser": "^5.2.5",
+        "html-to-text": "^9.0.5",
         "lucide-react": "^0.487.0",
         "motion": "^12.6.3",
         "react-day-picker": "^8.10.1",
