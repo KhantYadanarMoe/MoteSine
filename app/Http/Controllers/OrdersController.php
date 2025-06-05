@@ -96,6 +96,10 @@ class OrdersController extends Controller
             case 'delivered':
                 $query->where('status', 'delivered');
                 break;
+            
+            case 'cancelled':
+                $query->where('status', 'cancelled');
+                break;
 
             case 'all':
             default:
@@ -146,20 +150,20 @@ class OrdersController extends Controller
         $order = Order::findOrFail($id);
 
         $validated = $request->validate([
-            'status' => 'required|in:confirmed,processing,out for delivery,delivered',
+            'status' => 'required|in:confirmed,processing,out for delivery,delivered,cancelled',
         ]);
 
         // Map internal status to human-readable status
-    $statusMap = [
-        'confirmed' => 'confirmed',
-        'processing' => 'processing',
-        "out for delivery" => 'out for delivery',
-        'delivered' => 'delivered',
-    ];
+        $statusMap = [
+            'confirmed' => 'confirmed',
+            'processing' => 'processing',
+            "out for delivery" => 'out for delivery',
+            'delivered' => 'delivered',
+            'cancelled' => 'cancelled',
+        ];
 
-    // Set the human-readable status
-    $order->status = $statusMap[$validated['status']];
-        $order->save();
+        $order->status = $statusMap[$validated['status']];
+            $order->save();
 
         return response()->json(['success' => true, 'status' => $order->status]);
     }

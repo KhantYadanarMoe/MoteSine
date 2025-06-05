@@ -100,6 +100,26 @@ export default function AdminOrderHistories() {
         handleFilterChange("all");
     }, []);
 
+    const handleCancel = async (orderId) => {
+        try {
+            await axios
+                .put(`/api/order/${orderId}/status`, {
+                    status: "cancelled",
+                })
+                .then((res) => {
+                    setOrders((prevOrders) =>
+                        prevOrders.map((order) =>
+                            order.id === orderId
+                                ? { ...order, status: "cancelled" }
+                                : order
+                        )
+                    );
+                });
+        } catch (error) {
+            console.error("Failed to cancel order:", error);
+        }
+    };
+
     return (
         <div>
             {loading ? (
@@ -153,6 +173,15 @@ export default function AdminOrderHistories() {
                                 className="relative hover:text-gray-950 group"
                             >
                                 Delivered
+                                <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
+                            </button>
+                        </li>
+                        <li>
+                            <button
+                                onClick={() => handleFilterChange("cancelled")}
+                                className="relative hover:text-gray-950 group"
+                            >
+                                Cancelled
                                 <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
                             </button>
                         </li>
@@ -231,6 +260,11 @@ export default function AdminOrderHistories() {
                                         ? "text-gray-500 bg-gray-100"
                                         : ""
                                 }
+                                ${
+                                    order?.status === "cancelled"
+                                        ? "text-red-500 bg-red-100"
+                                        : ""
+                                }
                             `}
                                         >
                                             {order?.status}
@@ -267,7 +301,12 @@ export default function AdminOrderHistories() {
                                                         View Details
                                                     </DropdownMenuItem>
                                                 </Link>
-                                                <DropdownMenuItem className="text-accentRed">
+                                                <DropdownMenuItem
+                                                    className="text-accentRed"
+                                                    onClick={() =>
+                                                        handleCancel(order.id)
+                                                    }
+                                                >
                                                     Cancel
                                                 </DropdownMenuItem>
                                             </DropdownMenuContent>
