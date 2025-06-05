@@ -165,11 +165,17 @@ export default function AdminSidebar() {
                 <div className="flex gap-3 md:gap-4 items-center">
                     <DropdownMenu modal={false}>
                         <DropdownMenuTrigger asChild>
-                            <img
-                                src={Profile}
-                                alt="Profile"
-                                className="w-10 h-10 rounded-full object-cover cursor-pointer"
-                            />
+                            <div className="w-12 h-12 rounded-full overflow-hidden cursor-pointer flex-shrink-0">
+                                <img
+                                    src={
+                                        user?.image
+                                            ? `/storage/${user.image}`
+                                            : Profile
+                                    }
+                                    alt="Profile"
+                                    className="w-12 h-12 object-cover rounded-full"
+                                />
+                            </div>
                         </DropdownMenuTrigger>
 
                         <DropdownMenuContent
