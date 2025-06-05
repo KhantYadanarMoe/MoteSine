@@ -51,6 +51,7 @@ import ProtectedRoute from "./Components/ProtectedRoute";
 import UserSidebar from "./Pages/User/UserSidebar";
 import Banned from "./Components/Home/Banned";
 import BannedRedirect from "./Components/BannedRedirect";
+import { SearchProvider } from "./contexts/SearchContext";
 
 const routes = createBrowserRouter([
     {
@@ -158,7 +159,9 @@ const routes = createBrowserRouter([
         path: "/admin",
         element: (
             <ProtectedRoute>
-                <AdminLayout />
+                <SearchProvider>
+                    <AdminLayout />
+                </SearchProvider>
             </ProtectedRoute>
         ),
         children: [

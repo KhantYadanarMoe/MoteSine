@@ -42,10 +42,14 @@ export default function MenuCards({ selectedCategory }) {
                 localStorage.getItem("categoryVisibility") || "{}"
             );
 
-            // Filter out menus from hidden categories
-            const filteredMenus = visibleMenus.filter(
-                (menu) => visibilityMap[menu.category.id]
-            );
+            let filteredMenus = visibleMenus;
+
+            // If no visibility is set, fallback to showing all visible menus
+            if (Object.keys(visibilityMap).length > 0) {
+                filteredMenus = visibleMenus.filter(
+                    (menu) => visibilityMap[menu.category.id]
+                );
+            }
 
             setMenus(filteredMenus);
         } catch (error) {

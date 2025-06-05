@@ -28,9 +28,11 @@ import { Link } from "react-router-dom";
 import { Input } from "../../Components/ui/input";
 import { motion } from "framer-motion";
 import { useSetting } from "@/contexts/GeneralSettingContext";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function AdminSidebar() {
     const { form } = useSetting();
+    const { setQuery } = useSearch();
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
     return (
@@ -180,6 +182,7 @@ export default function AdminSidebar() {
                             type="text"
                             placeholder="Search..."
                             className="mt-1 border-gray-500 pl-8 pr-4"
+                            onChange={(e) => setQuery(e.target.value)}
                         />
                     </div>
                 </div>

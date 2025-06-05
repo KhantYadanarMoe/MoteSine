@@ -22,6 +22,7 @@ import Empty from "../../../images/Empty.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function MenuGrid() {
     const [loading, setLoading] = useState(true);
@@ -31,6 +32,7 @@ export default function MenuGrid() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 9;
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getMenus = async () => {
@@ -64,12 +66,15 @@ export default function MenuGrid() {
         getMenus();
     }, []);
 
-    // calculate the last items, first items and set menus to show
+    const filteredMenus = menus.filter((menu) =>
+        menu.title?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastMenu = currentPage * rowsPerPage;
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
-    const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
+    const currentMenus = filteredMenus.slice(indexOfFirstMenu, indexOfLastMenu);
 
-    const totalPages = Math.ceil(menus.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredMenus.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

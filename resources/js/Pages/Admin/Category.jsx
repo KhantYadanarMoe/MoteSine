@@ -44,6 +44,7 @@ import axios from "axios";
 import dayjs from "dayjs";
 import Empty from "../../../images/Empty.png";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function Category() {
     const [loading, setLoading] = useState(true);
@@ -72,6 +73,8 @@ export default function Category() {
 
     // state to control edit category dialog
     const [editDialogOpen, setEditDialogOpen] = useState(false);
+
+    const { query } = useSearch();
 
     const submit = async (e) => {
         e.preventDefault();
@@ -154,15 +157,19 @@ export default function Category() {
     // rows to show in a page
     const rowsPerPage = 10;
 
+    const filteredCategories = categories.filter((category) =>
+        category.category?.toLowerCase().includes(query.toLowerCase())
+    );
+
     // calculate the last items, first items and set menus to show
     const indexOfLastCategory = currentPage * rowsPerPage;
     const indexOfFirstCategory = indexOfLastCategory - rowsPerPage;
-    const currentCategories = categories.slice(
+    const currentCategories = filteredCategories.slice(
         indexOfFirstCategory,
         indexOfLastCategory
     );
 
-    const totalPages = Math.ceil(categories.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredCategories.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

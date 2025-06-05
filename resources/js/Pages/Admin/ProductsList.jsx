@@ -33,11 +33,13 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Empty from "../../../images/Empty.png";
 import axios from "axios";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function ProductsList() {
     const [loading, setLoading] = useState(true);
     // state to store products
     let [products, setProducts] = useState([]);
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getProducts = async () => {
@@ -62,15 +64,18 @@ export default function ProductsList() {
     // rows to show in a page
     const rowsPerPage = 10;
 
-    // calculate the last items, first items and set products to show
+    const filteredProducts = products.filter((product) =>
+        product.name?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastProduct = currentPage * rowsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - rowsPerPage;
-    const currentProducts = products.slice(
+    const currentProducts = filteredProducts.slice(
         indexOfFirstProduct,
         indexOfLastProduct
     );
 
-    const totalPages = Math.ceil(products.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredProducts.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

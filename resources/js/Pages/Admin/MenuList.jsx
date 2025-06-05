@@ -32,6 +32,7 @@ import {
 import { useEffect, useState } from "react";
 import Empty from "../../../images/Empty.png";
 import axios from "axios";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function MenuList() {
     const [loading, setLoading] = useState(true);
@@ -41,6 +42,7 @@ export default function MenuList() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 10;
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getMenus = async () => {
@@ -60,12 +62,19 @@ export default function MenuList() {
         getMenus();
     }, []);
 
-    // calculate the last items, first items and set menus to show
+    const filteredMenus = menus.filter((menu) =>
+        menu.title?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastMenu = currentPage * rowsPerPage;
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
-    const currentMenus = menus.slice(indexOfFirstMenu, indexOfLastMenu);
+    const currentMenus = filteredMenus.slice(indexOfFirstMenu, indexOfLastMenu);
 
-    const totalPages = Math.ceil(menus.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredMenus.length / rowsPerPage);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [query]);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {

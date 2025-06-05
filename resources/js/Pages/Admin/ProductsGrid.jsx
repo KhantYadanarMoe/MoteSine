@@ -22,11 +22,13 @@ import Empty from "../../../images/Empty.png";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import dayjs from "dayjs";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function ProductsGrid() {
     const [loading, setLoading] = useState(true);
     // state to store products
     let [products, setProducts] = useState([]);
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getProducts = async () => {
@@ -51,21 +53,25 @@ export default function ProductsGrid() {
     // rows to show in a page
     const rowsPerPage = 9;
 
-    // calculate the last items, first items and set products to show
+    const filteredProducts = products.filter((product) =>
+        product.name?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastProduct = currentPage * rowsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - rowsPerPage;
-    const currentProducts = products.slice(
+    const currentProducts = filteredProducts.slice(
         indexOfFirstProduct,
         indexOfLastProduct
     );
 
-    const totalPages = Math.ceil(products.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredProducts.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
             setCurrentPage(page);
         }
     };
+
     return (
         <div>
             {loading ? (

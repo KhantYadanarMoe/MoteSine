@@ -18,9 +18,17 @@ export default function MenuCategories({ onCategorySelect }) {
             const visibilityMap = JSON.parse(
                 localStorage.getItem("categoryVisibility") || "{}"
             );
-            const publishedCategories = allCategories.filter(
-                (c) => visibilityMap[c.id]
-            );
+
+            let publishedCategories;
+
+            if (Object.keys(visibilityMap).length > 0) {
+                publishedCategories = allCategories.filter(
+                    (c) => visibilityMap[c.id]
+                );
+            } else {
+                // fallback: show all by default
+                publishedCategories = allCategories;
+            }
 
             setCategories(publishedCategories);
         } catch (error) {
