@@ -22,11 +22,13 @@ import { useState } from "react";
 import axios from "axios";
 import Empty from "../../../images/Empty.png";
 import { useEffect } from "react";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function ContactsList() {
     const [loading, setLoading] = useState(true);
     // state to store contacts
     let [contacts, setContacts] = useState([]);
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getContacts = async () => {
@@ -45,6 +47,13 @@ export default function ContactsList() {
     useEffect(() => {
         getContacts();
     }, []);
+
+    const filteredContacts = contacts.filter(
+        (contact) =>
+            contact.name.toLowerCase().includes(query.toLowerCase()) ||
+            contact.email.toLowerCase().includes(query.toLowerCase())
+        // add more fields if needed
+    );
 
     // send marked value to backend
     const markContact = async (id, currentMarked) => {
@@ -165,7 +174,7 @@ export default function ContactsList() {
                         </li>
                     </ul>
                     <ul className="my-3">
-                        {contacts.map((contact) => (
+                        {filteredContacts.map((contact) => (
                             <li
                                 key={contact.id}
                                 className="px-2 md:px-4 py-3 bg-white shadow-md mb-3 border-l-2 border-l-accentRed flex justify-between"

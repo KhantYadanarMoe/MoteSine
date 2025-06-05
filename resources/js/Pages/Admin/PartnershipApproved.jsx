@@ -41,6 +41,7 @@ import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
 import { useEffect } from "react";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function PartnershipApproved() {
     const [loading, setLoading] = useState(true);
@@ -50,6 +51,7 @@ export default function PartnershipApproved() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 10;
+    const { query } = useSearch();
 
     // fetch data that send from backend
     let getApprovedPartnerships = async () => {
@@ -72,15 +74,22 @@ export default function PartnershipApproved() {
         getApprovedPartnerships();
     }, []);
 
-    // calculate the last items, first items and set partnerships to show
+    const filteredPartnerships = approvedPartnership.filter(
+        (partnership) =>
+            partnership.businessName
+                ?.toLowerCase()
+                .includes(query.toLowerCase()) ||
+            partnership.name?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastPartnership = currentPage * rowsPerPage;
     const indexOfFirstPartnership = indexOfLastPartnership - rowsPerPage;
-    const currentPartnerships = approvedPartnership.slice(
+    const currentPartnerships = filteredPartnerships.slice(
         indexOfFirstPartnership,
         indexOfLastPartnership
     );
 
-    const totalPages = Math.ceil(approvedPartnership.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredPartnerships.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
