@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('paragraph');
+            // $table->longText('paragraph');
             $table->boolean('visibility')->nullable();  
             $table->timestamps();
         });

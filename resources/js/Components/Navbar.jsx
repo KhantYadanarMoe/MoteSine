@@ -95,6 +95,17 @@ const Navbar = () => {
                             <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
                         </Link>
                     </li>
+                    {user?.isAdmin === 1 && (
+                        <li>
+                            <Link
+                                to="/admin"
+                                className="relative hover:text-gray-950 group"
+                            >
+                                Admin
+                                <span className="absolute left-0 bottom-[-2px] w-0 h-0.5 bg-accentRed transition-all duration-300 group-hover:w-full"></span>
+                            </Link>
+                        </li>
+                    )}
                 </ul>
 
                 <div className="flex items-center justify-center space-x-4">

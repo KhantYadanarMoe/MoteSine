@@ -18,7 +18,8 @@ return new class extends Migration
             $table->string('phone')->nullable();
             $table->text('address')->nullable();
             $table->string('password')->nullable();
-            $table->string('image')->nullable(); 
+            $table->string('image')->nullable();
+            $table->boolean('isAdmin')->default(false); 
             $table->boolean('banned')->default(false);
             $table->rememberToken();
             $table->timestamps();
