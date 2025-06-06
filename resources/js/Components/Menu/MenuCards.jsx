@@ -33,24 +33,12 @@ export default function MenuCards({ selectedCategory }) {
         try {
             const res = await axios.get("/api/menus");
             const data = res.data;
-            const visibleMenus = data.menus.filter(
-                (menu) => menu.visibility === 1
+            const filteredMenus = data.menus.filter(
+                (menu) =>
+                    menu.visibility === 1 &&
+                    menu.category &&
+                    menu.category.visibility === 1
             );
-
-            // Load category visibility map from localStorage
-            const visibilityMap = JSON.parse(
-                localStorage.getItem("categoryVisibility") || "{}"
-            );
-
-            let filteredMenus = visibleMenus;
-
-            // If no visibility is set, fallback to showing all visible menus
-            if (Object.keys(visibilityMap).length > 0) {
-                filteredMenus = visibleMenus.filter(
-                    (menu) => visibilityMap[menu.category.id]
-                );
-            }
-
             setMenus(filteredMenus);
         } catch (error) {
             console.error("Error fetching menus:", error);

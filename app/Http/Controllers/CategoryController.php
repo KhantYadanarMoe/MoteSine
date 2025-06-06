@@ -79,6 +79,18 @@ class CategoryController extends Controller
         ]);
     }
 
+    public function updateVisibility(Request $request, $id){
+        $request->validate([
+            'visibility' => 'required|boolean',
+        ]);
+
+        $category = Category::findOrFail($id);
+        $category->visibility = $request->visibility;
+        $category->save();
+
+        return response()->json(['success' => true]);
+    }
+
     public function delete(Category $category){
         $category->delete();
         return response()->json([

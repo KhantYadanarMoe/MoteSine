@@ -15,21 +15,9 @@ export default function MenuCategories({ onCategorySelect }) {
             let data = response.data;
             let allCategories = data.categories;
 
-            const visibilityMap = JSON.parse(
-                localStorage.getItem("categoryVisibility") || "{}"
+            const publishedCategories = allCategories.filter(
+                (c) => c.visibility
             );
-
-            let publishedCategories;
-
-            if (Object.keys(visibilityMap).length > 0) {
-                publishedCategories = allCategories.filter(
-                    (c) => visibilityMap[c.id]
-                );
-            } else {
-                // fallback: show all by default
-                publishedCategories = allCategories;
-            }
-
             setCategories(publishedCategories);
         } catch (error) {
             console.error("Error fetching categories data: ", error);

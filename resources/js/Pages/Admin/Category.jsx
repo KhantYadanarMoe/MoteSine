@@ -142,6 +142,13 @@ export default function Category() {
             let res = await axios.get("/api/categories");
             let data = res.data;
             setCategories(data.categories);
+
+            const visibilityMap = {};
+            data.categories.forEach((cat) => {
+                visibilityMap[cat.id] = !!cat.visibility;
+            });
+
+            setVisibility(visibilityMap);
         } catch (error) {
             console.error("Failed to fetch categories:", error);
         } finally {
@@ -212,10 +219,19 @@ export default function Category() {
         setVisibility(stored);
     }, []);
 
-    const toggleVisibility = (id, checked) => {
-        const updated = { ...visibility, [id]: checked };
-        setVisibility(updated);
-        localStorage.setItem("categoryVisibility", JSON.stringify(updated));
+    const toggleVisibility = (categoryId, checked) => {
+        setVisibility((prev) => ({
+            ...prev,
+            [categoryId]: checked,
+        }));
+
+        axios
+            .put(`/api/category/${categoryId}/visibility`, {
+                visibility: checked,
+            })
+            .catch((error) => {
+                console.error("Error updating visibility:", error);
+            });
     };
 
     // delete function

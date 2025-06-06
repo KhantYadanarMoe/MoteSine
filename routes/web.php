@@ -118,6 +118,7 @@ Route::middleware(['auth:sanctum', IsAdmin::class])->group(function () {
     Route::delete('/api/menu/{menu}', [MenuController::class, 'delete']);
     
     Route::post("/api/category/create", [CategoryController::class, 'store']);
+    Route::put('/api/category/{id}/visibility', [CategoryController::class, 'updateVisibility']);
     Route::put('/api/category/{category}', [CategoryController::class, 'update']);
     Route::delete('/api/category/{category}', [CategoryController::class, 'delete']);
  

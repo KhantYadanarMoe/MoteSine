@@ -30,20 +30,12 @@ export default function Favorite() {
         try {
             const res = await axios.get("/api/menus");
             const data = res.data;
-            const visibleMenus = data.menus.filter(
-                (menu) => menu.visibility === 1
+            const filteredMenus = data.menus.filter(
+                (menu) =>
+                    menu.visibility === 1 &&
+                    menu.category &&
+                    menu.category.visibility === 1
             );
-
-            // Load category visibility map from localStorage
-            const visibilityMap = JSON.parse(
-                localStorage.getItem("categoryVisibility") || "{}"
-            );
-
-            // Filter out menus from hidden categories
-            const filteredMenus = visibleMenus.filter(
-                (menu) => visibilityMap[menu.category.id]
-            );
-
             setMenus(filteredMenus);
         } catch (error) {
             console.error("Error fetching menus:", error);
