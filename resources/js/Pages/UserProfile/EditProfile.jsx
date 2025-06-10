@@ -110,6 +110,9 @@ export default function EditProfile() {
 
             // success condition
             if (res.data.message === "User updated successfully.") {
+                const updatedUser = res.data.user;
+
+                setUser(updatedUser);
                 navigate("/user");
             }
         } catch (error) {
@@ -219,7 +222,7 @@ export default function EditProfile() {
 
                                 <Label
                                     htmlFor="image-upload"
-                                    className="inline-block rounded-lg border border-accentGreen text-accentGreen hover:border-hoverGreen hover:text-hoverGreen hover:bg-gray-100 font-medium duration-300 px-3 py-1 cursor-pointer"
+                                    className="flex rounded-lg border border-accentGreen text-accentGreen hover:border-hoverGreen hover:text-hoverGreen hover:bg-gray-100 font-medium duration-300 px-3 py-1 cursor-pointer items-center justify-center"
                                 >
                                     Upload
                                 </Label>

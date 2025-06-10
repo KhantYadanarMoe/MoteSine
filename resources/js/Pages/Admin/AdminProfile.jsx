@@ -223,7 +223,7 @@ export default function AdminProfile() {
                                     />
                                     <Label
                                         htmlFor="image-upload"
-                                        className="inline-block rounded-lg border border-accentGreen text-accentGreen hover:border-hoverGreen hover:text-hoverGreen hover:bg-gray-100 font-medium duration-300 px-3 py-1 cursor-pointer"
+                                        className="flex justify-center items-center rounded-lg border border-accentGreen text-accentGreen hover:border-hoverGreen hover:text-hoverGreen hover:bg-gray-100 font-medium duration-300 px-3 py-1 cursor-pointer"
                                     >
                                         Upload New
                                     </Label>

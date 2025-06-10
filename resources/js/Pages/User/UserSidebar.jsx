@@ -11,9 +11,11 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function UserSidebar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { user, setUser } = useAuth();
     const { cartItems } = useCart();
 
     return (
@@ -31,15 +33,17 @@ export default function UserSidebar() {
                 <div className="py-8 flex flex-col justify-between h-screen">
                     <div className="flex items-center gap-2 justify-center">
                         <img
-                            src={Profile}
+                            src={
+                                user?.image ? `/storage/${user.image}` : Profile
+                            }
                             alt="User Profile"
                             className="h-20 w-20 object-cover rounded-full border-2 border-red-600"
                         />
                         <div>
-                            <h2 className="text-lg font-medium">
-                                Khant Yadanar Moe
-                            </h2>
-                            <p className="text-gray-700 text-xs">NYC, USA</p>
+                            <h2 className="text-lg font-medium">{user.name}</h2>
+                            <p className="text-gray-700 text-xs">
+                                {user.address}
+                            </p>
                         </div>
                     </div>
                     <ul>

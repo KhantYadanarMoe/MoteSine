@@ -110,6 +110,49 @@ class AuthController extends Controller
         ]);
     }
 
+    public function updateUser(User $user){
+        $validator = Validator::make(request()->all(), [
+            "name" => ["required"],
+            "email" => ["required"],
+            "phone" => ["nullable", "numeric"],
+            "address" => ["nullable"],
+            "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],
+        ]);
+
+        // condition for failed validation
+        if ($validator->fails()) {
+            return response()->json([
+                'errors' => $validator->errors()->messages()
+            ], 422);
+        }
+
+        // store image
+        $imagePath = null;
+        if (request()->hasFile('image')) {
+            $image = request()->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('users', $imageName, 'public'); 
+        }else {
+            // Retain the old image if no new image is provided
+            $imagePath = $user->image;
+        }
+
+        Log::info(request()->all()); // Log all incoming data
+
+
+        $user->update([
+            'name' => request('name'),
+            'email' => request('email'),
+            'phone' => request('phone'),
+            'address' => request('address'),
+            'image' => $imagePath, // Save image path if any
+        ]);
+        return response()->json([
+            'message' => 'User updated successfully.',
+            'user' => $user
+        ]);
+    }
+
     public function changePassword(Request $request, $id){
         $request->validate([
             'currentPassword' => 'required|string',
