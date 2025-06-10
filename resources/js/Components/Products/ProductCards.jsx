@@ -25,8 +25,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function ProductCards() {
+    const { query, setQuery } = useSearch();
     // state to store products
     let [products, setProducts] = useState([]);
 
@@ -43,16 +45,21 @@ export default function ProductCards() {
         let data = res.data;
         const today = dayjs();
 
-        const nonPromoOrExpiredProducts = data.products.filter((product) => {
-            const hasValidPromotion =
-                product.promotion &&
-                dayjs(product.startDate).isBefore(today) &&
-                dayjs(product.endDate).isAfter(today);
+        // const nonPromoOrExpiredProducts = data.products.filter((product) => {
+        //     const hasValidPromotion =
+        //         product.promotion &&
+        //         dayjs(product.startDate).isBefore(today) &&
+        //         dayjs(product.endDate).isAfter(today);
 
-            return product.visibility === 1 && !hasValidPromotion;
-        });
+        //     return product.visibility === 1 && !hasValidPromotion;
+        // });
 
-        setProducts(nonPromoOrExpiredProducts);
+        // setProducts(nonPromoOrExpiredProducts);
+        const visibleProducts = data.products.filter(
+            (product) => product.visibility === 1
+        );
+
+        setProducts(visibleProducts);
     };
 
     // state for pagination
@@ -60,15 +67,18 @@ export default function ProductCards() {
     // rows to show in a page
     const rowsPerPage = 6;
 
-    // calculate the last items, first items and set products to show
+    const filteredProducts = products.filter((product) =>
+        product.name?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastProduct = currentPage * rowsPerPage;
     const indexOfFirstProduct = indexOfLastProduct - rowsPerPage;
-    const currentProducts = products.slice(
+    const currentProducts = filteredProducts.slice(
         indexOfFirstProduct,
         indexOfLastProduct
     );
 
-    const totalPages = Math.ceil(products.length / rowsPerPage);
+    const totalPages = Math.ceil(filteredProducts.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -157,6 +167,7 @@ export default function ProductCards() {
                                 type="text"
                                 placeholder="Search..."
                                 className="mt-1 border-gray-500 pl-8 pr-4"
+                                onChange={(e) => setQuery(e.target.value)}
                             />
                         </div>
                     </div>
@@ -211,8 +222,45 @@ export default function ProductCards() {
                                         {product.name}
                                     </h1>
                                     <p className="text-sm font-medium">
-                                        {product.price} $
+                                        {product.promotion &&
+                                        new Date() >=
+                                            new Date(product.startDate) &&
+                                        new Date() <=
+                                            new Date(product.endDate) ? (
+                                            <div className="flex items-center gap-1">
+                                                <span className="text-red-600 font-semibold">
+                                                    {(
+                                                        product.price -
+                                                        (product.price *
+                                                            product.promotion) /
+                                                            100
+                                                    ).toFixed(2)}{" "}
+                                                    $
+                                                </span>
+                                                <span className="line-through text-sm text-gray-500">
+                                                    {product.price} $
+                                                </span>
+                                            </div>
+                                        ) : (
+                                            <span>{product.price} $</span>
+                                        )}
                                     </p>
+                                    {product.promotion &&
+                                        new Date() >=
+                                            new Date(product.startDate) &&
+                                        new Date() <=
+                                            new Date(product.endDate) && (
+                                            <p className="text-xs text-gray-500">
+                                                Promo period:{" "}
+                                                {dayjs(
+                                                    product.startDate
+                                                ).format("MMM D")}{" "}
+                                                -{" "}
+                                                {dayjs(product.endDate).format(
+                                                    "MMM D"
+                                                )}
+                                            </p>
+                                        )}
                                 </div>
                                 <div className="flex flex-col items-end gap-2">
                                     <div>

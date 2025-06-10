@@ -57,7 +57,11 @@ import AdminRoute from "./Components/AdminRoute";
 const routes = createBrowserRouter([
     {
         path: "/",
-        element: <Layout />,
+        element: (
+            <SearchProvider>
+                <Layout />
+            </SearchProvider>
+        ),
         children: [
             {
                 path: "/",
