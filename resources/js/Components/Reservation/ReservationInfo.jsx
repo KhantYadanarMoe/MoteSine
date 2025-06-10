@@ -51,6 +51,7 @@ export default function ReservationInfo() {
 
     // use state to check dialog open or not and control
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     const { form: reservationSetting } = useReservationSetting();
 
@@ -188,6 +189,7 @@ export default function ReservationInfo() {
                     message: "",
                 });
                 setErrors({});
+                setIsSuccessDialogOpen(true);
                 navigate("/reservation");
                 setAvailabilityMessage("");
             }
@@ -422,6 +424,31 @@ export default function ReservationInfo() {
                                 Reserve
                             </Button>
                         </div>
+                        <AlertDialog
+                            open={isSuccessDialogOpen}
+                            onOpenChange={setIsSuccessDialogOpen}
+                        >
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>
+                                        Reserved Successfully!
+                                    </AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        Your reservation had been recorded.
+                                        Thank You!
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogAction
+                                        onClick={() =>
+                                            setIsSuccessDialogOpen(false)
+                                        }
+                                    >
+                                        OK
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
                         <div className="mt-5 flex justify-end">
                             <AlertDialog
                                 open={isDialogOpen}

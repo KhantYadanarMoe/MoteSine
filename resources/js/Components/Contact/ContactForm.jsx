@@ -6,6 +6,17 @@ import { Textarea } from "../ui/textarea";
 import { Label } from "../ui/label";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import axios from "axios";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 
@@ -20,6 +31,7 @@ export default function ContactForm() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -76,6 +88,7 @@ export default function ContactForm() {
                     message: "",
                 });
                 setErrors({});
+                setIsSuccessDialogOpen(true);
                 navigate("/contact");
             }
         } catch (error) {
@@ -213,6 +226,29 @@ export default function ContactForm() {
                         </Button>
                     </div>
                 </form>
+                <AlertDialog
+                    open={isSuccessDialogOpen}
+                    onOpenChange={setIsSuccessDialogOpen}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Your message had been sent successfully!
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                We got your message and we'll connect you soon
+                                via email. Thank You!
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction
+                                onClick={() => setIsSuccessDialogOpen(false)}
+                            >
+                                OK
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
             <div className="w-full md:w-2/5 lg:w-1/2 px-5 ml-3 border-l border-l-accentRed">
                 <div className="py-5">
