@@ -12,6 +12,17 @@ import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { Label } from "../ui/label";
 import { useRef } from "react";
 import { useEffect } from "react";
@@ -29,6 +40,8 @@ export default function JobForm() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     // state to store jobs
     let [jobs, setJobs] = useState([]);
@@ -118,6 +131,7 @@ export default function JobForm() {
                     resume: "",
                 });
                 resumeRef.current.value = "";
+                setIsSuccessDialogOpen(true);
                 navigate("/jobs");
             }
         } catch (error) {
@@ -288,6 +302,29 @@ export default function JobForm() {
                         </Button>
                     </div>
                 </form>
+                <AlertDialog
+                    open={isSuccessDialogOpen}
+                    onOpenChange={setIsSuccessDialogOpen}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Your application has been recorded!
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                We got your job application and we'll connect
+                                you soon via email. Thank You!
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction
+                                onClick={() => setIsSuccessDialogOpen(false)}
+                            >
+                                OK
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </motion.div>
     );

@@ -10,6 +10,17 @@ import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 
@@ -29,6 +40,8 @@ export default function ApplyForm() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+
+    const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -106,6 +119,7 @@ export default function ApplyForm() {
                     certificate: "",
                 });
                 certificateRef.current.value = "";
+                setIsSuccessDialogOpen(true);
                 navigate("/partnerships");
             }
         } catch (error) {
@@ -325,6 +339,30 @@ export default function ApplyForm() {
                         </div>
                     </div>
                 </form>
+                <AlertDialog
+                    open={isSuccessDialogOpen}
+                    onOpenChange={setIsSuccessDialogOpen}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Your application has been recorded!
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                We got your application for our partnership
+                                program and we'll connect you soon via email.
+                                Thank You!
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction
+                                onClick={() => setIsSuccessDialogOpen(false)}
+                            >
+                                OK
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
             </div>
         </motion.div>
     );
