@@ -136,8 +136,7 @@ export default function Checkout() {
                     time: "",
                     note: "",
                 });
-
-                // ✅ Clear cart
+                setErrors({});
                 clearCart();
                 navigate("/review");
             }
@@ -202,6 +201,11 @@ export default function Checkout() {
                                 placeholder="Enter your name"
                                 className="mt-1 border-gray-500"
                             />
+                            {errors.name && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.name[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="md:flex gap-2">
                             <div className="mb-3 md:w-1/2 flex flex-col gap-2">
@@ -215,6 +219,11 @@ export default function Checkout() {
                                     placeholder="Enter your phone"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.phone && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.phone[0]}
+                                    </p>
+                                )}
                             </div>
                             <div className="mb-3 md:w-1/2 flex flex-col gap-2">
                                 <label htmlFor="email">Email</label>
@@ -227,6 +236,11 @@ export default function Checkout() {
                                     placeholder="Enter your email"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.email && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.email[0]}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <div className="mb-2 flex flex-col gap-2">
@@ -240,6 +254,11 @@ export default function Checkout() {
                                 placeholder="Enter your address"
                                 className="mt-1 border-gray-500"
                             ></Textarea>
+                            {errors.address && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.address[0]}
+                                </p>
+                            )}
                         </div>
                     </form>
                 </div>
@@ -258,6 +277,11 @@ export default function Checkout() {
                                     handleCustomChange("date", date)
                                 }
                             />
+                            {errors.date && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.date[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="mb-3 flex flex-col gap-2">
                             <label htmlFor="time">Time</label>
@@ -270,6 +294,11 @@ export default function Checkout() {
                                     handleCustomChange("time", time)
                                 }
                             />
+                            {errors.time && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.time[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="mb-3 flex flex-col gap-2">
                             <label htmlFor="note">Note</label>
@@ -282,6 +311,11 @@ export default function Checkout() {
                                 placeholder="Write something..."
                                 className="mt-1 border-gray-500"
                             ></Textarea>
+                            {errors.note && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.note[0]}
+                                </p>
+                            )}
                         </div>
                     </form>
                 </div>

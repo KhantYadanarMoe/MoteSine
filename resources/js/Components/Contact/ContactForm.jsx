@@ -94,7 +94,6 @@ export default function ContactForm() {
         } catch (error) {
             console.error("Error sending contact message:", error);
 
-            // failed condition
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
