@@ -6,6 +6,17 @@ import { Textarea } from "../../Components/ui/textarea";
 import { Label } from "../../Components/ui/Label";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -22,6 +33,9 @@ export default function EditProfile() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+
+    const [isPasswordSuccessDialogOpen, setIsPasswordSuccessDialogOpen] =
+        useState(false);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -108,6 +122,64 @@ export default function EditProfile() {
         }
     };
 
+    const [passwordForm, setPasswordForm] = useState({
+        currentPassword: "",
+        newPassword: "",
+        confirmPassword: "",
+    });
+
+    const [passwordErrors, setPasswordErrors] = useState({});
+
+    const handlePasswordChange = (e) => {
+        const { name, value } = e.target;
+        setPasswordForm((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handlePasswordSubmit = async (e) => {
+        e.preventDefault();
+
+        if (passwordForm.newPassword !== passwordForm.confirmPassword) {
+            setPasswordErrors({
+                confirmPassword: ["Password and Confirm Password don't match."],
+            });
+            return;
+        }
+
+        try {
+            const res = await axios.put(`/api/user/${user.id}/changePassword`, {
+                currentPassword: passwordForm.currentPassword,
+                newPassword: passwordForm.newPassword,
+                newPassword_confirmation: passwordForm.confirmPassword,
+            });
+
+            if (res.data.message === "Password updated successfully.") {
+                setIsPasswordSuccessDialogOpen(true);
+                setPasswordForm({
+                    currentPassword: "",
+                    newPassword: "",
+                    confirmPassword: "",
+                });
+                setPasswordErrors({});
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                const data = error.response.data;
+
+                if (data.errors) {
+                    setPasswordErrors(data.errors); // Object with field errors
+                } else if (data.message) {
+                    // Wrap single message into an object keyed by a general field or 'form'
+                    setPasswordErrors({ general: [data.message] });
+                } else {
+                    setPasswordErrors({});
+                }
+            }
+        }
+    };
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -145,12 +217,12 @@ export default function EditProfile() {
                                     className="hidden"
                                 />
 
-                                <label
+                                <Label
                                     htmlFor="image-upload"
                                     className="inline-block rounded-lg border border-accentGreen text-accentGreen hover:border-hoverGreen hover:text-hoverGreen hover:bg-gray-100 font-medium duration-300 px-3 py-1 cursor-pointer"
                                 >
                                     Upload
-                                </label>
+                                </Label>
 
                                 <Button
                                     variant="default"
@@ -176,7 +248,7 @@ export default function EditProfile() {
                         </div>
                         <div className="md:flex gap-2">
                             <div className="md:w-1/2 my-3">
-                                <label htmlFor="email">Email</label>
+                                <Label htmlFor="email">Email</Label>
                                 <Input
                                     id="email"
                                     name="email"
@@ -233,10 +305,18 @@ export default function EditProfile() {
                         </Label>
                         <Input
                             id="currentPassword"
-                            type="text"
+                            name="currentPassword"
+                            type="password"
                             placeholder="Enter your password"
+                            value={passwordForm.currentPassword}
+                            onChange={handlePasswordChange}
                             className="mt-1 border-gray-500"
                         />
+                        {passwordErrors.general && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {passwordErrors.general[0]}
+                            </p>
+                        )}
                         {/* <a href="" className="text-sm underline mt-1 mb-3">
               forgot password?
             </a> */}
@@ -245,17 +325,68 @@ export default function EditProfile() {
                         <Label htmlFor="newPassword">New Password</Label>
                         <Input
                             id="newPassword"
-                            type="text"
-                            placeholder="Set new password"
+                            name="newPassword"
+                            type="password"
+                            value={passwordForm.newPassword}
+                            onChange={handlePasswordChange}
+                            placeholder="Enter your new password"
+                            className="mt-1 border-gray-500"
+                        />
+                        {passwordErrors.confirmPassword && (
+                            <p className="text-red-500 mt-1 text-sm">
+                                {passwordErrors.confirmPassword}
+                            </p>
+                        )}
+                    </div>
+                    <div className="my-3">
+                        <Label htmlFor="confirmPassword">
+                            Confirm Password
+                        </Label>
+                        <Input
+                            id="confirmPassword"
+                            name="confirmPassword"
+                            type="password"
+                            value={passwordForm.confirmPassword}
+                            onChange={handlePasswordChange}
+                            placeholder="Confirm your password"
                             className="mt-1 border-gray-500"
                         />
                     </div>
                     <div className="flex justify-end">
-                        <Button className="bg-accentYellow text-black hover:bg-hoverYellow duration-300">
+                        <Button
+                            className="bg-accentYellow text-black hover:bg-hoverYellow duration-300"
+                            onClick={handlePasswordSubmit}
+                        >
                             Change
                         </Button>
                     </div>
                 </form>
+
+                <AlertDialog
+                    open={isPasswordSuccessDialogOpen}
+                    onOpenChange={setIsPasswordSuccessDialogOpen}
+                >
+                    <AlertDialogContent>
+                        <AlertDialogHeader>
+                            <AlertDialogTitle>
+                                Password Updated Successfully!
+                            </AlertDialogTitle>
+                            <AlertDialogDescription>
+                                Your password has been changed. You can now use
+                                your new password to log in.
+                            </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                            <AlertDialogAction
+                                onClick={() =>
+                                    setIsPasswordSuccessDialogOpen(false)
+                                }
+                            >
+                                OK
+                            </AlertDialogAction>
+                        </AlertDialogFooter>
+                    </AlertDialogContent>
+                </AlertDialog>
 
                 <a href="" className="text-accentRed underline">
                     Delete Account?

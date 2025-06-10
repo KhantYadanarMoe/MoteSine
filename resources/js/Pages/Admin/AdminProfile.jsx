@@ -7,6 +7,18 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
+import { Label } from "@/Components/ui/label";
 
 export default function AdminProfile() {
     const { user, setUser } = useAuth();
@@ -20,6 +32,9 @@ export default function AdminProfile() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+
+    const [isPasswordSuccessDialogOpen, setIsPasswordSuccessDialogOpen] =
+        useState(false);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -143,12 +158,15 @@ export default function AdminProfile() {
                 newPassword_confirmation: passwordForm.confirmPassword,
             });
 
-            alert("Password changed successfully.");
-            setPasswordForm({
-                currentPassword: "",
-                newPassword: "",
-                confirmPassword: "",
-            });
+            if (res.data.message === "Password updated successfully.") {
+                setIsPasswordSuccessDialogOpen(true);
+                setPasswordForm({
+                    currentPassword: "",
+                    newPassword: "",
+                    confirmPassword: "",
+                });
+                setPasswordErrors({});
+            }
         } catch (error) {
             if (error.response && error.response.data) {
                 const data = error.response.data;
@@ -203,12 +221,12 @@ export default function AdminProfile() {
                                         onChange={uploadImg}
                                         className="hidden"
                                     />
-                                    <label
+                                    <Label
                                         htmlFor="image-upload"
                                         className="inline-block rounded-lg border border-accentGreen text-accentGreen hover:border-hoverGreen hover:text-hoverGreen hover:bg-gray-100 font-medium duration-300 px-3 py-1 cursor-pointer"
                                     >
                                         Upload New
-                                    </label>
+                                    </Label>
                                     <button className="px-2 py-2 text-sm bg-accentRed hover:bg-accentRed duration-300 text-white rounded-md">
                                         Delete
                                     </button>
@@ -216,7 +234,7 @@ export default function AdminProfile() {
                             </div>
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="name">Name</label>
+                            <Label htmlFor="name">Name</Label>
                             <Input
                                 id="name"
                                 name="name"
@@ -229,7 +247,7 @@ export default function AdminProfile() {
                         </div>
                         <div className="md:flex gap-3">
                             <div className="md:w-1/2 mb-4">
-                                <label htmlFor="email">Email</label>
+                                <Label htmlFor="email">Email</Label>
                                 <Input
                                     id="email"
                                     name="email"
@@ -241,7 +259,7 @@ export default function AdminProfile() {
                                 />
                             </div>
                             <div className="md:w-1/2 mb-4">
-                                <label htmlFor="phone">Phone</label>
+                                <Label htmlFor="phone">Phone</Label>
                                 <Input
                                     id="phone"
                                     name="phone"
@@ -254,7 +272,7 @@ export default function AdminProfile() {
                             </div>
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="address">Address</label>
+                            <Label htmlFor="address">Address</Label>
                             <textarea
                                 id="address"
                                 name="address"
@@ -282,9 +300,9 @@ export default function AdminProfile() {
                     <h1 className="text-lg font-medium">Security Setting</h1>
                     <form action="" className="mt-6">
                         <div className="mb-4">
-                            <label htmlFor="currentPassword">
+                            <Label htmlFor="currentPassword">
                                 Current Password
-                            </label>
+                            </Label>
                             <Input
                                 id="currentPassword"
                                 name="currentPassword"
@@ -301,7 +319,7 @@ export default function AdminProfile() {
                             )}
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="newPassword">New Password</label>
+                            <Label htmlFor="newPassword">New Password</Label>
                             <Input
                                 id="newPassword"
                                 name="newPassword"
@@ -318,9 +336,9 @@ export default function AdminProfile() {
                             )}
                         </div>
                         <div className="mb-4">
-                            <label htmlFor="confirmPassword">
+                            <Label htmlFor="confirmPassword">
                                 Confirm Password
-                            </label>
+                            </Label>
                             <Input
                                 id="confirmPassword"
                                 name="confirmPassword"
@@ -340,6 +358,31 @@ export default function AdminProfile() {
                             </button>
                         </div>
                     </form>
+                    <AlertDialog
+                        open={isPasswordSuccessDialogOpen}
+                        onOpenChange={setIsPasswordSuccessDialogOpen}
+                    >
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>
+                                    Password Updated Successfully!
+                                </AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    Your password has been changed. You can now
+                                    use your new password to log in.
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                                <AlertDialogAction
+                                    onClick={() =>
+                                        setIsPasswordSuccessDialogOpen(false)
+                                    }
+                                >
+                                    OK
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
                 </div>
             </div>
 
