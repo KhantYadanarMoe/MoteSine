@@ -14,6 +14,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Label } from "../ui/label";
 import { useRef } from "react";
+import { useEffect } from "react";
 
 export default function JobForm() {
     const [position, setPosition] = useState("");
@@ -28,6 +29,25 @@ export default function JobForm() {
     });
     // store errors state
     const [errors, setErrors] = useState({});
+
+    // state to store jobs
+    let [jobs, setJobs] = useState([]);
+
+    // fetch data that send from backend
+    let getJobs = async () => {
+        try {
+            let res = await axios.get("/api/jobs");
+            let data = res.data;
+            setJobs(data.jobs);
+        } catch (error) {
+            console.error("Failed to fetch jobs:", error);
+        }
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getJobs();
+    }, []);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -222,19 +242,14 @@ export default function JobForm() {
                                     <SelectValue placeholder="Choose a position" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="waiter">
-                                        Waiter
-                                    </SelectItem>
-                                    <SelectItem value="chef">Chef</SelectItem>
-                                    <SelectItem value="cashier">
-                                        Cashier
-                                    </SelectItem>
-                                    <SelectItem value="barista">
-                                        Barista
-                                    </SelectItem>
-                                    <SelectItem value="delivery">
-                                        Delivery Staff
-                                    </SelectItem>
+                                    {jobs.map((job) => (
+                                        <SelectItem
+                                            key={job.id}
+                                            value={job?.title?.toLowerCase()}
+                                        >
+                                            {job.title}
+                                        </SelectItem>
+                                    ))}
                                 </SelectContent>
                             </Select>
                         </div>
