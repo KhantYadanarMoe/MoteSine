@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useSearch } from "@/contexts/SearchContext";
 
-export default function MenuHeader() {
+export default function MenuHeader({ selectedCategory }) {
     const [isOpen, setIsOpen] = useState(false);
     const { setQuery } = useSearch();
 
@@ -18,8 +18,8 @@ export default function MenuHeader() {
         >
             <div className="flex justify-between my-4 mx-2">
                 <div>
-                    <h2 className="text-xl md:text-3xl font-medium mb-1 relative inline-block">
-                        Noodles
+                    <h2 className="text-xl md:text-2xl font-medium mb-1 relative inline-block">
+                        {selectedCategory || "All Menus"}
                     </h2>
                     <div className="flex items-center">
                         <div className="w-12 md:w-20 h-[2px] bg-accentRed"></div>

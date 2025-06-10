@@ -13,7 +13,7 @@ export default function Menu() {
             {orderSetting.allow ? (
                 <>
                     <MenuCategories onCategorySelect={setSelectedCategory} />
-                    <MenuHeader />
+                    <MenuHeader selectedCategory={selectedCategory} />
                     <MenuCards selectedCategory={selectedCategory} />
                 </>
             ) : (
