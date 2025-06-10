@@ -1,8 +1,32 @@
 import { ArrowDownRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, animateScroll as scroll } from "react-scroll";
+import { useState } from "react";
+import axios from "axios";
+import { useEffect } from "react";
 
 export default function Career() {
+    const [loading, setLoading] = useState(true);
+    // state to store jobs
+    let [jobs, setJobs] = useState([]);
+
+    // fetch data that send from backend
+    let getJobs = async () => {
+        try {
+            let res = await axios.get("/api/jobs");
+            let data = res.data;
+            setJobs(data.jobs);
+        } catch (error) {
+            console.error("Failed to fetch jobs:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    // call data fetching function in useEffect to run when user enter the page
+    useEffect(() => {
+        getJobs();
+    }, []);
     return (
         <motion.div
             initial={{ y: -100, opacity: 0 }}
@@ -25,134 +49,38 @@ export default function Career() {
                     </p>
                 </div>
                 <div className="my-5 md:my-8">
-                    <div>
-                        <hr className="border-t-gray-400" />
-                        <div className="px-2 py-2 flex justify-between items-center">
-                            <div className="w-[35%] md:w-[55%]">
-                                <h1 className="font-medium">Delivery Man</h1>
-                                <p className="text-gray-800 text-sm hidden md:block">
-                                    can deliver on time, familiar with GPS apps,
-                                    can drive well, good customer service, good
-                                    problem-solving skills
-                                </p>
-                            </div>
-                            <div className="w-[50%] md:w-[35%] px-5">
-                                <p className="text-gray-900 text-sm md:text-base">
-                                    $35-50 Per Hour
-                                </p>
-                                <p className="text-gray-800 text-sm md:text-base">
-                                    Part-time
-                                </p>
-                            </div>
-                            <div className="w-[15%] md:w-[10%]">
-                                <Link
-                                    to="Form"
-                                    smooth={true}
-                                    duration={500}
-                                    offset={-70}
-                                    className="cursor-pointer"
-                                >
-                                    <ArrowDownRight size={28} />
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <hr className="border-t-gray-400" />
-                        <div className="px-2 py-2 flex justify-between items-center">
-                            <div className="w-[35%] md:w-[55%]">
-                                <h1 className="font-medium">Delivery Man</h1>
-                                <p className="text-gray-800 text-sm hidden md:block">
-                                    can deliver on time, familiar with GPS apps,
-                                    can drive well, good customer service, good
-                                    problem-solving skills
-                                </p>
-                            </div>
-                            <div className="w-[50%] md:w-[35%] px-5">
-                                <p className="text-gray-900 text-sm md:text-base">
-                                    $35-50 Per Hour
-                                </p>
-                                <p className="text-gray-800 text-sm md:text-base">
-                                    Part-time
-                                </p>
-                            </div>
-                            <div className="w-[15%] md:w-[10%]">
-                                <Link
-                                    to="Form"
-                                    smooth={true}
-                                    duration={500}
-                                    offset={-70}
-                                    className="cursor-pointer"
-                                >
-                                    <ArrowDownRight size={28} />
-                                </Link>
+                    {jobs.map((job) => (
+                        <div>
+                            <hr className="border-t-gray-400" />
+                            <div className="px-2 py-2 flex justify-between items-center">
+                                <div className="w-[35%] md:w-[55%]">
+                                    <h1 className="font-medium">{job.title}</h1>
+                                    <p className="text-gray-800 text-sm hidden md:block">
+                                        {job.desc}
+                                    </p>
+                                </div>
+                                <div className="w-[50%] md:w-[35%] px-5">
+                                    <p className="text-gray-900 text-sm md:text-base">
+                                        ${parseInt(job.salary)} Per Hour
+                                    </p>
+                                    <p className="text-gray-800 text-sm md:text-base">
+                                        {job.type}
+                                    </p>
+                                </div>
+                                <div className="w-[15%] md:w-[10%]">
+                                    <Link
+                                        to="Form"
+                                        smooth={true}
+                                        duration={500}
+                                        offset={-70}
+                                        className="cursor-pointer"
+                                    >
+                                        <ArrowDownRight size={28} />
+                                    </Link>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <div>
-                        <hr className="border-t-gray-400" />
-                        <div className="px-2 py-2 flex justify-between items-center">
-                            <div className="w-[35%] md:w-[55%]">
-                                <h1 className="font-medium">Delivery Man</h1>
-                                <p className="text-gray-800 text-sm hidden md:block">
-                                    can deliver on time, familiar with GPS apps,
-                                    can drive well, good customer service, good
-                                    problem-solving skills
-                                </p>
-                            </div>
-                            <div className="w-[50%] md:w-[35%] px-5">
-                                <p className="text-gray-900 text-sm md:text-base">
-                                    $35-50 Per Hour
-                                </p>
-                                <p className="text-gray-800 text-sm md:text-base">
-                                    Part-time
-                                </p>
-                            </div>
-                            <div className="w-[15%] md:w-[10%]">
-                                <Link
-                                    to="Form"
-                                    smooth={true}
-                                    duration={500}
-                                    offset={-70}
-                                    className="cursor-pointer"
-                                >
-                                    <ArrowDownRight size={28} />
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
-                    <div>
-                        <hr className="border-t-gray-400" />
-                        <div className="px-2 py-2 flex justify-between items-center">
-                            <div className="w-[35%] md:w-[55%]">
-                                <h1 className="font-medium">Delivery Man</h1>
-                                <p className="text-gray-800 text-sm hidden md:block">
-                                    can deliver on time, familiar with GPS apps,
-                                    can drive well, good customer service, good
-                                    problem-solving skills
-                                </p>
-                            </div>
-                            <div className="w-[50%] md:w-[35%] px-5">
-                                <p className="text-gray-900 text-sm md:text-base">
-                                    $35-50 Per Hour
-                                </p>
-                                <p className="text-gray-800 text-sm md:text-base">
-                                    Part-time
-                                </p>
-                            </div>
-                            <div className="w-[15%] md:w-[10%]">
-                                <Link
-                                    to="Form"
-                                    smooth={true}
-                                    duration={500}
-                                    offset={-70}
-                                    className="cursor-pointer"
-                                >
-                                    <ArrowDownRight size={28} />
-                                </Link>
-                            </div>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
         </motion.div>
