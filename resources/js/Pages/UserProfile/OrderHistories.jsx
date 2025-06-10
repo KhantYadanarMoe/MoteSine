@@ -17,12 +17,15 @@ import { useEffect } from "react";
 import Empty from "../../../images/Empty.png";
 import dayjs from "dayjs";
 import { useOrderSetting } from "@/contexts/OrderSettingContext";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function OrderHistories() {
     const [loading, setLoading] = useState(true);
     const { form: orderSetting } = useOrderSetting();
     // state to store orders
     let [orders, setOrders] = useState([]);
+
+    const { query, setQuery } = useSearch();
 
     console.log("Order:", orders);
     // state for pagination
@@ -48,12 +51,18 @@ export default function OrderHistories() {
         getOrders();
     }, []);
 
-    // calculate the last items, first items and set orders to show
+    const filteredOrders = orders.filter((order) =>
+        order.order_number?.toLowerCase().includes(query.toLowerCase())
+    );
+
     const indexOfLastOrder = currentPage * rowsPerPage;
     const indexOfFirstOrder = indexOfLastOrder - rowsPerPage;
-    const currentOrders = orders.slice(indexOfFirstOrder, indexOfLastOrder);
 
-    const totalPages = Math.ceil(orders.length / rowsPerPage);
+    const currentOrders = filteredOrders.slice(
+        indexOfFirstOrder,
+        indexOfLastOrder
+    );
+    const totalPages = Math.ceil(filteredOrders.length / rowsPerPage);
 
     const handlePageChange = (page) => {
         if (page >= 1 && page <= totalPages) {
@@ -99,6 +108,7 @@ export default function OrderHistories() {
                                     type="text"
                                     placeholder="Search..."
                                     className="mt-1 border-gray-500 pl-8 pr-4"
+                                    onChange={(e) => setQuery(e.target.value)}
                                 />
                             </div>
                         </div>
