@@ -200,6 +200,31 @@ export default function ReservationInfo() {
             }
         }
     };
+
+    function timeStringToMinutes(timeStr) {
+        const [time, modifier] = timeStr.split(" ");
+        let [hours, minutes] = time.split(":").map(Number);
+
+        if (modifier === "PM" && hours !== 12) {
+            hours += 12;
+        }
+        if (modifier === "AM" && hours === 12) {
+            hours = 0;
+        }
+
+        return hours * 60 + minutes;
+    }
+
+    const openingMinutes = generalForm.from
+        ? timeStringToMinutes(generalForm.from)
+        : 540;
+    const closingMinutes = generalForm.to
+        ? timeStringToMinutes(generalForm.to)
+        : 1320;
+
+    const minTime = openingMinutes + 60;
+    const maxTime = closingMinutes - 60;
+
     return (
         <div className="relative">
             <div className="md:absolute md:-top-40 lg:-top-36 md:left-0 md:ml-4 lg:ml-12 md:translate-y-1/2 w-[97%] mx-auto md:mx-0 md:w-auto bg-white md:shadow-xl p-3 mt-4 md:mt-0 rounded-lg">
@@ -261,8 +286,8 @@ export default function ReservationInfo() {
                             Time
                         </Label>
                         <TimePicker
-                            minTime={540}
-                            maxTime={1320}
+                            minTime={minTime}
+                            maxTime={maxTime}
                             id="time"
                             name="time"
                             selectedTime={form.time}
