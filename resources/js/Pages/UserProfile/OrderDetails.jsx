@@ -256,6 +256,60 @@ export default function OrderDetails() {
                             {orderDetails?.address}
                         </p>
                     </div>
+                    <div className="mt-3 py-3 px-3 shadow-md rounded-md border-t-2 border-t-accentRed">
+                        <h1 className="text-base font-medium">
+                            Order Progress
+                        </h1>
+                        <div className="relative pl-6 mt-3">
+                            <div className="absolute left-4 top-2 bottom-2 w-0.5 bg-gray-300"></div>
+
+                            {[
+                                {
+                                    key: "confirmed",
+                                    label: "Ordered",
+                                    color: "bg-accentGreen",
+                                },
+                                {
+                                    key: "processing",
+                                    label: "Processing",
+                                    color: "bg-accentYellow",
+                                },
+                                {
+                                    key: "out for delivery",
+                                    label: "Out for Delivery",
+                                    color: "bg-blue-400",
+                                },
+                                {
+                                    key: "delivered",
+                                    label: "Delivered",
+                                    color: "bg-gray-500",
+                                },
+                            ].map(({ key, label, color }, i, arr) => (
+                                <div
+                                    key={key}
+                                    className={`flex items-center ${
+                                        i < arr.length - 1 ? "mb-6" : ""
+                                    } relative`}
+                                >
+                                    <div
+                                        className={`w-3 h-3 rounded-full relative left-[-0.8rem] z-10 ${
+                                            i <=
+                                            arr.findIndex(
+                                                (s) =>
+                                                    s.key ===
+                                                    orderDetails?.status
+                                            )
+                                                ? color
+                                                : "bg-gray-300"
+                                        }`}
+                                    ></div>
+                                    <span className="text-gray-800">
+                                        {label}
+                                    </span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                     {/* <div className="mt-3 py-3 px-3 shadow-md rounded-md">
             <h1 className="text-sm font-medium">Scheduled Delivery</h1>
             <div className="flex justify-between items-center mt-5 mb-3">

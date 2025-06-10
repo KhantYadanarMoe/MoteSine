@@ -12,11 +12,25 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/Components/ui/button";
+import axios from "axios";
 
 export default function UserSidebar() {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const { user, setUser } = useAuth();
     const { cartItems } = useCart();
+
+    const logout = async () => {
+        try {
+            await axios.post("http://localhost:8000/api/logout", null, {
+                withCredentials: true,
+            });
+            setUser(null);
+            // navigate("/login");
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
+    };
 
     return (
         <motion.div
@@ -71,12 +85,12 @@ export default function UserSidebar() {
                             </Link>
                         </li>
                     </ul>
-                    <a
-                        href=""
+                    <Button
+                        onClick={logout}
                         className="bg-red-600 hover:bg-red-800 duration-300 text-white justify-center mx-3 py-3 rounded-md flex gap-1"
                     >
                         <LogOut size={20} /> Logout
-                    </a>
+                    </Button>
                 </div>
             </div>
 

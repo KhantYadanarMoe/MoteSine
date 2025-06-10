@@ -44,7 +44,7 @@ export default function AdminSidebar() {
                 withCredentials: true,
             });
             setUser(null);
-            navigate("/login");
+            // navigate("/login");
         } catch (error) {
             console.error("Logout failed:", error);
         }
