@@ -16,11 +16,13 @@ import {
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function Liked() {
     const [wishlistItems, setWishlistItems] = useState([]);
     const [filter, setFilter] = useState("menu");
     const { addToCart } = useCart();
+    const { query, setQuery } = useSearch();
 
     const [openOutOfStock, setOpenOutOfStock] = useState(false);
     const [outOfStockProduct, setOutOfStockProduct] = useState(null);
@@ -86,6 +88,14 @@ export default function Liked() {
         }
     };
 
+    const filteredFavorites = wishlistItems.filter((item) =>
+        item.item_type === "menu"
+            ? item.menu?.title?.toLowerCase().includes(query.toLowerCase())
+            : item.item_type === "product"
+            ? item.product?.name?.toLowerCase().includes(query.toLowerCase())
+            : false
+    );
+
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
@@ -96,16 +106,20 @@ export default function Liked() {
         >
             <div className="flex justify-between">
                 <h1 className="text-2xl font-medium">Favorite</h1>
-                <div className="relative w-full max-w-md hidden md:block">
-                    <Search
-                        className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
-                        size={16}
-                    />
-                    <Input
-                        type="text"
-                        placeholder="Search..."
-                        className="mt-1 border-gray-500 pl-8 pr-4"
-                    />
+                <div>
+                    <div className="relative w-full max-w-md hidden md:block">
+                        <Search
+                            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500"
+                            size={16}
+                        />
+                        <Input
+                            id=""
+                            type="text"
+                            placeholder="Search..."
+                            className="mt-1 border-gray-500 pl-8 pr-4"
+                            onChange={(e) => setQuery(e.target.value)}
+                        />
+                    </div>
                 </div>
             </div>
 
@@ -132,12 +146,12 @@ export default function Liked() {
             </ul>
 
             <div className="md:flex flex-wrap block">
-                {wishlistItems.length === 0 ? (
+                {filteredFavorites.length === 0 ? (
                     <p className="h-[50vh] text-xl text-accentRed font-medium flex items-center justify-center mx-auto">
                         Your wishlist is empty.
                     </p>
                 ) : (
-                    wishlistItems.map((item) =>
+                    filteredFavorites.map((item) =>
                         item.item_type === "menu" ? (
                             <div
                                 key={item.id}

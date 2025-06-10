@@ -125,8 +125,9 @@ const routes = createBrowserRouter([
         path: "/user",
         element: (
             <ProtectedRoute>
-                {/* <UserSidebar /> */}
-                <UserLayout />
+                <SearchProvider>
+                    <UserLayout />
+                </SearchProvider>
             </ProtectedRoute>
         ),
         children: [
