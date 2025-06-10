@@ -15,12 +15,15 @@ import { Link } from "react-router-dom";
 import Empty from "../../../images/Empty.png";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
+import { useSearch } from "@/contexts/SearchContext";
 
 export default function MenuCards({ selectedCategory }) {
     // state to store menus
     let [menus, setMenus] = useState([]);
     // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
+    // search state
+    const { query } = useSearch();
     // rows to show in a page
     const rowsPerPage = 6;
 
@@ -59,14 +62,20 @@ export default function MenuCards({ selectedCategory }) {
         "drinks-beverages": "text-teal-800 bg-teal-200",
     };
 
-    const filteredMenus = selectedCategory
-        ? menus.filter((menu) => menu.category.category === selectedCategory)
-        : menus;
+    const filteredMenus = menus
+        .filter((menu) =>
+            menu.title?.toLowerCase().includes(query.toLowerCase())
+        )
+        .filter((menu) =>
+            selectedCategory
+                ? menu.category.category === selectedCategory
+                : true
+        );
 
     const indexOfLastMenu = currentPage * rowsPerPage;
     const indexOfFirstMenu = indexOfLastMenu - rowsPerPage;
-    const currentMenus = filteredMenus.slice(indexOfFirstMenu, indexOfLastMenu);
 
+    const currentMenus = filteredMenus.slice(indexOfFirstMenu, indexOfLastMenu);
     const totalPages = Math.ceil(filteredMenus.length / rowsPerPage);
 
     const handlePageChange = (page) => {
