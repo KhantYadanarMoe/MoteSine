@@ -102,7 +102,7 @@ export default function Liked() {
             whileInView={{ x: 0, opacity: 1 }}
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
-            className="w-full lg:w-[68%] xl:w-[74%] flex flex-col gap-6 lg:ml-[32%] xl:ml-[26%] px-3 lg:px-7 py-6"
+            className="w-full flex flex-col gap-6 px-3 lg:px-7 py-6"
         >
             <div className="flex justify-between">
                 <h1 className="text-2xl font-medium">Favorite</h1>

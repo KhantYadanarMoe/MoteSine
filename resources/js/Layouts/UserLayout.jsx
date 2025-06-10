@@ -6,7 +6,7 @@ export default function AdminLayout() {
     return (
         <div>
             <UserSidebar />
-            <div className="lg:pt-24 pt-20 pl-3 pr-3 bg-white min-h-screen">
+            <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen">
                 <Outlet />
             </div>
         </div>
