@@ -19,6 +19,8 @@ import {
 } from "../../Components/ui/alert-dialog";
 import axios from "axios";
 import { useSetting } from "@/contexts/GeneralSettingContext";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
 
 export default function ContactForm() {
     const { form: generalForm } = useSetting();
@@ -32,6 +34,7 @@ export default function ContactForm() {
     // store errors state
     const [errors, setErrors] = useState({});
     const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
+    const { user, setUser } = useAuth();
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -44,6 +47,17 @@ export default function ContactForm() {
             [name]: value,
         }));
     };
+
+    useEffect(() => {
+        if (user) {
+            setForm({
+                name: user?.name || "",
+                phone: user?.phone || "",
+                email: user?.email || "",
+                message: "",
+            });
+        }
+    }, [user]);
 
     // form submit function
     const submit = async (e) => {
