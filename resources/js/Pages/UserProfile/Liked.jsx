@@ -145,7 +145,7 @@ export default function Liked() {
                 </li>
             </ul>
 
-            <div className="md:flex flex-wrap block">
+            <div className="md:flex flex-wrap gap-3 block justify-center">
                 {filteredFavorites.length === 0 ? (
                     <p className="h-[50vh] text-xl text-accentRed font-medium flex items-center justify-center mx-auto">
                         Your wishlist is empty.
@@ -280,7 +280,7 @@ export default function Liked() {
                         ) : (
                             <div
                                 key={item.id}
-                                className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl md:w-1/2 w-[99%] md:mx-0 mx-auto p-1 mt-10"
+                                className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl md:w-[45%] w-[99%] md:mx-0 mx-auto p-1 mt-10"
                             >
                                 <div className="flex justify-between">
                                     <button
