@@ -2,9 +2,9 @@ import { Progress } from "../../Components/ui/progress";
 import React from "react";
 import Mohinga from "../../../images/Mohinga.png";
 import Profile from "../../../images/profile.jpg";
-import { ReceiptText } from "lucide-react";
+import { ChevronRight, ReceiptText } from "lucide-react";
 import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
@@ -104,9 +104,18 @@ export default function AdminOrderDetails() {
         >
             <div className="md:w-[60%] lg:w-[70%]">
                 <div className="flex items-center gap-2">
-                    <h1 className="text-xl font-medium">
-                        {orderDetails?.order_number}
-                    </h1>
+                    <nav className="flex items-center space-x-1 text-xl text-muted-foreground ">
+                        <Link to="/admin/orders" className="hover:text-primary">
+                            Orders
+                        </Link>
+                        <ChevronRight className="w-4 h-4" />
+                        <span className="text-foreground flex gap-2 items-center">
+                            Order{" "}
+                            <p className="text-accentRed">
+                                {orderDetails?.order_number}
+                            </p>
+                        </span>
+                    </nav>
                     <div>
                         <span
                             className={`rounded-lg text-sm px-2 py-1 border 

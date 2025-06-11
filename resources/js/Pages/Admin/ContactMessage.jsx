@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Flag } from "lucide-react";
+import { Flag, ChevronRight } from "lucide-react";
 import { Textarea } from "../../Components/ui/textarea";
 import { Button } from "../../Components/ui/button";
 import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
@@ -71,6 +71,13 @@ export default function ContactMessage() {
             viewport={{ once: false, amount: 0.2 }}
             className="md:h-[89vh] lg:h-full mx-2 md:mx-4 my-6"
         >
+            <nav className="flex items-center space-x-2 text-sm text-muted-foreground mb-4">
+                <Link to="/admin/contact" className="hover:text-primary">
+                    Contacts
+                </Link>
+                <ChevronRight className="w-4 h-4" />
+                <span className="text-foreground">Message</span>
+            </nav>
             {contact ? (
                 <>
                     <div className="flex items-center gap-1">

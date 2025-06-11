@@ -1,8 +1,9 @@
 import { motion } from "framer-motion";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState } from "react";
 import { useEffect } from "react";
 import dayjs from "dayjs";
+import { ChevronRight } from "lucide-react";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
@@ -40,12 +41,18 @@ export default function OrderDetails() {
         >
             <div className="md:flex gap-3">
                 <div className="md:w-3/5">
-                    <h1 className="text-2xl font-medium">
-                        Order{" "}
-                        <span className="text-accentRed">
-                            {orderDetails?.order_number}
+                    <nav className="flex items-center space-x-2 text-xl text-muted-foreground mb-4">
+                        <Link to="/user/orders" className="hover:text-primary">
+                            Orders
+                        </Link>
+                        <ChevronRight className="w-4 h-4" />
+                        <span className="text-foreground flex gap-2 items-center">
+                            Order{" "}
+                            <p className="text-accentRed">
+                                {orderDetails?.order_number}
+                            </p>
                         </span>
-                    </h1>
+                    </nav>
                     <div className="mt-6">
                         <ul className="flex items-center justify-between border-t-2 border-t-accentRed py-5 px-3 shadow-md">
                             <li className="basis-[53%] md:basis-[45%] ml-1 text-sm">
