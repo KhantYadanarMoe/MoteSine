@@ -157,7 +157,7 @@ export default function ProductsGrid() {
                                 <img
                                     src={`/storage/${product.image}`}
                                     alt={product.title}
-                                    className="w-40 md:w-36 xl:w-32 h-auto object-cover mx-auto my-3"
+                                    className="w-40 md:w-36 xl:w-32 h-48 md:h-44 xl:h-36  object-cover mx-auto my-3"
                                 />
                                 <div className="flex justify-between items-center my-3">
                                     <div>

@@ -177,7 +177,7 @@ export default function ProductCards() {
                     {currentProducts.map((product) => (
                         <div
                             key={product.id}
-                            className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl"
+                            className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl"
                         >
                             <div className="flex justify-between">
                                 <button
@@ -214,7 +214,7 @@ export default function ProductCards() {
                             <img
                                 src={`/storage/${product.image}`}
                                 alt={product.name}
-                                className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
+                                className="w-44 md:w-40 xl:w-36 h-52 object-cover mx-auto my-3"
                             />
                             <div className="flex justify-between items-center my-3">
                                 <div>

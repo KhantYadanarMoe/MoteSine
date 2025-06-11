@@ -133,7 +133,7 @@ export default function Promotions() {
                                     key={product.id}
                                     className="basis-[85%] md:basis-[75%] lg:basis-1/2"
                                 >
-                                    <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg w-[100%] lg:w-full md:mx-auto rounded-xl">
+                                    <div className="px-3 py-2 bg-white border border-gray-400 shadow-lg w-[100%] lg:w-full md:mx-auto rounded-xl">
                                         <div className="flex justify-between">
                                             <button
                                                 onClick={() =>
@@ -178,7 +178,7 @@ export default function Promotions() {
                                         <img
                                             src={`/storage/${product.image}`}
                                             alt={product.name}
-                                            className="w-36 md:w-28 xl:w-28 h-auto object-cover mx-auto my-3"
+                                            className="w-36 md:w-28 xl:w-28 h-40 object-cover mx-auto my-3"
                                         />
                                         <div className="flex justify-between items-center my-3">
                                             <div>

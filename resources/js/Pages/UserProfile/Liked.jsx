@@ -280,7 +280,7 @@ export default function Liked() {
                         ) : (
                             <div
                                 key={item.id}
-                                className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl md:w-1/2 w-[99%] md:mx-0 mx-auto p-1 mt-10"
+                                className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl md:w-1/2 w-[99%] md:mx-0 mx-auto p-1 mt-10"
                             >
                                 <div className="flex justify-between">
                                     <button
@@ -305,7 +305,7 @@ export default function Liked() {
                                 <img
                                     src={`/storage/${item.product.image}`}
                                     alt={item.product.name}
-                                    className="w-44 md:w-40 xl:w-36 h-auto object-cover mx-auto my-3"
+                                    className="w-44 md:w-40 xl:w-36 h-52 md:h-48 xl:h-40 object-cover mx-auto my-3"
                                 />
                                 <div className="flex justify-between items-center my-3">
                                     <div>
