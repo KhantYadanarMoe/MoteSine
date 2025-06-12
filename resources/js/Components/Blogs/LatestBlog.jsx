@@ -46,9 +46,9 @@ export default function LatestBlog() {
             {blog ? (
                 <div className="block md:flex gap-3 lg:gap-0 my-6">
                     <div className="md:w-1/2">
-                        {blog?.blog_images?.length > 0 && (
+                        {blog?.image?.length > 0 && (
                             <img
-                                src={`/storage/${blog.blog_images[0].url}`}
+                                src={`/storage/${blog.image}`}
                                 alt="Cover"
                                 className="w-[97%] h-52 md:h-64 lg:h-72 xl:h-80 object-cover rounded-md"
                             />

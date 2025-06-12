@@ -20,9 +20,11 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Label } from "@/Components/ui/label";
 import { useNavigate, useParams } from "react-router-dom";
+import "react-quill/dist/quill.snow.css";
+import RichTextEditor from "@/Components/RichTextEditor";
 
 export default function BlogForm() {
-    const [images, setImages] = useState([]); //for new image upload
+    const [image, setImage] = useState(null); // single image file
 
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -47,7 +49,7 @@ export default function BlogForm() {
         setIsEdit(!!id);
     }, [id]);
 
-    const [imageUrls, setImageUrls] = useState([]);
+    const [imageUrl, setImageUrl] = useState([]);
 
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
@@ -71,9 +73,10 @@ export default function BlogForm() {
 
     // Handle image input
     const uploadImg = (e) => {
-        const files = Array.from(e.target.files);
-        if (files.length > 0) {
-            setImages((prevImages) => [...prevImages, ...files]);
+        const file = e.target.files[0];
+        if (file) {
+            setImage(file);
+            setImageUrl(null);
         }
     };
 
@@ -96,7 +99,7 @@ export default function BlogForm() {
     useEffect(() => {
         if (blogDetail) {
             console.log(blogDetail);
-            setImageUrls(blogDetail.blog_images?.map((img) => img.url) || []);
+            setImageUrl(blogDetail.image || null);
 
             setForm({
                 title: blogDetail.title,
@@ -126,10 +129,9 @@ export default function BlogForm() {
 
         console.log("Form data after appending:", formData);
 
-        // Append images to form data
-        images.forEach((image) => {
-            formData.append("images[]", image);
-        });
+        if (image) {
+            formData.append("image", image);
+        }
 
         if (isEdit) {
             formData.append("_method", "PUT");
@@ -166,6 +168,12 @@ export default function BlogForm() {
         }
     };
 
+    const stripHtml = (html) => {
+        const div = document.createElement("div");
+        div.innerHTML = html;
+        return div.textContent || div.innerText || "";
+    };
+
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}
@@ -187,16 +195,10 @@ export default function BlogForm() {
                             onDragOver={(e) => e.preventDefault()}
                             onDrop={(e) => {
                                 e.preventDefault();
-                                const files = Array.from(e.dataTransfer.files);
-                                const imageFiles = files.filter((file) =>
-                                    file.type.startsWith("image/")
-                                );
-
-                                if (imageFiles.length > 0) {
-                                    setImages((prevImages) => [
-                                        ...prevImages,
-                                        ...imageFiles,
-                                    ]);
+                                const file = e.dataTransfer.files[0];
+                                if (file && file.type.startsWith("image/")) {
+                                    setImage(file);
+                                    setImageUrl(null);
                                 }
                             }}
                             className="w-full border-2 border-dashed border-gray-400 p-8 rounded-lg text-center"
@@ -228,64 +230,32 @@ export default function BlogForm() {
                                 <p className="mt-4 text-sm">
                                     or drag and drop an image
                                 </p>
-                                {imageUrls.length > 0 &&
-                                    images.length === 0 && (
-                                        <div className="mt-4 flex gap-4">
-                                            {imageUrls
-                                                .slice(0, 3)
-                                                .map((url, index) => (
-                                                    <img
-                                                        key={index}
-                                                        src={`/storage/${url}`} // directly use the URL
-                                                        alt={`Existing Preview ${
-                                                            index + 1
-                                                        }`}
-                                                        className="max-w-[130px] max-h-[130px] rounded-lg"
-                                                    />
-                                                ))}
-                                        </div>
-                                    )}
 
-                                {images.length > 0 && (
-                                    <div className="mt-4 flex gap-4">
-                                        {images
-                                            .slice(0, 3)
-                                            .map((image, index) => (
-                                                <div
-                                                    key={index}
-                                                    className="relative"
-                                                >
-                                                    <button
-                                                        type="button"
-                                                        onClick={() =>
-                                                            setImages(
-                                                                (prevImages) =>
-                                                                    prevImages.filter(
-                                                                        (
-                                                                            _,
-                                                                            i
-                                                                        ) =>
-                                                                            i !==
-                                                                            index
-                                                                    )
-                                                            )
-                                                        }
-                                                        className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center text-sm shadow-md border border-gray-300 hover:bg-red-700 hover:text-white transition"
-                                                        title="Remove image"
-                                                    >
-                                                        <X />
-                                                    </button>
-                                                    <img
-                                                        src={URL.createObjectURL(
-                                                            image
-                                                        )}
-                                                        alt={`Preview ${
-                                                            index + 1
-                                                        }`}
-                                                        className="max-w-[130px] max-h-[130px] rounded-lg"
-                                                    />
-                                                </div>
-                                            ))}
+                                {imageUrl && !image && (
+                                    <div className="mt-4">
+                                        <img
+                                            src={`/storage/${imageUrl}`}
+                                            alt="Existing Cover"
+                                            className="max-w-[130px] max-h-[130px] rounded-lg"
+                                        />
+                                    </div>
+                                )}
+
+                                {image && (
+                                    <div className="mt-4 relative max-w-[130px] max-h-[130px]">
+                                        <button
+                                            type="button"
+                                            onClick={() => setImage(null)}
+                                            className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 w-6 h-6 flex items-center justify-center text-sm shadow-md border border-gray-300 hover:bg-red-700 hover:text-white transition"
+                                            title="Remove image"
+                                        >
+                                            <X />
+                                        </button>
+                                        <img
+                                            src={URL.createObjectURL(image)}
+                                            alt="Preview Cover"
+                                            className="max-w-[130px] max-h-[130px] rounded-lg"
+                                        />
                                     </div>
                                 )}
                             </div>
@@ -314,13 +284,10 @@ export default function BlogForm() {
                             </div>
                             <div className="mt-3">
                                 <Label htmlFor="paragraph">Paragraph</Label>
-                                <TextEditor
+                                <RichTextEditor
                                     value={form.paragraph}
-                                    onChange={(e) =>
-                                        handleCustomChange(
-                                            "paragraph",
-                                            e.target.value
-                                        )
+                                    onChange={(val) =>
+                                        handleCustomChange("paragraph", val)
                                     }
                                 />
 
@@ -394,15 +361,15 @@ export default function BlogForm() {
             <div className="lg:w-[30%] lg:max-w-[295px] xl:max-w-[290px] hidden lg:block fixed right-4">
                 <div className="mb-5">
                     <div className="xl:w-[97%] mx-auto">
-                        {images.length > 0 ? (
+                        {image ? (
                             <img
-                                src={URL.createObjectURL(images[0])}
+                                src={URL.createObjectURL(image)}
                                 alt="Live Preview"
                                 className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
                             />
-                        ) : isEdit && imageUrls.length > 0 ? (
+                        ) : isEdit && imageUrl ? (
                             <img
-                                src={`/storage/${imageUrls[0]}`}
+                                src={`/storage/${imageUrl}`}
                                 alt="Cover Preview"
                                 className="w-[100%] h-36 lg:h-32 xl:h-36 object-cover rounded-md"
                             />
@@ -421,11 +388,11 @@ export default function BlogForm() {
                             </h1>
                             <p className="text-gray-700 mt-2 text-xs">
                                 {(
-                                    form.paragraph ||
+                                    stripHtml(form.paragraph) ||
                                     "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Optio, modi accusamus ratione dolorem inventore sapiente?"
                                 )
                                     .split(" ")
-                                    .slice(0, 18)
+                                    .slice(0, 27)
                                     .join(" ") + "..."}
                             </p>
                             <div className="flex gap-5 mt-4">

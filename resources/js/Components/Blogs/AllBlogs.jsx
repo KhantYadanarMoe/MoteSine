@@ -102,9 +102,9 @@ export default function AllBlogs() {
                         currentBlogs.map((blog) => (
                             <div className="mb-5">
                                 <div className="xl:w-[97%] mx-auto">
-                                    {blog.blog_images?.length > 0 && (
+                                    {blog.image?.length > 0 && (
                                         <img
-                                            src={`/storage/${blog.blog_images[0].url}`}
+                                            src={`/storage/${blog.image}`}
                                             alt="Cover"
                                             className="w-[100%] h-52 lg:h-48 xl:h-52 object-cover rounded-md"
                                         />

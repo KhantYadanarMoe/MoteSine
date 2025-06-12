@@ -9,12 +9,6 @@ class Blog extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['title', 'paragraph', 'visibility'];
-
-    // A blog can have many images
-    public function blogImages()
-    {
-        return $this->hasMany(BlogImage::class);  
-    }
+    protected $fillable = ['title', 'paragraph', 'image', 'visibility'];
 }
 

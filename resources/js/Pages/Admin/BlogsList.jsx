@@ -164,17 +164,13 @@ export default function BlogsList() {
                                 >
                                     <li className="basis-[5%]">{blog.id}</li>
                                     <li className="basis-[21%] flex gap-1 items-center">
-                                        {console.log(blog.blogImages)}
-                                        {(
-                                            blog.blog_images?.slice(0, 3) || []
-                                        ).map((img, index) => (
+                                        {blog.image && (
                                             <img
-                                                key={index}
-                                                src={`/storage/${img.url}`}
+                                                src={`/storage/${blog.image}`}
                                                 alt="blog img"
                                                 className="w-11 h-11 object-cover rounded-md"
                                             />
-                                        ))}
+                                        )}
                                     </li>
                                     <li className="basis-[30%] font-medium text-sm pr-2">
                                         {blog.title}

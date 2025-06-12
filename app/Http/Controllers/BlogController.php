@@ -6,6 +6,7 @@ use App\Models\Blog;
 use App\Models\BlogImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class BlogController extends Controller
@@ -16,8 +17,7 @@ class BlogController extends Controller
             "title" => ["required"],
             "paragraph" => ["required"],
             'visibility' => ['nullable', 'boolean'], 
-            "images" => ["nullable", "array", "max:3"],  // Validate array of images (up to 3)
-            "images.*" => ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],  // Validate individual image files
+            "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],
         ]);
     
         // Condition for failed validation
@@ -27,42 +27,35 @@ class BlogController extends Controller
             ], 422);
         }
     
+    
+        $imagePath = null;
+        if (request()->hasFile('image')) {
+            $image = request()->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('blogs', $imageName, 'public');
+        }
+
         // Store blog data
         $blog = Blog::create([
             'title' => request('title'),
             'paragraph' => request('paragraph'),
             'visibility' => request('visibility'),
+            'image' => $imagePath,
         ]);
     
-        // Store images if they exist
-        $imagePaths = [];
-        if (request()->hasFile('images')) {
-            foreach (request()->file('images') as $image) {
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $imagePath = $image->storeAs('blogs', $imageName, 'public');
-                $imagePaths[] = $imagePath;  // Store the image paths in an array
-            }
-        }
-    
-        // Store image paths in the blog_images table (if any images were uploaded)
-        foreach ($imagePaths as $path) {
-            BlogImage::create([
-                'blog_id' => $blog->id,
-                'url' => $path,
-            ]);
-        }
     
         // Return response
         return response()->json([
             'message' => 'Blog created successfully.',
             'blog' => $blog,
-            'image_urls' => array_map(fn($path) => asset('storage/' . $path), $imagePaths)
+            'image_url' => $imagePath ? asset('storage/' . $imagePath) : null
+
         ]);
     }
     
     public function index(){
         // take data from backend database
-        $blogs = Blog::with('blogImages')->latest()->get();
+        $blogs = Blog::latest()->get();
 
         // send data to frontend
         return response()->json([
@@ -71,7 +64,7 @@ class BlogController extends Controller
     }
 
     public function show($id){
-        $blog = Blog::with('blogImages')->findOrFail($id); // Find blog by ID
+        $blog = Blog::findOrFail($id); // Find blog by ID
 
         // Check if blog exists
         if ($blog) {
@@ -87,8 +80,7 @@ class BlogController extends Controller
             "title" => ["required"],
             "paragraph" => ["required"],
             'visibility' => ['nullable', 'boolean'], 
-            "images" => ["nullable", "array", "max:3"],  // Validate array of images (up to 3)
-            "images.*" => ["image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],  // Validate 
+            "image" => ["nullable", "image", "mimes:jpeg,png,jpg,gif,svg", "max:2048"],
         ]);
 
         // condition for failed validation
@@ -98,37 +90,31 @@ class BlogController extends Controller
             ], 422);
         }
 
+        // Store new images if they exist
+        $imagePath = $blog->image;
+
+        if (request()->hasFile('image')) {
+            // Optional: delete old image
+            if ($imagePath && Storage::disk('public')->exists($imagePath)) {
+                Storage::disk('public')->delete($imagePath);
+            }
+
+            $image = request()->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $imagePath = $image->storeAs('blogs', $imageName, 'public');
+        }
+
         $blog->update([
             'title' => request('title'),
             'paragraph' => request('paragraph'),
             'visibility' => request('visibility'),
+            'image' => $imagePath,
         ]);
 
-        // Store new images if they exist
-        $imagePaths = [];
-        if (request()->hasFile('images')) {
-            // Delete existing images from the blog_images table if needed (optional step)
-            BlogImage::where('blog_id', $blog->id)->delete();  // Deletes previous images associated with this blog (optional step)
-
-            // Store new images
-            foreach (request()->file('images') as $image) {
-                $imageName = time() . '_' . $image->getClientOriginalName();
-                $imagePath = $image->storeAs('blogs', $imageName, 'public');
-                $imagePaths[] = $imagePath;  // Collect image paths
-            }
-
-            // Store image paths in the blog_images table
-            foreach ($imagePaths as $path) {
-                BlogImage::create([
-                    'blog_id' => $blog->id,
-                    'url' => $path,
-                ]);
-            }
-        }
         return response()->json([
             'message' => 'Blog updated successfully.',
             'blog' => $blog,
-            'image_urls' => array_map(fn($path) => asset('storage/' . $path), $imagePaths)  // Return image URLs
+            'image_url' => $imagePath ? asset('storage/' . $imagePath) : null
         ]);
     }
 

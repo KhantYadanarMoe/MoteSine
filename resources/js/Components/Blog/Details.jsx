@@ -36,27 +36,6 @@ export default function Details() {
 
     console.log(blog);
 
-    // Utility to strip HTML tags and split into chunks by word count
-    const splitTextByWords = (html, chunks) => {
-        // Remove HTML tags (simple way)
-        const text = html.replace(/<[^>]+>/g, "");
-        const words = text.split(/\s+/);
-
-        let result = [];
-        let start = 0;
-
-        for (let chunkWords of chunks) {
-            const end = start + chunkWords;
-            result.push(words.slice(start, end).join(" "));
-            start = end;
-        }
-
-        return result;
-    };
-
-    const chunks = [50, 150, 300]; // words count for each <p>
-    const paragraphs = splitTextByWords(blog?.paragraph || "", chunks);
-
     return (
         <motion.div
             initial={{ y: -100, opacity: 0 }}
@@ -78,42 +57,18 @@ export default function Details() {
                 <h1 className="text-xl md:text-3xl lg:text-4xl font-medium my-3 text-center">
                     {blog?.title}
                 </h1>
-                <p className="text-gray-800 mb-4 text-sm md:text-base">
-                    {paragraphs[0]}
-                </p>
+                <div
+                    className="rich-text-content"
+                    dangerouslySetInnerHTML={{ __html: blog?.paragraph }}
+                />
 
-                {blog?.blog_images?.length > 0 && (
+                {blog?.image?.length > 0 && (
                     <img
-                        src={`/storage/${blog.blog_images[0].url}`}
+                        src={`/storage/${blog.image}`}
                         alt="Main blog image"
                         className="w-full h-60 md:h-80 object-cover rounded-lg my-7"
                     />
                 )}
-
-                <div>
-                    <p className="text-gray-800 mb-4 text-sm md:text-base">
-                        {paragraphs[1]}
-                    </p>
-                    <div className="flex gap-2">
-                        {blog?.blog_images?.length > 0 && (
-                            <img
-                                src={`/storage/${blog.blog_images[1].url}`}
-                                alt="Main blog image"
-                                className="w-1/2 h-60 md:h-80 object-cover rounded-lg my-7"
-                            />
-                        )}
-                        {blog?.blog_images?.length > 0 && (
-                            <img
-                                src={`/storage/${blog.blog_images[2].url}`}
-                                alt="Main blog image"
-                                className="w-1/2 h-60 md:h-80 object-cover rounded-lg my-7"
-                            />
-                        )}
-                    </div>
-                    <p className="text-gray-800 mb-4 text-sm md:text-base">
-                        {paragraphs[2]}
-                    </p>
-                </div>
             </div>
         </motion.div>
     );
