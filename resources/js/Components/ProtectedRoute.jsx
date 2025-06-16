@@ -1,12 +1,13 @@
 import { useAuth } from "@/contexts/AuthContext";
 import React from "react";
 import { Navigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const ProtectedRoute = ({ children }) => {
     const { user, loading } = useAuth();
 
     if (loading) {
-        return <div className="text-black font-bold text-5xl">loading...</div>;
+        return <Loading />;
     }
     if (user) {
         return <div>{children}</div>;
