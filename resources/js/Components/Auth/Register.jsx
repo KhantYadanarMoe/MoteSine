@@ -8,6 +8,7 @@ import Google from "../../../images/Google.png";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSetting } from "@/contexts/GeneralSettingContext";
+import Loading from "../Loading";
 
 export default function Register() {
     const { form: generalForm } = useSetting();
@@ -22,6 +23,8 @@ export default function Register() {
     const navigate = useNavigate();
     const { setUser } = useAuth();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setForm((prev) => ({ ...prev, [name]: value }));
@@ -29,6 +32,7 @@ export default function Register() {
 
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
         setErrors({});
 
         try {
@@ -64,8 +68,14 @@ export default function Register() {
             } else {
                 setErrors({ general: "Registration failed. Try again." });
             }
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (isLoading) {
+        return <Loading />;
+    }
 
     return (
         <div className="block md:flex md:h-screen overflow-hidden">

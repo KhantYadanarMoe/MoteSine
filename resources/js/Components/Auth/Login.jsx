@@ -7,6 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSetting } from "@/contexts/GeneralSettingContext";
+import Loading from "../Loading";
 
 export default function Login() {
     const { form: generalForm } = useSetting();
@@ -26,9 +27,12 @@ export default function Login() {
 
     const { setUser } = useAuth();
 
+    const [isLoading, setIsLoading] = useState(false);
+
     // Handle login
     const submit = async (e) => {
         e.preventDefault();
+        setIsLoading(true);
 
         try {
             setErrors({});
@@ -65,8 +69,14 @@ export default function Login() {
             } else {
                 setErrors({ general: "Login failed. Please try again." });
             }
+        } finally {
+            setIsLoading(false);
         }
     };
+
+    if (isLoading) {
+        return <Loading />;
+    }
 
     return (
         <div className="block md:flex md:h-screen overflow-hidden">

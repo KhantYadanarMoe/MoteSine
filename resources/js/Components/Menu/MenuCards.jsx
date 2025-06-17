@@ -22,6 +22,8 @@ export default function MenuCards({ selectedCategory }) {
     let [menus, setMenus] = useState([]);
     // state for pagination
     const [currentPage, setCurrentPage] = useState(1);
+    // loading state
+    const [loading, setLoading] = useState(true);
     // search state
     const { query } = useSearch();
     // rows to show in a page
@@ -33,6 +35,7 @@ export default function MenuCards({ selectedCategory }) {
 
     // fetch data that send from backend
     const getMenus = async () => {
+        setLoading(true);
         try {
             const res = await axios.get("/api/menus");
             const data = res.data;
@@ -45,6 +48,8 @@ export default function MenuCards({ selectedCategory }) {
             setMenus(filteredMenus);
         } catch (error) {
             console.error("Error fetching menus:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -132,6 +137,25 @@ export default function MenuCards({ selectedCategory }) {
         );
     };
 
+    const SkeletonCard = () => (
+        <div className="w-[93%] lg:mx-0 mx-auto md:w-1/2 lg:w-1/3 p-1 mt-16 animate-pulse">
+            <div className="py-3 relative bg-gray-100 h-[280px] border border-gray-200 shadow rounded-lg">
+                <div className="absolute -top-10 right-0 flex justify-end">
+                    <div className="w-[140px] h-[140px] rounded-full bg-gray-200 border-4 border-white shadow-md"></div>
+                </div>
+                <div className="pt-5 px-6 space-y-3 mt-12">
+                    <div className="h-4 bg-gray-200 rounded w-2/4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-full"></div>
+                    <div className="h-3 bg-gray-200 rounded w-5/6"></div>
+                    <div className="flex justify-between items-center mt-6">
+                        <div className="h-4 w-16 bg-gray-200 rounded"></div>
+                        <div className="h-6 w-6 bg-gray-200 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -140,7 +164,11 @@ export default function MenuCards({ selectedCategory }) {
             viewport={{ once: false, amount: 0.2 }}
         >
             <div className="mt-5 flex flex-wrap">
-                {currentMenus.length > 0 ? (
+                {loading ? (
+                    Array.from({ length: 6 }).map((_, idx) => (
+                        <SkeletonCard key={idx} />
+                    ))
+                ) : currentMenus.length > 0 ? (
                     currentMenus.map((menu) => (
                         <div className="w-[93%] lg:mx-0 mx-auto md:w-1/2 lg:w-1/3 p-1 mt-16">
                             <div className="py-3 relative bg-white border h-[280px] border-gray-400 shadow-lg rounded-lg">
