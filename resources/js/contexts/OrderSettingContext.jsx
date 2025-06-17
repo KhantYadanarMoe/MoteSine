@@ -10,6 +10,7 @@ export const OrderSettingProvider = ({ children }) => {
         type: "",
         allow: true,
     });
+    const [loading, setLoading] = useState(true);
 
     const getOrderSetting = async () => {
         try {
@@ -25,6 +26,8 @@ export const OrderSettingProvider = ({ children }) => {
             }
         } catch (err) {
             console.error("Failed to fetch setting", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -33,7 +36,9 @@ export const OrderSettingProvider = ({ children }) => {
     }, []);
 
     return (
-        <SettingContext.Provider value={{ form, setForm, getOrderSetting }}>
+        <SettingContext.Provider
+            value={{ form, setForm, getOrderSetting, loading }}
+        >
             {children}
         </SettingContext.Provider>
     );

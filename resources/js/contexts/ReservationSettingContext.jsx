@@ -10,6 +10,8 @@ export const ReservationSettingProvider = ({ children }) => {
         allow: true,
     });
 
+    const [loading, setLoading] = useState(true);
+
     const getReservationSetting = async () => {
         try {
             const res = await axios.get("/api/setting/reservation");
@@ -23,6 +25,8 @@ export const ReservationSettingProvider = ({ children }) => {
             }
         } catch (err) {
             console.error("Failed to fetch setting", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -32,7 +36,7 @@ export const ReservationSettingProvider = ({ children }) => {
 
     return (
         <SettingContext.Provider
-            value={{ form, setForm, getReservationSetting }}
+            value={{ form, setForm, getReservationSetting, loading }}
         >
             {children}
         </SettingContext.Provider>

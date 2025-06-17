@@ -11,6 +11,7 @@ export const HeroSettingProvider = ({ children }) => {
     });
 
     const [images, setImages] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const getSetting = async () => {
         try {
@@ -29,6 +30,8 @@ export const HeroSettingProvider = ({ children }) => {
             }
         } catch (err) {
             console.error("Failed to fetch setting", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -38,7 +41,7 @@ export const HeroSettingProvider = ({ children }) => {
 
     return (
         <SettingContext.Provider
-            value={{ form, setForm, images, setImages, getSetting }}
+            value={{ form, setForm, images, setImages, getSetting, loading }}
         >
             {children}
         </SettingContext.Provider>

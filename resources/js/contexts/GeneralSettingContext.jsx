@@ -15,6 +15,7 @@ export const GeneralSettingProvider = ({ children }) => {
     });
 
     const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(true);
 
     const getSetting = async () => {
         try {
@@ -37,6 +38,8 @@ export const GeneralSettingProvider = ({ children }) => {
             }
         } catch (err) {
             console.error("Failed to fetch setting", err);
+        } finally {
+            setLoading(false); // <-- hide loading
         }
     };
 
@@ -46,7 +49,7 @@ export const GeneralSettingProvider = ({ children }) => {
 
     return (
         <SettingContext.Provider
-            value={{ form, setForm, image, setImage, getSetting }}
+            value={{ form, setForm, image, setImage, getSetting, loading }}
         >
             {children}
         </SettingContext.Provider>

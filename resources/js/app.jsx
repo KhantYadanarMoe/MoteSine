@@ -9,6 +9,7 @@ import { GeneralSettingProvider } from "./contexts/GeneralSettingContext";
 import { ReservationSettingProvider } from "./contexts/ReservationSettingContext";
 import { OrderSettingProvider } from "./contexts/OrderSettingContext";
 import { HeroSettingProvider } from "./contexts/HeroSettingContext";
+import AppContent from "./AppContent";
 
 export default function App() {
     return (
@@ -18,7 +19,7 @@ export default function App() {
                     <ReservationSettingProvider>
                         <OrderSettingProvider>
                             <HeroSettingProvider>
-                                <RouterProvider router={routes} />
+                                <AppContent />
                             </HeroSettingProvider>
                         </OrderSettingProvider>
                     </ReservationSettingProvider>
