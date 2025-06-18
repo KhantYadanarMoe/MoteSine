@@ -30,7 +30,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { useReservationSetting } from "@/contexts/ReservationSettingContext";
 import { Label } from "../ui/label";
 
-export default function ReservationInfo() {
+export default function ReservationInfo({ setSubmitting }) {
     const { form: generalForm } = useSetting();
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -122,6 +122,7 @@ export default function ReservationInfo() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
 
         // Don't allow submit if availability was checked and it's NOT available
         if (isAvailable === false) {
@@ -200,6 +201,8 @@ export default function ReservationInfo() {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setSubmitting(false);
         }
     };
 

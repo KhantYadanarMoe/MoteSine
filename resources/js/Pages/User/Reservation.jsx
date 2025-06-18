@@ -2,15 +2,20 @@ import ReservationHero from "@/Components/Reservation/Hero";
 import ReservationInfo from "@/Components/Reservation/ReservationInfo";
 import { useReservationSetting } from "@/contexts/ReservationSettingContext";
 import Unavailable from "../../../images/Unavailable.jpg";
+import Loading from "@/Components/Loading";
+import { useState } from "react";
 
 export default function Reservation() {
     const { form: reservationSetting } = useReservationSetting();
+    const [submitting, setSubmitting] = useState(false);
     return (
         <>
-            {reservationSetting.allow ? (
+            {submitting ? (
+                <Loading />
+            ) : reservationSetting.allow ? (
                 <>
                     <ReservationHero />
-                    <ReservationInfo />
+                    <ReservationInfo setSubmitting={setSubmitting} />
                 </>
             ) : (
                 <div className="h-[85vh] flex flex-col justify-center items-center">
