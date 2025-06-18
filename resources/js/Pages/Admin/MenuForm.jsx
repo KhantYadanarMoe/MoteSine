@@ -30,6 +30,7 @@ import {
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
 import { fromJSON } from "postcss";
+import Loading from "@/Components/Loading";
 
 export default function MenuForm() {
     // take id for edit feature
@@ -70,6 +71,9 @@ export default function MenuForm() {
 
     // Define state for categories
     const [categories, setCategories] = useState([]);
+
+    // state for loading
+    const [loading, setLoading] = useState(false);
 
     // Fetch categories data from backend
     const getCategories = async () => {
@@ -198,6 +202,7 @@ export default function MenuForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         // url and method to use in sending data using axios
         let url = isEdit ? "/api/menu/" + id : "/api/menu/create";
@@ -267,8 +272,20 @@ export default function MenuForm() {
                 setIsDialogOpen(false);
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
+                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen flex items-center justify-center pointer-events-auto">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <motion.div

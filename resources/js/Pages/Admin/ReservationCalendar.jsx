@@ -19,11 +19,14 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useReservationSetting } from "@/contexts/ReservationSettingContext";
 import Unavailable from "../../../images/Unavailable.jpg";
+import Loading from "@/Components/Loading";
 
 export default function ReservationCalendar() {
     const { form: reservationSetting } = useReservationSetting();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [reservations, setReservations] = useState([]);
+    // state for loading
+    const [loading, setLoading] = useState(false);
 
     const handleDateChange = async (date) => {
         if (!date) return;
@@ -83,6 +86,7 @@ export default function ReservationCalendar() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         // url and method to use in sending data using axios
         let url = "/reserve";
@@ -142,8 +146,20 @@ export default function ReservationCalendar() {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
+                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen flex items-center justify-center pointer-events-auto">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}

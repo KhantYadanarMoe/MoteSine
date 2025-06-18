@@ -21,6 +21,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { Label } from "@/Components/ui/label";
 import DatePicker from "@/Components/DatePicker";
 import axios from "axios";
+import Loading from "@/Components/Loading";
 
 export default function ProductForm() {
     const [image, setImage] = useState(null); //for new image upload
@@ -46,6 +47,8 @@ export default function ProductForm() {
     let { id } = useParams();
     // state to check the page is create page or edit page
     let [isEdit, setIsEdit] = useState(false);
+    // state for loading
+    const [loading, setLoading] = useState(false);
 
     // check the id is exist or not (number or undefined)
     useEffect(() => {
@@ -97,6 +100,7 @@ export default function ProductForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         // url and method to use in sending data using axios
         let url = isEdit ? "/api/product/" + id : "/api/product/create";
@@ -165,6 +169,8 @@ export default function ProductForm() {
                 setIsDialogOpen(false);
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -215,6 +221,16 @@ export default function ProductForm() {
 
         return (price - (price * promo) / 100).toFixed(2);
     };
+
+    if (loading) {
+        return (
+            <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
+                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen flex items-center justify-center pointer-events-auto">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
 
     return (
         <motion.div
