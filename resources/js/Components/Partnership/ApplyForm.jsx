@@ -24,7 +24,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 
-export default function ApplyForm() {
+export default function ApplyForm({ setSubmitting }) {
     const [position, setPosition] = useState("");
 
     // prepare state to store form data
@@ -68,6 +68,7 @@ export default function ApplyForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
 
         // url and method to use in sending data using axios
         let url = "/partnership/send";
@@ -129,6 +130,8 @@ export default function ApplyForm() {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setSubmitting(false);
         }
     };
     return (
