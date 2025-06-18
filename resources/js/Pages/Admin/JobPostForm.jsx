@@ -23,6 +23,7 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
+import Loading from "@/Components/Loading";
 
 export default function JobPostForm() {
     // take id for edit feature
@@ -72,6 +73,9 @@ export default function JobPostForm() {
     // state to store detail of the job related to ID
     let [jobDetails, setJobDetails] = useState(null);
 
+    // state for loading
+    const [loading, setLoading] = useState(false);
+
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
         let res = await fetch("http://localhost:8000/api/job/" + id);
@@ -101,6 +105,7 @@ export default function JobPostForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         // url and method to use in sending data using axios
         let url = isEdit ? "/api/job/" + id : "/api/job/create";
@@ -151,8 +156,20 @@ export default function JobPostForm() {
                 setIsDialogOpen(false);
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
+
+    if (loading) {
+        return (
+            <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
+                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen flex items-center justify-center pointer-events-auto">
+                    <Loading />
+                </div>
+            </div>
+        );
+    }
     return (
         <motion.div
             initial={{ visibility: "hidden", opacity: 0 }}

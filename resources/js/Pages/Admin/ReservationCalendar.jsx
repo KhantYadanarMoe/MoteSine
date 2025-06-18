@@ -25,7 +25,6 @@ export default function ReservationCalendar() {
     const { form: reservationSetting } = useReservationSetting();
     const [selectedDate, setSelectedDate] = useState(new Date());
     const [reservations, setReservations] = useState([]);
-    // state for loading
     const [loading, setLoading] = useState(false);
 
     const handleDateChange = async (date) => {
