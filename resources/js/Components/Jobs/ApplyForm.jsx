@@ -27,7 +27,7 @@ import { Label } from "../ui/label";
 import { useRef } from "react";
 import { useEffect } from "react";
 
-export default function JobForm() {
+export default function JobForm({ setSubmitting }) {
     const [position, setPosition] = useState("");
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -87,6 +87,7 @@ export default function JobForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
 
         // url and method to use in sending data using axios
         let url = "/jobs/apply";
@@ -141,6 +142,8 @@ export default function JobForm() {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setSubmitting(false);
         }
     };
     return (
