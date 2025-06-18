@@ -24,6 +24,7 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
+import Loading from "@/Components/Loading";
 
 export default function Checkout() {
     const { form: orderSetting } = useOrderSetting();
@@ -47,6 +48,8 @@ export default function Checkout() {
     // prepare to move another route/page after sending data
     const navigate = useNavigate();
     const [stockErrorMessage, setStockErrorMessage] = useState("");
+    // state for loading
+    const [submitLoading, setSubmitLoading] = useState(false);
 
     // Handle HTML inputs
     const handleInputChange = (e) => {
@@ -67,6 +70,7 @@ export default function Checkout() {
 
     const submit = async (e) => {
         e?.preventDefault();
+        setSubmitLoading(true);
 
         const formData = new FormData();
 
@@ -151,6 +155,8 @@ export default function Checkout() {
             ) {
                 setStockErrorMessage(error.response.data.message);
             }
+        } finally {
+            setSubmitLoading(false);
         }
     };
 
@@ -172,6 +178,10 @@ export default function Checkout() {
             submit();
         }
     };
+
+    if (submitLoading) {
+        return <Loading />;
+    }
 
     return (
         <div className="px-4 md:px-6 py-7 bg-lightBackground lg:flex gap-5">
