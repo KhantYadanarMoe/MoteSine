@@ -17,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useReservationSetting } from "@/contexts/ReservationSettingContext";
 
-export default function ReservationSetting() {
+export default function ReservationSetting({ setLoading }) {
     const { form, setForm, getReservationSetting } = useReservationSetting();
     // store errors state
     const [errors, setErrors] = useState({});
@@ -45,6 +45,7 @@ export default function ReservationSetting() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         let formData = new FormData();
 
@@ -74,6 +75,8 @@ export default function ReservationSetting() {
             if (error.response?.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
 

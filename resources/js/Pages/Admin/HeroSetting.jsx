@@ -7,7 +7,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-export default function HeroSetting() {
+export default function HeroSetting({ setLoading }) {
     const { form, setForm, images, setImages, getSetting } = useSetting();
     // store errors state
     const [errors, setErrors] = useState({});
@@ -36,6 +36,7 @@ export default function HeroSetting() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         let formData = new FormData();
 
@@ -66,6 +67,8 @@ export default function HeroSetting() {
             if (error.response?.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
 

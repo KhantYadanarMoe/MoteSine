@@ -17,9 +17,18 @@ import GeneralSetting from "./GeneralSetting";
 import ReservationSetting from "./ReservationSetting";
 import OrderSetting from "./OrderSetting";
 import HeroSetting from "./HeroSetting";
+import { useState } from "react";
+import Loading from "@/Components/Loading";
 
 export default function Setting() {
-    return (
+    const [loading, setLoading] = useState(false);
+    return loading ? (
+        <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
+            <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen flex items-center justify-center pointer-events-auto">
+                <Loading />
+            </div>
+        </div>
+    ) : (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
             whileInView={{ x: 0, opacity: 1 }}
@@ -27,10 +36,10 @@ export default function Setting() {
             viewport={{ once: false, amount: 0.2 }}
             className="mx-2 md:mx-4 my-8"
         >
-            <GeneralSetting />
-            <OrderSetting />
-            <ReservationSetting />
-            <HeroSetting />
+            <GeneralSetting setLoading={setLoading} />
+            <OrderSetting setLoading={setLoading} />
+            <ReservationSetting setLoading={setLoading} />
+            <HeroSetting setLoading={setLoading} />
         </motion.div>
     );
 }

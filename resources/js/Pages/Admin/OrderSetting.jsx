@@ -15,7 +15,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useOrderSetting } from "@/contexts/OrderSettingContext";
 
-export default function OrderSetting() {
+export default function OrderSetting({ setLoading }) {
     const { form, setForm } = useOrderSetting();
     // store errors state
     const [errors, setErrors] = useState({});
@@ -43,6 +43,7 @@ export default function OrderSetting() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         let formData = new FormData();
 
@@ -71,6 +72,8 @@ export default function OrderSetting() {
             if (error.response?.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
     return (

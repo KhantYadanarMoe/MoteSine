@@ -9,7 +9,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 
-export default function GeneralSetting() {
+export default function GeneralSetting({ setLoading }) {
     const { form, setForm, image, setImage, getSetting } = useSetting();
     // store errors state
     const [errors, setErrors] = useState({});
@@ -45,6 +45,7 @@ export default function GeneralSetting() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
         let formData = new FormData();
 
@@ -79,6 +80,8 @@ export default function GeneralSetting() {
             if (error.response?.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setLoading(false);
         }
     };
 
