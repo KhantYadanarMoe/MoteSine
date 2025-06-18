@@ -22,7 +22,7 @@ import { useSetting } from "@/contexts/GeneralSettingContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useEffect } from "react";
 
-export default function ContactForm() {
+export default function ContactForm({ setSubmitting }) {
     const { form: generalForm } = useSetting();
     // prepare state to store form data
     const [form, setForm] = useState({
@@ -62,6 +62,7 @@ export default function ContactForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
 
         // url and method to use in sending data using axios
         let url = "/contact/send";
@@ -111,6 +112,8 @@ export default function ContactForm() {
             if (error.response && error.response.status === 422) {
                 setErrors(error.response.data.errors);
             }
+        } finally {
+            setSubmitting(false);
         }
     };
     return (
