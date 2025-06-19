@@ -116,6 +116,7 @@ export default function BlogForm() {
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        setIsDialogOpen(false);
         setLoading(true);
 
         // url and method to use in sending data using axios
@@ -178,7 +179,7 @@ export default function BlogForm() {
     if (loading) {
         return (
             <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
-                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 bg-white min-h-screen flex items-center justify-center pointer-events-auto">
+                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 h-[83vh] flex items-center justify-center pointer-events-auto">
                     <Loading />
                 </div>
             </div>
