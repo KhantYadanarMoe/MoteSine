@@ -38,14 +38,18 @@ export default function HeroSetting({ setLoading }) {
         e.preventDefault();
         setLoading(true);
 
-        let formData = new FormData();
+        const formData = new FormData();
 
         formData.append("header", form.header);
         formData.append("body", form.body);
 
-        images.forEach((img, index) => {
-            formData.append(`heroImg[]`, img); // use array format
-        });
+        if (Array.isArray(images) && images.length > 0) {
+            images.forEach((img) => {
+                formData.append("heroImg[]", img);
+            });
+        } else if (form.heroImg) {
+            formData.append("existingHeroImg", JSON.stringify(form.heroImg));
+        }
 
         try {
             const csrfToken = document
