@@ -119,9 +119,24 @@ export default function ReservationInfo({ setSubmitting }) {
         }
     };
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.firstName.trim())
+            newErrors.firstName = ["First name is required."];
+        if (!form.lastName.trim())
+            newErrors.lastName = ["Last name is required."];
+        if (!form.email.trim()) newErrors.email = ["Email is required."];
+        if (!form.phone.trim()) newErrors.phone = ["Phone is required."];
+        if (!form.message.trim()) newErrors.message = ["Message is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         setSubmitting(true);
 
         // Don't allow submit if availability was checked and it's NOT available
@@ -366,6 +381,11 @@ export default function ReservationInfo({ setSubmitting }) {
                                     placeholder="Enter your first name"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.firstName && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.firstName[0]}
+                                    </p>
+                                )}
                             </div>
                             <div className="md:w-1/2 mb-5">
                                 <Label htmlFor="lastName">Last Name</Label>
@@ -378,6 +398,11 @@ export default function ReservationInfo({ setSubmitting }) {
                                     placeholder="Enter your last name"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.lastName && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.lastName[0]}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <div className="md:flex gap-4">
@@ -392,6 +417,11 @@ export default function ReservationInfo({ setSubmitting }) {
                                     placeholder="Enter your email"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.email && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.email[0]}
+                                    </p>
+                                )}
                             </div>
                             <div className="md:w-1/2 mb-5">
                                 <Label htmlFor="phone">Phone</Label>
@@ -404,6 +434,11 @@ export default function ReservationInfo({ setSubmitting }) {
                                     placeholder="Enter your phone"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.phone && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.phone[0]}
+                                    </p>
+                                )}
                             </div>
                         </div>
                         <div className="mb-5">
@@ -417,6 +452,11 @@ export default function ReservationInfo({ setSubmitting }) {
                                 placeholder="Enter your message"
                                 className="mt-1 border-gray-500"
                             ></Textarea>
+                            {errors.message && (
+                                <p className="text-red-500 mt-1 text-sm">
+                                    {errors.message[0]}
+                                </p>
+                            )}
                         </div>
                         <div className="flex justify-end mt-4">
                             <Button

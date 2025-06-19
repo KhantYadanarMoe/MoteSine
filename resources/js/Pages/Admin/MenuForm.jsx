@@ -281,10 +281,10 @@ export default function MenuForm() {
     if (loading) {
         return (
             <div className="absolute top-0 left-0 w-full h-full z-50 pointer-events-none">
-                            <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 h-[83vh] flex items-center justify-center pointer-events-auto">
-                                <Loading />
-                            </div>
-                        </div>
+                <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20 h-[83vh] flex items-center justify-center pointer-events-auto">
+                    <Loading />
+                </div>
+            </div>
         );
     }
 

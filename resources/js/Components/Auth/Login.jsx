@@ -29,9 +29,20 @@ export default function Login() {
 
     const [isLoading, setIsLoading] = useState(false);
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.email.trim()) newErrors.email = ["Email is required."];
+        if (!form.password.trim())
+            newErrors.password = ["Password is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // Handle login
     const submit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         setIsLoading(true);
 
         try {

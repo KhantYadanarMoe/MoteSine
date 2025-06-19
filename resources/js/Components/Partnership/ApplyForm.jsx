@@ -65,9 +65,25 @@ export default function ApplyForm({ setSubmitting }) {
 
     const certificateRef = useRef();
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.businessName.trim())
+            newErrors.businessName = ["Business name is required."];
+        if (!form.businessAddress.trim())
+            newErrors.businessAddress = ["Business address is required."];
+        if (!form.name.trim()) newErrors.name = ["Name is required."];
+        if (!form.email.trim()) newErrors.email = ["Email is required."];
+        if (!form.phone.trim()) newErrors.phone = ["Phone is required."];
+        if (!form.type.trim()) newErrors.type = ["Type is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         setSubmitting(true);
 
         // url and method to use in sending data using axios

@@ -191,6 +191,11 @@ export default function ReservationCalendar() {
                                         placeholder="Enter customer's first name"
                                         className="mt-1 border-gray-500"
                                     />
+                                    {errors.firstName && (
+                                        <p className="text-red-500 mt-1 text-sm">
+                                            {errors.firstName}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="my-2 md:w-1/2">
                                     <Label htmlFor="lastName">Last Name</Label>
@@ -203,6 +208,11 @@ export default function ReservationCalendar() {
                                         placeholder="Enter customer's last name"
                                         className="mt-1 border-gray-500"
                                     />
+                                    {errors.lastName && (
+                                        <p className="text-red-500 mt-1 text-sm">
+                                            {errors.lastName}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <div className="my-2">
@@ -244,6 +254,11 @@ export default function ReservationCalendar() {
                                         </ScrollArea>
                                     </PopoverContent>
                                 </Popover>
+                                {errors.guest && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.guest}
+                                    </p>
+                                )}
                             </div>
                             <div className="md:flex gap-3">
                                 <div className="my-2 md:w-1/2">
@@ -256,6 +271,11 @@ export default function ReservationCalendar() {
                                             handleCustomChange("date", date)
                                         }
                                     />
+                                    {errors.date && (
+                                        <p className="text-red-500 mt-1 text-sm">
+                                            {errors.date}
+                                        </p>
+                                    )}
                                 </div>
                                 <div className="my-2 md:w-1/2">
                                     <Label htmlFor="time">Time</Label>
@@ -269,6 +289,11 @@ export default function ReservationCalendar() {
                                             handleCustomChange("time", time)
                                         }
                                     />
+                                    {errors.time && (
+                                        <p className="text-red-500 mt-1 text-sm">
+                                            {errors.time}
+                                        </p>
+                                    )}
                                 </div>
                             </div>
                             <div className="my-2">
@@ -282,6 +307,11 @@ export default function ReservationCalendar() {
                                     placeholder="Enter customer's email"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.email && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.email}
+                                    </p>
+                                )}
                             </div>
                             <div className="my-2">
                                 <Label htmlFor="phone">Phone</Label>
@@ -294,6 +324,11 @@ export default function ReservationCalendar() {
                                     placeholder="Enter customer's phone"
                                     className="mt-1 border-gray-500"
                                 />
+                                {errors.phone && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.phone}
+                                    </p>
+                                )}
                             </div>
                             <div className="my-2">
                                 <Label htmlFor="message">Message</Label>
@@ -306,6 +341,11 @@ export default function ReservationCalendar() {
                                     placeholder="Enter customer's message"
                                     className="mt-1 border-gray-500"
                                 ></Textarea>
+                                {errors.message && (
+                                    <p className="text-red-500 mt-1 text-sm">
+                                        {errors.message}
+                                    </p>
+                                )}
                             </div>
                             <div className="flex mt-5 justify-end">
                                 <Button

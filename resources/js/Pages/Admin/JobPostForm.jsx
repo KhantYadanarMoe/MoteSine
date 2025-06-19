@@ -102,6 +102,18 @@ export default function JobPostForm() {
         }
     }, [jobDetails]);
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.title.trim()) newErrors.title = ["Title is required."];
+        if (!form.salary.trim()) newErrors.salary = ["Pay rate is required."];
+        if (!form.desc.trim())
+            newErrors.desc = ["Job description is required."];
+        if (!form.type.trim()) newErrors.type = ["Type is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();

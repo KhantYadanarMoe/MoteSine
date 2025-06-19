@@ -59,9 +59,21 @@ export default function ContactForm({ setSubmitting }) {
         }
     }, [user]);
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.name.trim()) newErrors.name = ["Name is required."];
+        if (!form.phone.trim()) newErrors.phone = ["Phone is required."];
+        if (!form.email.trim()) newErrors.email = ["Email is required."];
+        if (!form.message.trim()) newErrors.message = ["Message is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         setSubmitting(true);
 
         // url and method to use in sending data using axios

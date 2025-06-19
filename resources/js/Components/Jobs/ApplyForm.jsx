@@ -84,9 +84,25 @@ export default function JobForm({ setSubmitting }) {
 
     const resumeRef = useRef();
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.firstName.trim())
+            newErrors.firstName = ["First name is required."];
+        if (!form.lastName.trim())
+            newErrors.lastName = ["Last name is required."];
+        if (!form.email.trim()) newErrors.email = ["Email is required."];
+        if (!form.phone.trim()) newErrors.phone = ["Phone is required."];
+        if (!form.position.trim())
+            newErrors.position = ["Position is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
+        if (!validateForm()) return;
         setSubmitting(true);
 
         // url and method to use in sending data using axios

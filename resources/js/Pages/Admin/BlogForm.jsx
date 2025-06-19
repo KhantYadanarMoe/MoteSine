@@ -113,10 +113,21 @@ export default function BlogForm() {
         }
     }, [blogDetail]);
 
+    const validateForm = () => {
+        const newErrors = {};
+        if (!form.title.trim()) newErrors.title = ["Title is required."];
+        if (!form.paragraph.trim())
+            newErrors.paragraph = ["Paragraph is required."];
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
     // form submit function
     const submit = async (e) => {
         e.preventDefault();
         setIsDialogOpen(false);
+        if (!validateForm()) return;
         setLoading(true);
 
         // url and method to use in sending data using axios
