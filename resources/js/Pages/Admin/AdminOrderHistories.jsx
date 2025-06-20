@@ -212,7 +212,7 @@ export default function AdminOrderHistories() {
                             <OrderItemSkeleton key={i} />
                         ))
                     ) : orders.length === 0 ? (
-                        <div className="text-center font-medium text-accentRed flex flex-col items-center justify-center h-[80vh]">
+                        <div className="absolute inset-0 z-10  bg-lightBackground flex flex-col items-center justify-center text-center font-medium text-accentRed h-full">
                             <img
                                 src={Empty}
                                 alt="No data"
