@@ -6,12 +6,14 @@ import axios from "axios";
 import { useEffect } from "react";
 
 export default function Career() {
-    const [loading, setLoading] = useState(true);
     // state to store jobs
     let [jobs, setJobs] = useState([]);
+    // state for loading
+    let [loading, setLoading] = useState(false);
 
     // fetch data that send from backend
     let getJobs = async () => {
+        setLoading(true);
         try {
             let res = await axios.get("/api/jobs");
             let data = res.data;
@@ -27,6 +29,26 @@ export default function Career() {
     useEffect(() => {
         getJobs();
     }, []);
+
+    const JobSkeleton = () => (
+        <div>
+            <hr className="border-t-gray-400" />
+            <div className="px-2 py-2 flex justify-between items-center animate-pulse">
+                <div className="w-[35%] md:w-[55%]">
+                    <div className="h-5 bg-gray-300 rounded mb-2 w-3/4"></div>
+                    <div className="hidden md:block h-4 bg-gray-300 rounded w-full max-w-[200px]"></div>
+                </div>
+                <div className="w-[50%] md:w-[35%] px-5">
+                    <div className="h-5 bg-gray-300 rounded mb-2 w-1/2"></div>
+                    <div className="h-4 bg-gray-300 rounded w-1/3"></div>
+                </div>
+                <div className="w-[15%] md:w-[10%] flex justify-center">
+                    <div className="h-7 w-7 bg-gray-300 rounded"></div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <motion.div
             initial={{ y: -100, opacity: 0 }}
@@ -49,38 +71,44 @@ export default function Career() {
                     </p>
                 </div>
                 <div className="my-5 md:my-8">
-                    {jobs.map((job) => (
-                        <div>
-                            <hr className="border-t-gray-400" />
-                            <div className="px-2 py-2 flex justify-between items-center">
-                                <div className="w-[35%] md:w-[55%]">
-                                    <h1 className="font-medium">{job.title}</h1>
-                                    <p className="text-gray-800 text-sm hidden md:block">
-                                        {job.desc}
-                                    </p>
-                                </div>
-                                <div className="w-[50%] md:w-[35%] px-5">
-                                    <p className="text-gray-900 text-sm md:text-base">
-                                        ${parseInt(job.salary)} Per Hour
-                                    </p>
-                                    <p className="text-gray-800 text-sm md:text-base">
-                                        {job.type}
-                                    </p>
-                                </div>
-                                <div className="w-[15%] md:w-[10%]">
-                                    <Link
-                                        to="Form"
-                                        smooth={true}
-                                        duration={500}
-                                        offset={-70}
-                                        className="cursor-pointer"
-                                    >
-                                        <ArrowDownRight size={28} />
-                                    </Link>
-                                </div>
-                            </div>
-                        </div>
-                    ))}
+                    {loading
+                        ? Array.from({ length: 4 }).map((_, idx) => (
+                              <JobSkeleton key={idx} />
+                          ))
+                        : jobs.map((job) => (
+                              <div>
+                                  <hr className="border-t-gray-400" />
+                                  <div className="px-2 py-2 flex justify-between items-center">
+                                      <div className="w-[35%] md:w-[55%]">
+                                          <h1 className="font-medium">
+                                              {job.title}
+                                          </h1>
+                                          <p className="text-gray-800 text-sm hidden md:block">
+                                              {job.desc}
+                                          </p>
+                                      </div>
+                                      <div className="w-[50%] md:w-[35%] px-5">
+                                          <p className="text-gray-900 text-sm md:text-base">
+                                              ${parseInt(job.salary)} Per Hour
+                                          </p>
+                                          <p className="text-gray-800 text-sm md:text-base">
+                                              {job.type}
+                                          </p>
+                                      </div>
+                                      <div className="w-[15%] md:w-[10%]">
+                                          <Link
+                                              to="Form"
+                                              smooth={true}
+                                              duration={500}
+                                              offset={-70}
+                                              className="cursor-pointer"
+                                          >
+                                              <ArrowDownRight size={28} />
+                                          </Link>
+                                      </div>
+                                  </div>
+                              </div>
+                          ))}
                 </div>
             </div>
         </motion.div>
