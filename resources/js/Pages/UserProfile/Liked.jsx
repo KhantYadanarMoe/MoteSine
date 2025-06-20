@@ -27,7 +27,11 @@ export default function Liked() {
     const [openOutOfStock, setOpenOutOfStock] = useState(false);
     const [outOfStockProduct, setOutOfStockProduct] = useState(null);
 
+    // state for loading
+    const [loading, setLoading] = useState(false);
+
     const getWishlistItems = async () => {
+        setLoading(true);
         try {
             const [wishlistRes, menusRes] = await Promise.all([
                 axios.get(`/api/wishlist?filter=${filter}`),
@@ -57,6 +61,8 @@ export default function Liked() {
             setWishlistItems(filteredWishlist);
         } catch (error) {
             console.error("Failed to fetch wishlist items:", error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -95,6 +101,57 @@ export default function Liked() {
             ? item.product?.name?.toLowerCase().includes(query.toLowerCase())
             : false
     );
+
+    const MenuSkeleton = () => {
+        return (
+            <div className="w-full flex md:mx-0 mx-auto p-1 mt-10">
+                <div className="w-full relative py-3 bg-white border h-[270px] border-gray-400 shadow-lg rounded-lg animate-pulse">
+                    <div className="absolute -top-10 mr-3 right-0 flex justify-end">
+                        <div className="w-44 md:w-40 xl:w-36 h-36 mx-auto my-3 rounded-full bg-gray-300" />
+                    </div>
+                    <div className="pt-5 px-6 space-y-3">
+                        <div className="flex items-center justify-between mb-16">
+                            <div className="flex gap-4">
+                                <div className="w-5 h-5 bg-gray-300 rounded-full" />
+                                <div className="w-12 h-5 bg-gray-300 rounded-md" />
+                            </div>
+                        </div>
+                        <div className="mt-7 md:mt-12 h-4 w-1/3 bg-gray-300 rounded-md" />
+                        <div className="h-3 bg-gray-200 rounded-md w-full" />
+                        <div className="h-3 bg-gray-200 rounded-md w-5/6" />
+                        <div className="flex items-center justify-between mt-4 md:mt-6">
+                            <div className="w-20 h-5 bg-gray-300 rounded-md" />
+                            <div className="w-6 h-6 bg-gray-300 rounded-full" />
+                        </div>
+                        <div className="h-3 w-32 bg-gray-200 rounded" />
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
+    const ProductSkeleton = () => {
+        return (
+            <div className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl w-full md:mx-0 mx-auto p-1 mt-10 animate-pulse">
+                <div className="flex justify-between">
+                    <div className="w-4 h-4 bg-gray-300 rounded-full" />
+                    <div className="w-12 h-4 bg-gray-300 rounded-md" />
+                </div>
+                <div className="w-44 md:w-40 xl:w-36 h-52 md:h-48 xl:h-40 bg-gray-300 mx-auto my-3 rounded-md" />
+                <div className="flex justify-between items-center my-3">
+                    <div className="space-y-2">
+                        <div className="h-4 w-28 bg-gray-300 rounded-md" />
+                        <div className="h-4 w-20 bg-gray-300 rounded-md" />
+                    </div>
+                    <div className="flex flex-col items-end gap-2">
+                        <div className="h-5 w-24 bg-gray-200 rounded-full" />
+                        <div className="w-8 h-8 bg-gray-300 rounded-full" />
+                    </div>
+                </div>
+                <div className="h-3 w-32 bg-gray-200 rounded" />
+            </div>
+        );
+    };
 
     return (
         <motion.div
@@ -145,8 +202,20 @@ export default function Liked() {
                 </li>
             </ul>
 
-            <div className="md:flex flex-wrap gap-3 block justify-center">
-                {filteredFavorites.length === 0 ? (
+            <div
+                className={`grid gap-4 px-2 md:px-0 ${
+                    filteredFavorites.some((i) => filter === "menu")
+                        ? "grid-cols-1 sm:grid-cols-2"
+                        : "grid-cols-1 sm:grid-cols-2 md:grid-cols-3"
+                }`}
+            >
+                {loading ? (
+                    filter === "menu" ? (
+                        [...Array(2)].map((_, i) => <MenuSkeleton key={i} />)
+                    ) : (
+                        [...Array(3)].map((_, i) => <ProductSkeleton key={i} />)
+                    )
+                ) : filteredFavorites.length === 0 ? (
                     <p className="h-[50vh] text-xl text-accentRed font-medium flex items-center justify-center mx-auto">
                         Your wishlist is empty.
                     </p>
@@ -155,7 +224,7 @@ export default function Liked() {
                         item.item_type === "menu" ? (
                             <div
                                 key={item.id}
-                                className="md:w-1/2 w-[99%] md:mx-0 mx-auto p-1 mt-10"
+                                className="w-full flex md:mx-0 mx-auto p-1 mt-10"
                             >
                                 <div className="relative py-3 bg-white border h-[270px] border-gray-400 shadow-lg rounded-lg">
                                     <div className="absolute -top-10 mr-3 right-0 flex justify-end">
@@ -280,7 +349,7 @@ export default function Liked() {
                         ) : (
                             <div
                                 key={item.id}
-                                className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl md:w-[45%] w-[99%] md:mx-0 mx-auto p-1 mt-10"
+                                className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl w-full md:mx-0 mx-auto p-1 mt-10"
                             >
                                 <div className="flex justify-between">
                                     <button
