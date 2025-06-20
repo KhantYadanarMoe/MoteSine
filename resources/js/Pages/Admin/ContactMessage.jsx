@@ -12,14 +12,18 @@ export default function ContactMessage() {
     const { id } = useParams();
     const [contact, setContact] = useState(null);
     const [showReply, setShowReply] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     let getDetails = async (id) => {
+        setLoading(true);
         try {
             let res = await axios.get("/api/contacts/" + id);
             let data = res.data;
             setContact(data.contact);
         } catch (err) {
             console.error("Error fetching contact:", err);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -62,6 +66,36 @@ export default function ContactMessage() {
             console.error("Failed to send reply:", err);
         }
     };
+
+    const ContactSkeleton = () => (
+        <>
+            <div className="flex items-center gap-1 animate-pulse">
+                <div className="h-3 w-24 bg-gray-300 rounded" />
+                <div className="h-3 w-32 bg-gray-300 rounded" />
+            </div>
+            <div className="mt-4 bg-white border-l-2 border-l-gray-300 px-3 py-4 rounded-md shadow-md animate-pulse">
+                <div className="flex items-center justify-between">
+                    <div className="flex gap-3 items-center">
+                        <div className="h-3 w-24 bg-gray-300 rounded" />
+                        <div className="h-3 w-3 bg-gray-300 rounded-full" />
+                    </div>
+                    <div className="h-3 w-16 bg-gray-300 rounded" />
+                </div>
+                <div className="text-sm flex items-center gap-1 mt-1">
+                    <div className="h-2 w-32 bg-gray-300 rounded" />
+                    <div className="h-2 w-20 bg-gray-300 rounded hidden md:block" />
+                </div>
+                <hr className="my-3 border-l-gray-300" />
+                <div className="h-3 w-full bg-gray-300 rounded mb-2" />
+                <div className="h-3 w-3/4 bg-gray-300 rounded mb-2" />
+                <div className="h-3 w-2/3 bg-gray-300 rounded" />
+                <div className="flex gap-2 justify-end mt-6">
+                    <div className="h-7 w-20 bg-gray-300 rounded" />
+                    <div className="h-7 w-20 bg-gray-300 rounded" />
+                </div>
+            </div>
+        </>
+    );
 
     return (
         <motion.div
@@ -134,7 +168,7 @@ export default function ContactMessage() {
                     </div>
                 </>
             ) : (
-                <p className="text-center text-accentRed">Loading contact...</p>
+                <ContactSkeleton />
             )}
             {showReply && (
                 <div className="mt-4 bg-white border-l-2 border-l-accentRed px-3 md:px-4 py-4 md:py-8 rounded-md shadow-md">
