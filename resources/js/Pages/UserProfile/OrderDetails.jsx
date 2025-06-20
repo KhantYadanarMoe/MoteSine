@@ -12,15 +12,24 @@ export default function OrderDetails() {
     const { form } = useSetting();
     // take id for edit feature
     let { id } = useParams();
+    // state for loading
+    const [loading, setLoading] = useState(false);
 
     const [orderDetails, setOrderDetails] = useState(null);
 
     console.log("Scheduled time:", orderDetails?.time);
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
-        let res = await fetch("http://localhost:8000/api/order/" + id);
-        let data = await res.json();
-        setOrderDetails(data.order);
+        setLoading(true);
+        try {
+            let res = await fetch("http://localhost:8000/api/order/" + id);
+            let data = await res.json();
+            setOrderDetails(data.order);
+        } catch (error) {
+            console.error("Failed to fetch orders:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // call data fetching function depend on id changes
@@ -31,6 +40,130 @@ export default function OrderDetails() {
     const subtotal = orderDetails?.items?.reduce((acc, item) => {
         return acc + item.quantity * parseFloat(item.price);
     }, 0);
+
+    const OrderDetailsSkeleton = () => (
+        <div className="md:flex gap-3 animate-pulse px-5 py-5">
+            <div className="md:w-3/5 space-y-6">
+                <div className="h-5 w-48 bg-gray-300 rounded"></div>
+
+                <ul className="flex justify-between border-t-2 border-t-accentRed py-5 px-3 shadow-md">
+                    <li className="basis-[53%] md:basis-[45%] ml-4 text-sm bg-gray-300 rounded h-3"></li>
+                    <li className="basis-[15%] md:basis-[12%] ml-4 text-sm bg-gray-300 rounded h-3"></li>
+                    <li className="md:basis-[18%] hidden md:block ml-4 text-sm bg-gray-300 rounded h-3"></li>
+                    <li className="basis-[32%] md:basis-[25%] ml-4 text-sm bg-gray-300 rounded h-3"></li>
+                </ul>
+
+                {Array(2)
+                    .fill(null)
+                    .map((_, idx) => (
+                        <ul
+                            key={idx}
+                            className="flex items-center justify-between mt-2 py-3 px-3 shadow-md"
+                        >
+                            <li className="basis-[53%] md:basis-[45%] ml-1 text-sm flex gap-1 items-center">
+                                <div className="w-12 h-12 bg-gray-300 rounded-full"></div>
+                                <div className="h-3 w-32 bg-gray-300 rounded"></div>
+                            </li>
+                            <li className="basis-[15%] md:basis-[12%] ml-1 text-sm bg-gray-300 rounded h-3"></li>
+                            <li className="md:basis-[18%] hidden md:block ml-1 text-sm bg-gray-300 rounded h-3"></li>
+                            <li className="basis-[32%] md:basis-[25%] ml-1 text-sm bg-gray-300 rounded h-3"></li>
+                        </ul>
+                    ))}
+
+                <div className="flex items-center justify-between mt-2 py-3 px-3">
+                    <div className="h-3 w-24 bg-gray-300 rounded"></div>
+                    <div className="h-3 w-16 bg-gray-300 rounded"></div>
+                </div>
+
+                <div className="py-5 px-3 shadow-md rounded-md space-y-4">
+                    {Array(3)
+                        .fill(null)
+                        .map((_, idx) => (
+                            <div
+                                key={idx}
+                                className="flex justify-between mb-3"
+                            >
+                                <div className="h-2 w-32 bg-gray-300 rounded"></div>
+                                <div className="h-2 w-48 bg-gray-300 rounded"></div>
+                            </div>
+                        ))}
+                </div>
+
+                <div className="my-5 px-3 py-4 border-t-2 border-t-accentRed bg-white shadow-lg rounded-md space-y-4">
+                    <div className="h-6 w-48 bg-gray-300 rounded"></div>
+                    <div className="py-5 space-y-3">
+                        {Array(3)
+                            .fill(null)
+                            .map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className="flex justify-between mb-3"
+                                    style={{ minHeight: "20px" }}
+                                >
+                                    <div className="h-2 w-36 bg-gray-300 rounded"></div>
+                                    <div className="h-2 w-28 bg-gray-300 rounded"></div>
+                                </div>
+                            ))}
+                    </div>
+                </div>
+            </div>
+
+            <div className="md:w-2/5 space-y-4">
+                <div className="w-24 h-24 bg-gray-300 rounded-full mx-auto md:mx-0"></div>
+                <div className="h-4 w-full bg-gray-300 rounded"></div>
+                <div className="py-3 px-3 shadow-md rounded-md space-y-4">
+                    <div className="flex justify-between mb-5">
+                        <div className="h-3 w-40 bg-gray-300 rounded"></div>
+                        <div className="h-3 w-20 bg-gray-300 rounded"></div>
+                    </div>
+                    <div className="space-y-3">
+                        {Array(5)
+                            .fill(null)
+                            .map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className="flex justify-between items-center"
+                                    style={{ minHeight: "20px" }}
+                                >
+                                    <div className="h-3 w-36 bg-gray-300 rounded"></div>
+                                    <div className="h-3 w-28 bg-gray-300 rounded"></div>
+                                </div>
+                            ))}
+                    </div>
+                    <hr className="border-t-gray-400" />
+                    <div className="flex justify-between items-center my-3">
+                        <div className="h-3 w-36 bg-gray-300 rounded"></div>
+                        <div className="h-3 w-28 bg-gray-300 rounded"></div>
+                    </div>
+                </div>
+                <div className="py-5 px-3 shadow-md rounded-md border-t-2 border-t-accentRed">
+                    <div className="h-4 w-40 bg-gray-300 rounded"></div>
+                    <div className="h-12 w-full mt-2 bg-gray-300 rounded"></div>
+                </div>
+                <div className="py-3 px-3 shadow-md rounded-md border-t-2 border-t-accentRed">
+                    <div className="h-4 w-40 bg-gray-300 rounded"></div>
+                    <div className="space-y-6 mt-3">
+                        {Array(4)
+                            .fill(null)
+                            .map((_, idx) => (
+                                <div
+                                    key={idx}
+                                    className="flex items-center relative"
+                                    style={{ minHeight: "20px" }}
+                                >
+                                    <div className="w-5 h-5 rounded-full bg-gray-300 absolute z-10"></div>
+                                    <div className="h-3 w-32 bg-gray-300 rounded ml-6"></div>
+                                </div>
+                            ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
+
+    if (loading) {
+        return <OrderDetailsSkeleton />;
+    }
     return (
         <motion.div
             initial={{ x: 100, opacity: 0 }}
