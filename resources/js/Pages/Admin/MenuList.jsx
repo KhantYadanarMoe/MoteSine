@@ -35,7 +35,7 @@ import axios from "axios";
 import { useSearch } from "@/contexts/SearchContext";
 
 export default function MenuList() {
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     // state to store menus
     let [menus, setMenus] = useState([]);
     // state for pagination
@@ -46,6 +46,7 @@ export default function MenuList() {
 
     // fetch data that send from backend
     let getMenus = async () => {
+        setLoading(true);
         try {
             let res = await axios.get("/api/menus");
             let data = res.data;
@@ -101,87 +102,121 @@ export default function MenuList() {
         }
     };
 
+    const MenuSkeleton = () => (
+        <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2 animate-pulse">
+            <li className="basis-[4%]">
+                <div className="h-3 w-3 bg-gray-200 rounded"></div>
+            </li>
+            <li className="basis-[26%] flex gap-2 items-center">
+                <div className="w-12 h-12 rounded-full bg-gray-300" />
+                <div className="h-3 w-24 bg-gray-200 rounded" />
+            </li>
+            <li className="basis-[18%]">
+                <div className="h-3 w-20 bg-gray-200 rounded" />
+            </li>
+            <li className="basis-[20%]">
+                <div className="h-3 w-28 bg-gray-200 rounded capitalize" />
+            </li>
+            <li className="basis-[11%]">
+                <div className="h-3 w-10 bg-gray-200 rounded" />
+            </li>
+            <li className="basis-[8%]">
+                <div className="h-3 w-5 bg-gray-300 rounded" />
+            </li>
+            <li className="basis-[8%]">
+                <div className="h-3 w-10 bg-gray-300 rounded" />
+            </li>
+            <li className="basis-[5%]">
+                <div className="h-3 w-5 bg-gray-300 rounded" />
+            </li>
+        </ul>
+    );
+
     return (
         <div>
-            {loading ? (
-                <p className="text-center font-medium text-accentRed">
-                    Loading...
-                </p>
-            ) : menus.length === 0 ? (
-                <div className="text-center font-medium text-accentRed flex flex-col items-center justify-center h-[80vh]">
-                    <img src={Empty} alt="No data" className="mx-auto w-60" />
-                    <h2 className="text-xl font-semibold text-gray-700 mb-2">
-                        No data to show.
-                    </h2>
-                    <p className="text-gray-500 mb-4 text-sm">
-                        The table you are looking for is empty.
-                    </p>
-                    <Link
-                        to="/admin/menu/create"
-                        className="order-1 md:order-2"
-                    >
-                        <Button
-                            variant="default"
-                            className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
-                        >
-                            <Plus size={16} /> Add menu
-                        </Button>
-                    </Link>
-                </div>
-            ) : (
-                <motion.div
-                    initial={{ x: 100, opacity: 0 }}
-                    whileInView={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
-                    viewport={{ once: false, amount: 0.2 }}
-                    className="mx-2 md:mx-4 py-8"
-                >
-                    <div className="flex justify-between md:items-center">
-                        <h1 className="md:text-lg font-medium">
-                            {menus.length} Menu Items Found
-                        </h1>
-                        <div className="flex flex-col md:flex-row items-end gap-3">
-                            <div className="flex gap-2 order-2 md:order-1">
-                                <Link
-                                    to="/admin/menu"
-                                    className="px-1 py-1 border border-accentRed text-accentRed rounded-sm hover:bg-gray-100 duration-300"
-                                >
-                                    <List size={20} />
-                                </Link>
-                                <Link
-                                    to="/admin/menu/grid"
-                                    className="px-1 py-1 border border-accentRed text-accentRed rounded-sm hover:bg-gray-100 duration-300"
-                                >
-                                    <LayoutPanelLeft size={20} />
-                                </Link>
-                            </div>
-
+            <motion.div
+                initial={{ x: 100, opacity: 0 }}
+                whileInView={{ x: 0, opacity: 1 }}
+                transition={{ duration: 0.6, ease: "easeOut" }}
+                viewport={{ once: false, amount: 0.2 }}
+                className="mx-2 md:mx-4 py-8"
+            >
+                <div className="flex justify-between md:items-center">
+                    <h1 className="md:text-lg font-medium">
+                        {menus.length} Menu Items Found
+                    </h1>
+                    <div className="flex flex-col md:flex-row items-end gap-3">
+                        <div className="flex gap-2 order-2 md:order-1">
                             <Link
-                                to="/admin/menu/create"
-                                className="order-1 md:order-2"
+                                to="/admin/menu"
+                                className="px-1 py-1 border border-accentRed text-accentRed rounded-sm hover:bg-gray-100 duration-300"
                             >
-                                <Button
-                                    variant="default"
-                                    className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
-                                >
-                                    <Plus size={16} /> Add menu
-                                </Button>
+                                <List size={20} />
+                            </Link>
+                            <Link
+                                to="/admin/menu/grid"
+                                className="px-1 py-1 border border-accentRed text-accentRed rounded-sm hover:bg-gray-100 duration-300"
+                            >
+                                <LayoutPanelLeft size={20} />
                             </Link>
                         </div>
+
+                        <Link
+                            to="/admin/menu/create"
+                            className="order-1 md:order-2"
+                        >
+                            <Button
+                                variant="default"
+                                className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                            >
+                                <Plus size={16} /> Add menu
+                            </Button>
+                        </Link>
                     </div>
-                    <div className="mt-8 overflow-x-auto">
-                        <div className="min-w-[920px] lg:min-w-[880px]">
-                            <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">
-                                <li className="basis-[4%]">ID</li>
-                                <li className="basis-[26%]">Name</li>
-                                <li className="basis-[18%] pl-2">Price</li>
-                                <li className="basis-[20%]">Category</li>
-                                <li className="basis-[11%]">Promotion</li>
-                                <li className="basis-[8%]">Featured</li>
-                                <li className="basis-[8%]">Visibility</li>
-                                <li className="basis-[5%]"></li>
-                            </ul>
-                            {currentMenus.map((menu) => (
+                </div>
+                <div className="mt-8 overflow-x-auto">
+                    <div className="min-w-[920px] lg:min-w-[880px]">
+                        <ul className="flex items-center px-3 py-4 bg-accentRed text-white rounded-md shadow-md mb-4">
+                            <li className="basis-[4%]">ID</li>
+                            <li className="basis-[26%]">Name</li>
+                            <li className="basis-[18%] pl-2">Price</li>
+                            <li className="basis-[20%]">Category</li>
+                            <li className="basis-[11%]">Promotion</li>
+                            <li className="basis-[8%]">Featured</li>
+                            <li className="basis-[8%]">Visibility</li>
+                            <li className="basis-[5%]"></li>
+                        </ul>
+                        {loading ? (
+                            Array.from({ length: 5 }).map((_, index) => (
+                                <MenuSkeleton key={index} />
+                            ))
+                        ) : menus.length === 0 ? (
+                            <div className="text-center font-medium text-accentRed flex flex-col items-center justify-center h-[80vh]">
+                                <img
+                                    src={Empty}
+                                    alt="No data"
+                                    className="mx-auto w-60"
+                                />
+                                <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                                    No data to show.
+                                </h2>
+                                <p className="text-gray-500 mb-4 text-sm">
+                                    The table you are looking for is empty.
+                                </p>
+                                <Link
+                                    to="/admin/menu/create"
+                                    className="order-1 md:order-2"
+                                >
+                                    <Button
+                                        variant="default"
+                                        className="rounded-lg bg-accentRed text-white hover:bg-hoverRed duration-300"
+                                    >
+                                        <Plus size={16} /> Add menu
+                                    </Button>
+                                </Link>
+                            </div>
+                        ) : (
+                            currentMenus.map((menu) => (
                                 <ul
                                     key={menu.id}
                                     className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
@@ -307,70 +342,66 @@ export default function MenuList() {
                                         </DropdownMenu>
                                     </li>
                                 </ul>
-                            ))}
-                        </div>
+                            ))
+                        )}
                     </div>
-                    <div className="mt-8 flex justify-center gap-4">
-                        <Pagination className="text-accentRed">
-                            <PaginationContent>
-                                <PaginationItem>
-                                    <PaginationPrevious
-                                        onClick={() =>
-                                            handlePageChange(currentPage - 1)
-                                        }
-                                        disabled={currentPage === 1}
-                                        className={`cursor-pointer ${
-                                            currentPage === 1
-                                                ? "opacity-50 cursor-not-allowed"
-                                                : ""
-                                        }`}
-                                    />
-                                </PaginationItem>
-                                {Array.from(
-                                    {
-                                        length: Math.ceil(
-                                            menus.length / rowsPerPage
-                                        ),
-                                    },
-                                    (_, index) => (
-                                        <PaginationItem key={index}>
-                                            <PaginationLink
-                                                onClick={() =>
-                                                    handlePageChange(index + 1)
-                                                }
-                                                isActive={
-                                                    currentPage === index + 1
-                                                }
-                                                className="cursor-pointer"
-                                            >
-                                                {index + 1}
-                                            </PaginationLink>
-                                        </PaginationItem>
-                                    )
-                                )}
-                                <PaginationItem>
-                                    <PaginationNext
-                                        onClick={() =>
-                                            handlePageChange(currentPage + 1)
-                                        }
-                                        className={`cursor-pointer ${
-                                            currentPage === totalPages
-                                                ? "opacity-50 cursor-not-allowed"
-                                                : ""
-                                        }`}
-                                        disabled={
-                                            currentPage ===
-                                            Math.ceil(
-                                                menus.length / rowsPerPage
-                                            )
-                                        }
-                                    />
-                                </PaginationItem>
-                            </PaginationContent>
-                        </Pagination>
-                    </div>
-                </motion.div>
-            )}
+                </div>
+                <div className="mt-8 flex justify-center gap-4">
+                    <Pagination className="text-accentRed">
+                        <PaginationContent>
+                            <PaginationItem>
+                                <PaginationPrevious
+                                    onClick={() =>
+                                        handlePageChange(currentPage - 1)
+                                    }
+                                    disabled={currentPage === 1}
+                                    className={`cursor-pointer ${
+                                        currentPage === 1
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
+                                />
+                            </PaginationItem>
+                            {Array.from(
+                                {
+                                    length: Math.ceil(
+                                        menus.length / rowsPerPage
+                                    ),
+                                },
+                                (_, index) => (
+                                    <PaginationItem key={index}>
+                                        <PaginationLink
+                                            onClick={() =>
+                                                handlePageChange(index + 1)
+                                            }
+                                            isActive={currentPage === index + 1}
+                                            className="cursor-pointer"
+                                        >
+                                            {index + 1}
+                                        </PaginationLink>
+                                    </PaginationItem>
+                                )
+                            )}
+                            <PaginationItem>
+                                <PaginationNext
+                                    onClick={() =>
+                                        handlePageChange(currentPage + 1)
+                                    }
+                                    className={`cursor-pointer ${
+                                        currentPage === totalPages
+                                            ? "opacity-50 cursor-not-allowed"
+                                            : ""
+                                    }`}
+                                    disabled={
+                                        currentPage ===
+                                        Math.ceil(menus.length / rowsPerPage)
+                                    }
+                                />
+                            </PaginationItem>
+                        </PaginationContent>
+                    </Pagination>
+                </div>
+            </motion.div>
         </div>
     );
 }
