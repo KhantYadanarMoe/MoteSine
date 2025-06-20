@@ -76,17 +76,17 @@ export default function ProductsGrid() {
     const ProductCardSkeleton = () => (
         <div className="px-3 py-4 bg-white border border-gray-400 shadow-lg rounded-xl animate-pulse">
             <div className="flex justify-between">
-                <div className="h-4 w-4 bg-gray-300 rounded" />
-                <div className="h-4 w-10 bg-gray-300 rounded" />
+                <div className="h-3 w-3 bg-gray-300 rounded" />
+                <div className="h-3 w-10 bg-gray-300 rounded" />
             </div>
 
             <div className="w-40 md:w-36 xl:w-32 h-48 md:h-44 xl:h-36 bg-gray-300 rounded mx-auto my-3" />
 
             <div className="flex justify-between items-center my-3">
                 <div className="flex flex-col gap-2">
-                    <div className="h-4 w-24 bg-gray-300 rounded" />
-                    <div className="h-4 w-20 bg-gray-300 rounded" />
-                    <div className="h-3 w-28 bg-gray-200 rounded" />
+                    <div className="h-3 w-24 bg-gray-300 rounded" />
+                    <div className="h-3 w-20 bg-gray-300 rounded" />
+                    <div className="h-2 w-28 bg-gray-200 rounded" />
                 </div>
                 <div className="bg-gray-300 rounded-full p-3" />
             </div>

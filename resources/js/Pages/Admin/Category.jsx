@@ -260,22 +260,22 @@ export default function Category() {
     const CategoryRowSkeleton = () => (
         <ul className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2 animate-pulse">
             <li className="basis-[5%]">
-                <div className="h-4 w-4 bg-gray-300 rounded" />
+                <div className="h-3 w-3 bg-gray-300 rounded" />
             </li>
             <li className="basis-[35%]">
-                <div className="h-4 w-32 bg-gray-300 rounded" />
+                <div className="h-3 w-32 bg-gray-300 rounded" />
             </li>
             <li className="basis-[15%]">
-                <div className="h-6 w-10 bg-gray-300 rounded-full" />
+                <div className="h-4 w-10 bg-gray-300 rounded-full" />
             </li>
             <li className="basis-[18%] pl-2">
-                <div className="h-4 w-8 bg-gray-300 rounded" />
+                <div className="h-3 w-8 bg-gray-300 rounded" />
             </li>
             <li className="basis-[22%]">
-                <div className="h-4 w-24 bg-gray-300 rounded" />
+                <div className="h-3 w-24 bg-gray-300 rounded" />
             </li>
             <li className="basis-[5%]">
-                <div className="h-5 w-5 bg-gray-300 rounded" />
+                <div className="h-4 w-5 bg-gray-300 rounded" />
             </li>
         </ul>
     );
