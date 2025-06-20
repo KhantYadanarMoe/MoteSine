@@ -31,6 +31,8 @@ export default function ProductCards() {
     const { query, setQuery } = useSearch();
     // state to store products
     let [products, setProducts] = useState([]);
+    // state for loading
+    const [loading, setLoading] = useState(true);
 
     const { addToCart } = useCart();
 
@@ -41,25 +43,22 @@ export default function ProductCards() {
 
     // fetch data that send from backend
     let getProducts = async () => {
-        let res = await axios.get("/api/products");
-        let data = res.data;
-        const today = dayjs();
+        setLoading(true);
+        try {
+            let res = await axios.get("/api/products");
+            let data = res.data;
+            const today = dayjs();
 
-        // const nonPromoOrExpiredProducts = data.products.filter((product) => {
-        //     const hasValidPromotion =
-        //         product.promotion &&
-        //         dayjs(product.startDate).isBefore(today) &&
-        //         dayjs(product.endDate).isAfter(today);
+            const visibleProducts = data.products.filter(
+                (product) => product.visibility === 1
+            );
 
-        //     return product.visibility === 1 && !hasValidPromotion;
-        // });
-
-        // setProducts(nonPromoOrExpiredProducts);
-        const visibleProducts = data.products.filter(
-            (product) => product.visibility === 1
-        );
-
-        setProducts(visibleProducts);
+            setProducts(visibleProducts);
+        } catch (error) {
+            console.error("Error fetching menus:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // state for pagination
@@ -133,6 +132,31 @@ export default function ProductCards() {
                     (type === "product" && item.product.id === id))
         );
     };
+
+    const SkeletonCard = () => (
+        <div className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl animate-pulse">
+            <div className="flex justify-between mb-2">
+                <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+                <div className="flex items-center gap-1">
+                    <div className="w-4 h-4 bg-gray-200 rounded"></div>
+                    <div className="w-8 h-3 bg-gray-200 rounded"></div>
+                </div>
+            </div>
+            <div className="w-44 md:w-40 xl:w-36 h-52 bg-gray-200 rounded mx-auto my-3"></div>
+            <div className="flex justify-between items-center my-3">
+                <div className="space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-32"></div>
+                    <div className="h-3 bg-gray-200 rounded w-24"></div>
+                    <div className="h-2 bg-gray-200 rounded w-28"></div>
+                </div>
+                <div className="flex flex-col items-end gap-2">
+                    <div className="w-20 h-4 bg-gray-200 rounded"></div>
+                    <div className="w-8 h-8 bg-gray-200 rounded-full"></div>
+                </div>
+            </div>
+        </div>
+    );
+
     return (
         <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
@@ -174,163 +198,179 @@ export default function ProductCards() {
                 </div>
 
                 <div className="my-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-[97%] xl:w-[93%] mx-auto">
-                    {currentProducts.map((product) => (
-                        <div
-                            key={product.id}
-                            className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl"
-                        >
-                            <div className="flex justify-between">
-                                <button
-                                    onClick={() =>
-                                        toggleWishlist(product.id, "product")
-                                    }
-                                    className={`${
-                                        isInWishlist(product.id, "product")
-                                            ? "text-accentRed"
-                                            : "text-gray-500"
-                                    }`}
-                                >
-                                    <Heart
-                                        size={20}
-                                        fill={
-                                            isInWishlist(product.id, "product")
-                                                ? "red"
-                                                : "none"
-                                        }
-                                    />
-                                </button>
-                                <a
-                                    href=""
-                                    className="text-sm flex items-center gap-1 text-accentYellow"
-                                >
-                                    <Star
-                                        size={16}
-                                        fill="currentColor"
-                                        className="text-accentYellow"
-                                    />{" "}
-                                    {product.rating}
-                                </a>
-                            </div>
-                            <img
-                                src={`/storage/${product.image}`}
-                                alt={product.name}
-                                className="w-44 md:w-40 xl:w-36 h-52 object-cover mx-auto my-3"
-                            />
-                            <div className="flex justify-between items-center my-3">
-                                <div>
-                                    <h1 className="font-medium mb-1">
-                                        {product.name}
-                                    </h1>
-                                    <p className="text-sm font-medium">
-                                        {product.promotion &&
-                                        new Date() >=
-                                            new Date(product.startDate) &&
-                                        new Date() <=
-                                            new Date(product.endDate) ? (
-                                            <div className="flex items-center gap-1">
-                                                <span className="text-red-600 font-semibold">
-                                                    {(
-                                                        product.price -
-                                                        (product.price *
-                                                            product.promotion) /
-                                                            100
-                                                    ).toFixed(2)}{" "}
-                                                    $
-                                                </span>
-                                                <span className="line-through text-sm text-gray-500">
-                                                    {product.price} $
-                                                </span>
-                                            </div>
-                                        ) : (
-                                            <span>{product.price} $</span>
-                                        )}
-                                    </p>
-                                    {product.promotion &&
-                                        new Date() >=
-                                            new Date(product.startDate) &&
-                                        new Date() <=
-                                            new Date(product.endDate) && (
-                                            <p className="text-xs text-gray-500">
-                                                Promo period:{" "}
-                                                {dayjs(
-                                                    product.startDate
-                                                ).format("MMM D")}{" "}
-                                                -{" "}
-                                                {dayjs(product.endDate).format(
-                                                    "MMM D"
-                                                )}
-                                            </p>
-                                        )}
-                                </div>
-                                <div className="flex flex-col items-end gap-2">
-                                    <div>
-                                        {product.stock === 0 && (
-                                            <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
-                                                Out of Stock
-                                            </span>
-                                        )}
-                                    </div>
-                                    <div className="">
-                                        {product.stock > 0 ? (
-                                            <button
-                                                onClick={() =>
-                                                    addToCart(
-                                                        product,
-                                                        "product"
-                                                    )
-                                                }
-                                                className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2"
-                                            >
-                                                <ShoppingCart
-                                                    size={16}
-                                                    className="text-white"
-                                                />
-                                            </button>
-                                        ) : (
-                                            <button
-                                                onClick={() => {
-                                                    setOpenOutOfStock(true);
-                                                    setOutOfStockProduct(
-                                                        product
-                                                    );
-                                                }}
-                                                className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2 opacity-50"
-                                            >
-                                                <ShoppingCart
-                                                    size={16}
-                                                    className="text-white"
-                                                />
-                                            </button>
-                                        )}
-                                    </div>
-                                </div>
-                                <AlertDialog
-                                    open={openOutOfStock}
-                                    onOpenChange={setOpenOutOfStock}
-                                >
-                                    <AlertDialogContent>
-                                        <AlertDialogHeader>
-                                            <AlertDialogTitle>
-                                                Out of Stock
-                                            </AlertDialogTitle>
-                                            <AlertDialogDescription>
-                                                {outOfStockProduct?.name} is
-                                                currently out of stock. We’re
-                                                working to restock it as quickly
-                                                as possible. Thank you for your
-                                                patience!
-                                            </AlertDialogDescription>
-                                        </AlertDialogHeader>
-                                        <AlertDialogFooter>
-                                            <AlertDialogCancel>
-                                                Okay
-                                            </AlertDialogCancel>
-                                        </AlertDialogFooter>
-                                    </AlertDialogContent>
-                                </AlertDialog>
-                            </div>
-                        </div>
-                    ))}
+                    {loading
+                        ? Array.from({ length: 6 }).map((_, idx) => (
+                              <SkeletonCard key={idx} />
+                          ))
+                        : currentProducts.map((product) => (
+                              <div
+                                  key={product.id}
+                                  className="px-3 py-2 bg-white border border-gray-400 shadow-lg rounded-xl"
+                              >
+                                  <div className="flex justify-between">
+                                      <button
+                                          onClick={() =>
+                                              toggleWishlist(
+                                                  product.id,
+                                                  "product"
+                                              )
+                                          }
+                                          className={`${
+                                              isInWishlist(
+                                                  product.id,
+                                                  "product"
+                                              )
+                                                  ? "text-accentRed"
+                                                  : "text-gray-500"
+                                          }`}
+                                      >
+                                          <Heart
+                                              size={20}
+                                              fill={
+                                                  isInWishlist(
+                                                      product.id,
+                                                      "product"
+                                                  )
+                                                      ? "red"
+                                                      : "none"
+                                              }
+                                          />
+                                      </button>
+                                      <a
+                                          href=""
+                                          className="text-sm flex items-center gap-1 text-accentYellow"
+                                      >
+                                          <Star
+                                              size={16}
+                                              fill="currentColor"
+                                              className="text-accentYellow"
+                                          />{" "}
+                                          {product.rating}
+                                      </a>
+                                  </div>
+                                  <img
+                                      src={`/storage/${product.image}`}
+                                      alt={product.name}
+                                      className="w-44 md:w-40 xl:w-36 h-52 object-cover mx-auto my-3"
+                                  />
+                                  <div className="flex justify-between items-center my-3">
+                                      <div>
+                                          <h1 className="font-medium mb-1">
+                                              {product.name}
+                                          </h1>
+                                          <p className="text-sm font-medium">
+                                              {product.promotion &&
+                                              new Date() >=
+                                                  new Date(product.startDate) &&
+                                              new Date() <=
+                                                  new Date(product.endDate) ? (
+                                                  <div className="flex items-center gap-1">
+                                                      <span className="text-red-600 font-semibold">
+                                                          {(
+                                                              product.price -
+                                                              (product.price *
+                                                                  product.promotion) /
+                                                                  100
+                                                          ).toFixed(2)}{" "}
+                                                          $
+                                                      </span>
+                                                      <span className="line-through text-sm text-gray-500">
+                                                          {product.price} $
+                                                      </span>
+                                                  </div>
+                                              ) : (
+                                                  <span>{product.price} $</span>
+                                              )}
+                                          </p>
+                                          {product.promotion &&
+                                              new Date() >=
+                                                  new Date(product.startDate) &&
+                                              new Date() <=
+                                                  new Date(product.endDate) && (
+                                                  <p className="text-xs text-gray-500">
+                                                      Promo period:{" "}
+                                                      {dayjs(
+                                                          product.startDate
+                                                      ).format("MMM D")}{" "}
+                                                      -{" "}
+                                                      {dayjs(
+                                                          product.endDate
+                                                      ).format("MMM D")}
+                                                  </p>
+                                              )}
+                                      </div>
+                                      <div className="flex flex-col items-end gap-2">
+                                          <div>
+                                              {product.stock === 0 && (
+                                                  <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
+                                                      Out of Stock
+                                                  </span>
+                                              )}
+                                          </div>
+                                          <div className="">
+                                              {product.stock > 0 ? (
+                                                  <button
+                                                      onClick={() =>
+                                                          addToCart(
+                                                              product,
+                                                              "product"
+                                                          )
+                                                      }
+                                                      className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2"
+                                                  >
+                                                      <ShoppingCart
+                                                          size={16}
+                                                          className="text-white"
+                                                      />
+                                                  </button>
+                                              ) : (
+                                                  <button
+                                                      onClick={() => {
+                                                          setOpenOutOfStock(
+                                                              true
+                                                          );
+                                                          setOutOfStockProduct(
+                                                              product
+                                                          );
+                                                      }}
+                                                      className="bg-accentRed hover:bg-hoverRed duration-300 rounded-full px-2 py-2 opacity-50"
+                                                  >
+                                                      <ShoppingCart
+                                                          size={16}
+                                                          className="text-white"
+                                                      />
+                                                  </button>
+                                              )}
+                                          </div>
+                                      </div>
+                                      <AlertDialog
+                                          open={openOutOfStock}
+                                          onOpenChange={setOpenOutOfStock}
+                                      >
+                                          <AlertDialogContent>
+                                              <AlertDialogHeader>
+                                                  <AlertDialogTitle>
+                                                      Out of Stock
+                                                  </AlertDialogTitle>
+                                                  <AlertDialogDescription>
+                                                      {outOfStockProduct?.name}{" "}
+                                                      is currently out of stock.
+                                                      We’re working to restock
+                                                      it as quickly as possible.
+                                                      Thank you for your
+                                                      patience!
+                                                  </AlertDialogDescription>
+                                              </AlertDialogHeader>
+                                              <AlertDialogFooter>
+                                                  <AlertDialogCancel>
+                                                      Okay
+                                                  </AlertDialogCancel>
+                                              </AlertDialogFooter>
+                                          </AlertDialogContent>
+                                      </AlertDialog>
+                                  </div>
+                              </div>
+                          ))}
                 </div>
                 <div className="mt-4">
                     <Pagination>
