@@ -24,13 +24,24 @@ export default function AllBlogs() {
     const [currentPage, setCurrentPage] = useState(1);
     // rows to show in a page
     const rowsPerPage = 6;
+    // state for loading
+    const [loading, setLoading] = useState(true);
 
     // fetch data that send from backend
     let getBlogs = async () => {
-        let res = await axios.get("/api/blogs");
-        let data = res.data;
-        const visibleBlogs = data.blogs.filter((blog) => blog.visibility === 1);
-        setBlogs(visibleBlogs);
+        setLoading(true);
+        try {
+            let res = await axios.get("/api/blogs");
+            let data = res.data;
+            const visibleBlogs = data.blogs.filter(
+                (blog) => blog.visibility === 1
+            );
+            setBlogs(visibleBlogs);
+        } catch (error) {
+            console.error("Error fetching menus:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // call data fetching function in useEffect to run when user enter the page
@@ -63,6 +74,31 @@ export default function AllBlogs() {
         const minutes = Math.ceil(words / wordsPerMinute);
         return `${minutes} min${minutes > 1 ? "s" : ""} read`;
     }
+
+    const SkeletonCard = () => (
+        <div className="mb-5 animate-pulse">
+            <div className="xl:w-[97%] mx-auto">
+                <div className="w-full h-52 lg:h-48 xl:h-52 bg-gray-200 rounded-md"></div>
+                <div className="mt-3 space-y-2">
+                    <div className="h-5 w-2/3 bg-gray-200 rounded"></div>
+                    <div className="h-3 w-full bg-gray-200 rounded"></div>
+                    <div className="h-3 w-11/12 bg-gray-200 rounded"></div>
+                    <div className="h-3 w-10/12 bg-gray-200 rounded"></div>
+                    <div className="flex gap-5 mt-4">
+                        <div className="flex gap-1 items-center">
+                            <div className="w-4 h-4 bg-gray-200 rounded-full"></div>
+                            <div className="w-20 h-3 bg-gray-200 rounded"></div>
+                        </div>
+                        <div className="flex gap-1 items-center">
+                            <div className="w-4 h-4 bg-gray-200 rounded-full"></div>
+                            <div className="w-16 h-3 bg-gray-200 rounded"></div>
+                        </div>
+                    </div>
+                    <div className="h-4 w-24 bg-gray-200 rounded mt-3"></div>
+                </div>
+            </div>
+        </div>
+    );
 
     return (
         <motion.div
@@ -98,7 +134,11 @@ export default function AllBlogs() {
                     </div>
                 </div>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
-                    {currentBlogs.length > 0 ? (
+                    {loading ? (
+                        Array.from({ length: 6 }).map((_, idx) => (
+                            <SkeletonCard key={idx} />
+                        ))
+                    ) : currentBlogs.length > 0 ? (
                         currentBlogs.map((blog) => (
                             <div className="mb-5">
                                 <div className="xl:w-[97%] mx-auto">

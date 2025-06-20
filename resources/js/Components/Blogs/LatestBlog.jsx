@@ -10,12 +10,24 @@ export default function LatestBlog() {
     // state to store blogs
     let [blog, setBlog] = useState([]);
 
+    // state for loading
+    const [loading, setLoading] = useState(true);
+
     // fetch data that send from backend
     let getBlogs = async () => {
-        let res = await axios.get("/api/blogs");
-        let data = res.data;
-        const visibleBlogs = data.blogs.filter((blog) => blog.visibility === 1);
-        setBlog(visibleBlogs[0] || null); // handle case if no visible blogs
+        setLoading(true);
+        try {
+            let res = await axios.get("/api/blogs");
+            let data = res.data;
+            const visibleBlogs = data.blogs.filter(
+                (blog) => blog.visibility === 1
+            );
+            setBlog(visibleBlogs[0] || null); // handle case if no visible blogs
+        } catch (error) {
+            console.error("Error fetching menus:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     // call data fetching function in useEffect to run when user enter the page
@@ -36,6 +48,33 @@ export default function LatestBlog() {
         return `${minutes} min${minutes > 1 ? "s" : ""} read`;
     }
 
+    const BlogSkeletonCard = () => (
+        <div className="block md:flex gap-3 lg:gap-0 my-6 animate-pulse">
+            <div className="md:w-1/2">
+                <div className="w-[97%] h-52 md:h-64 lg:h-72 xl:h-80 bg-gray-200 rounded-md"></div>
+            </div>
+            <div className="md:w-1/2 flex flex-col justify-end py-3 space-y-3">
+                <div className="h-6 w-3/4 bg-gray-200 rounded"></div>
+                <div className="space-y-2">
+                    <div className="h-3 w-full bg-gray-200 rounded"></div>
+                    <div className="h-3 w-11/12 bg-gray-200 rounded"></div>
+                    <div className="h-3 w-10/12 bg-gray-200 rounded"></div>
+                </div>
+                <div className="flex gap-5 mt-2">
+                    <div className="flex gap-1 items-center">
+                        <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+                        <div className="w-20 h-3 bg-gray-200 rounded"></div>
+                    </div>
+                    <div className="flex gap-1 items-center">
+                        <div className="w-5 h-5 bg-gray-200 rounded-full"></div>
+                        <div className="w-16 h-3 bg-gray-200 rounded"></div>
+                    </div>
+                </div>
+                <div className="h-4 w-24 bg-gray-200 rounded mt-3"></div>
+            </div>
+        </div>
+    );
+
     return (
         <motion.div
             initial={{ x: -100, opacity: 0 }}
@@ -43,7 +82,9 @@ export default function LatestBlog() {
             transition={{ duration: 0.6, ease: "easeOut" }}
             viewport={{ once: false, amount: 0.2 }}
         >
-            {blog ? (
+            {loading ? (
+                <BlogSkeletonCard />
+            ) : blog ? (
                 <div className="block md:flex gap-3 lg:gap-0 my-6">
                     <div className="md:w-1/2">
                         {blog?.image?.length > 0 && (
