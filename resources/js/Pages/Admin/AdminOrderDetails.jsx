@@ -255,34 +255,42 @@ export default function AdminOrderDetails() {
                         ))}
                     </div>
                 </div>
-                <div className="my-5 px-3 py-4 border-t-2 border-t-accentRed bg-white shadow-lg rounded-md">
-                    <h1 className="text-lg font-medium">Scheduled Delivery</h1>
-                    <div className="py-5">
-                        <div className="flex justify-between mb-3">
-                            <h1 className="text-sm font-medium">
-                                Scheduled Date -
-                            </h1>
-                            <p className="text-sm">
-                                {orderDetails &&
-                                dayjs(orderDetails.date).isValid()
-                                    ? dayjs(orderDetails.date).format(
-                                          "MMMM D, YYYY"
-                                      )
-                                    : ""}
-                            </p>
-                        </div>
-                        <div className="flex justify-between mb-3">
-                            <h1 className="text-sm font-medium">
-                                Scheduled Time -
-                            </h1>
-                            <p className="text-sm"> {orderDetails?.time}</p>
-                        </div>
-                        <div className="mb-3">
-                            <h1 className="text-sm font-medium">Note -</h1>
-                            <p className="mt-1 text-sm">{orderDetails?.note}</p>
+                {orderDetails?.date ||
+                orderDetails?.time ||
+                orderDetails?.note ? (
+                    <div className="my-5 px-3 py-4 border-t-2 border-t-accentRed bg-white shadow-lg rounded-md">
+                        <h1 className="text-lg font-medium">
+                            Scheduled Delivery
+                        </h1>
+                        <div className="py-5">
+                            <div className="flex justify-between mb-3">
+                                <h1 className="text-sm font-medium">
+                                    Scheduled Date -
+                                </h1>
+                                <p className="text-sm">
+                                    {orderDetails &&
+                                    dayjs(orderDetails.date).isValid()
+                                        ? dayjs(orderDetails.date).format(
+                                              "MMMM D, YYYY"
+                                          )
+                                        : ""}
+                                </p>
+                            </div>
+                            <div className="flex justify-between mb-3">
+                                <h1 className="text-sm font-medium">
+                                    Scheduled Time -
+                                </h1>
+                                <p className="text-sm"> {orderDetails?.time}</p>
+                            </div>
+                            <div className="mb-3">
+                                <h1 className="text-sm font-medium">Note -</h1>
+                                <p className="mt-1 text-sm">
+                                    {orderDetails?.note}
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                ) : null}
             </div>
             <div className="md:w-[40%] lg:w-[30%]">
                 <div className="px-3 py-4 bg-white shadow-lg rounded-md">
