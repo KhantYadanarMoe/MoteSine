@@ -20,6 +20,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useEffect } from "react";
+import Empty from "../../../images/Empty.png";
 import dayjs from "dayjs";
 
 export default function ReservationHistories() {
@@ -126,6 +127,20 @@ export default function ReservationHistories() {
                             </div>
                         </div>
                     </>
+                ) : reservations.length === 0 ? (
+                    <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20  min-h-screen absolute inset-0 z-10  bg-white flex flex-col items-center justify-center text-center font-medium text-accentRed h-full">
+                        <img
+                            src={Empty}
+                            alt="No data"
+                            className="mx-auto w-60"
+                        />
+                        <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                            Nothing in your reservation history.
+                        </h2>
+                        <p className="text-gray-500 mb-4 text-sm">
+                            You didn't reserve any table.
+                        </p>
+                    </div>
                 ) : (
                     [...new Set(reservations.map((r) => r.date))].map(
                         (date) => (

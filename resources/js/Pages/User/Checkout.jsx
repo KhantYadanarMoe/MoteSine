@@ -559,7 +559,7 @@ export default function Checkout() {
                                 setShowLoginAlert(false);
                                 setTimeout(() => {
                                     submit();
-                                }, 100); // Delay allows dialog to close first
+                                }, 100);
                             }}
                         >
                             Order Anyway

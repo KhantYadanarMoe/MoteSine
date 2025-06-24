@@ -157,18 +157,17 @@ export default function OrderHistories() {
                         <OrderSkeleton key={idx} />
                     ))
                 ) : orders.length === 0 ? (
-                    // Show no data message only after loading is finished and no orders exist
-                    <div className="text-center font-medium text-accentRed flex flex-col items-center justify-center h-[80vh]">
+                    <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20  min-h-screen absolute inset-0 z-10  bg-white flex flex-col items-center justify-center text-center font-medium text-accentRed h-full">
                         <img
                             src={Empty}
                             alt="No data"
                             className="mx-auto w-60"
                         />
                         <h2 className="text-xl font-semibold text-gray-700 mb-2">
-                            No data to show.
+                            Nothing in your order history.
                         </h2>
                         <p className="text-gray-500 mb-4 text-sm">
-                            The table you are looking for is empty.
+                            You didn't order anything from us.
                         </p>
                     </div>
                 ) : (

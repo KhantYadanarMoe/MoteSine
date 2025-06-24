@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
+import Empty from "../../../images/Empty.png";
 import dayjs from "dayjs";
 import { useSearch } from "@/contexts/SearchContext";
 
@@ -216,9 +217,19 @@ export default function Liked() {
                         [...Array(3)].map((_, i) => <ProductSkeleton key={i} />)
                     )
                 ) : filteredFavorites.length === 0 ? (
-                    <p className="h-[50vh] text-xl text-accentRed font-medium flex items-center justify-center mx-auto">
-                        Your wishlist is empty.
-                    </p>
+                    <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20  min-h-screen absolute inset-0 z-10  bg-white flex flex-col items-center justify-center text-center font-medium text-accentRed h-full">
+                        <img
+                            src={Empty}
+                            alt="No data"
+                            className="mx-auto w-60"
+                        />
+                        <h2 className="text-xl font-semibold text-gray-700 mb-2">
+                            Nothing in your wishlist
+                        </h2>
+                        <p className="text-gray-500 mb-4 text-sm">
+                            You didn't add anything in your wishlist.
+                        </p>
+                    </div>
                 ) : (
                     filteredFavorites.map((item) =>
                         item.item_type === "menu" ? (
