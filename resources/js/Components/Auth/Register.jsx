@@ -73,7 +73,7 @@ export default function Register() {
 
             console.log("Registered user:", userRes.data);
 
-            navigate("/"); // success redirect
+            navigate("/user"); // success redirect
         } catch (error) {
             if (error.response?.status === 422) {
                 setErrors(error.response.data.errors);

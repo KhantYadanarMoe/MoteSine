@@ -5,6 +5,7 @@ import AuthBg from "../../../images/auth-bg.jpg";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Google from "../../../images/Google.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 import Loading from "../Loading";
@@ -186,6 +187,20 @@ export default function Login() {
                         >
                             Login
                         </Button>
+
+                        <a href="http://localhost:8000/auth/google">
+                            <Button
+                                type="button"
+                                className="mt-3 bg-white text-black w-full border border-gray-700 hover:bg-gray-50"
+                            >
+                                <img
+                                    src={Google}
+                                    alt="Google Logo"
+                                    className="w-5 h-5 object-cover"
+                                />
+                                Continue with Google
+                            </Button>
+                        </a>
 
                         <p className="text-sm text-gray-800 text-center mt-1">
                             Don't have an Account?{" "}
