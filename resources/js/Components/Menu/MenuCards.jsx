@@ -11,11 +11,23 @@ import {
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Empty from "../../../images/Empty.png";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+    AlertDialogTrigger,
+} from "../../Components/ui/alert-dialog";
 import { useSearch } from "@/contexts/SearchContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function MenuCards({ selectedCategory }) {
     // state to store menus
@@ -32,6 +44,13 @@ export default function MenuCards({ selectedCategory }) {
     const { addToCart } = useCart();
 
     const [wishlistItems, setWishlistItems] = useState([]);
+
+    const [showLoginAlert, setShowLoginAlert] = useState(false);
+
+    const { user } = useAuth();
+    const isLoggedIn = !!user;
+
+    const navigate = useNavigate();
 
     // fetch data that send from backend
     const getMenus = async () => {
@@ -184,12 +203,16 @@ export default function MenuCards({ selectedCategory }) {
                                     <div className="flex items-center justify-between mb-3">
                                         <div className="flex gap-4">
                                             <button
-                                                onClick={() =>
+                                                onClick={() => {
+                                                    if (!isLoggedIn) {
+                                                        setShowLoginAlert(true);
+                                                        return;
+                                                    }
                                                     toggleWishlist(
                                                         menu.id,
                                                         "menu"
-                                                    )
-                                                }
+                                                    );
+                                                }}
                                                 className={`${
                                                     isInWishlist(
                                                         menu.id,
@@ -316,6 +339,26 @@ export default function MenuCards({ selectedCategory }) {
                     </div>
                 )}
             </div>
+            <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Login Required</AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Please log in to add items to your wishlist.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel
+                            onClick={() => setShowLoginAlert(false)}
+                        >
+                            Cancel
+                        </AlertDialogCancel>
+                        <AlertDialogAction onClick={() => navigate("/login")}>
+                            Login
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
             <div className="mt-8 mx-auto">
                 <Pagination className="text-accentRed">
                     <PaginationContent>
