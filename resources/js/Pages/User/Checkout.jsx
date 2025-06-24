@@ -50,6 +50,7 @@ export default function Checkout() {
     const [stockErrorMessage, setStockErrorMessage] = useState("");
     // state for loading
     const [submitLoading, setSubmitLoading] = useState(false);
+    const [showLoginAlert, setShowLoginAlert] = useState(false);
 
     // Handle HTML inputs
     const handleInputChange = (e) => {
@@ -171,6 +172,10 @@ export default function Checkout() {
     const total = subtotal + tax + deliveryFee;
 
     const handleConfirmOrder = () => {
+        if (!user) {
+            setShowLoginAlert(true);
+            return;
+        }
         const minAmount = parseFloat(orderSetting?.minOrder ?? 0);
         if (total < minAmount) {
             setShowDialog(true);
@@ -536,6 +541,39 @@ export default function Checkout() {
                     </AlertDialogContent>
                 </AlertDialog>
             </motion.div>
+            <AlertDialog open={showLoginAlert} onOpenChange={setShowLoginAlert}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Login for a Better Experience
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Logging in helps you track orders and reuse saved
+                            info — or you can order as a guest.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="mt-3 space-x-2">
+                        <Button
+                            className="rounded-lg bg-white text-black hover:bg-gray-200"
+                            onClick={() => {
+                                setShowLoginAlert(false);
+                                setTimeout(() => {
+                                    submit();
+                                }, 100); // Delay allows dialog to close first
+                            }}
+                        >
+                            Order Anyway
+                        </Button>
+                        <Button
+                            variant="outline"
+                            onClick={() => navigate("/login")}
+                            className="bg-accentRed text-white hover:bg-hoverRed hover:text-white rounded-lg"
+                        >
+                            Login
+                        </Button>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 }
