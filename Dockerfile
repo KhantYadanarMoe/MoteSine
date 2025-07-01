@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
+COPY . /var/www
+
+
 # Set working directory
 WORKDIR /var/www
 
