@@ -9,23 +9,30 @@ RUN apt-get update && apt-get install -y \
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Set working directory for backend
 WORKDIR /var/www
 
-# Copy entire project at once — including resources/images
+# Copy entire project into container
 COPY . /var/www
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node.js and build assets
+# Switch to frontend directory (where package.json lives)
+WORKDIR /var/www/resources
+
+# Install Node.js, npm dependencies, and build frontend assets
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
-    npm install && npm run build
+    npm install && \
+    npm run build
 
-# Set permissions
+# Switch back to backend directory
+WORKDIR /var/www
+
+# Set permissions for Laravel storage and cache folders
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose port and run server
+# Expose port and run PHP built-in server
 EXPOSE 8000
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
