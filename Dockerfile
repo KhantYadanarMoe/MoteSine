@@ -12,16 +12,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-COPY . /var/www
-COPY resources /var/www/resources
-
-# Copy entire project before building
+# Copy entire project at once — including resources/images
 COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node and build React frontend
+# Install Node.js and build assets
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
     npm install && npm run build
@@ -29,8 +26,6 @@ RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
 # Set permissions
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose Laravel dev server port
+# Expose port and run server
 EXPOSE 8000
-
-# Start Laravel server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
