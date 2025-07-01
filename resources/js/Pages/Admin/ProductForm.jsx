@@ -1,4 +1,4 @@
-import Product from "../../../images/product.png";
+import product from "../../../images/product.png";
 import { Heart, Star, ShoppingCart, Upload, ChevronDown } from "lucide-react";
 import { Switch } from "../../Components/ui/switch";
 import { Button } from "../../Components/ui/button";
@@ -541,7 +541,7 @@ export default function ProductForm() {
                         />
                     ) : (
                         <img
-                            src={Product} // Default image when no image is uploaded or available
+                            src={product} // Default image when no image is uploaded or available
                             alt="product"
                             className="w-auto h-36 object-cover mx-auto my-3"
                         />
