@@ -22,7 +22,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/Components/ui/dropdown-menu";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Input } from "../../Components/ui/input";

@@ -5,7 +5,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 import { Button } from "../ui/button";
 import HeroBg from "../../../images/hero-bg.jpg";
 import { motion } from "framer-motion";

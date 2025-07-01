@@ -5,9 +5,9 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/Components/ui/popover";
+import { Button } from "@/Components/ui/button";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 
 // Function to generate times within a specified time range (minTime and maxTime in 24-hour format)
 const generateTimes = (minTime, maxTime) => {

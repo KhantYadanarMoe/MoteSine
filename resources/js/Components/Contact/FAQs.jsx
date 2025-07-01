@@ -3,7 +3,7 @@ import {
     AccordionContent,
     AccordionItem,
     AccordionTrigger,
-} from "@/components/ui/accordion";
+} from "@/Components/ui/accordion";
 import { motion } from "framer-motion";
 
 export default function FAQs() {

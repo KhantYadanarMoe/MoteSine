@@ -2,14 +2,14 @@ import Garden from "../../../images/Gardening.jpg";
 import Vegetables from "../../../images/fresh.jpg";
 import Cooking from "../../../images/Cooking-1.jpg";
 import Serving from "../../../images/Serving.jpg";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 import {
     Carousel,
     CarouselContent,
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/Components/ui/carousel";
 import HeroBg from "../../../images/hero-bg.jpg";
 import { motion } from "framer-motion";
 

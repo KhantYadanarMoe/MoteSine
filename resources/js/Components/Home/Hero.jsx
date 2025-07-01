@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import Arrow from "../../../images/arrow.png";
 import Hero1 from "../../../images/hero-delivery.jpg";
 import Hero2 from "../../../images/hero-restaurant.jpg";

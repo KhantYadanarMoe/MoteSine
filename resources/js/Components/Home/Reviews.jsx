@@ -4,9 +4,9 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/Components/ui/carousel";
 import { motion } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/Components/ui/card";
 import { Star } from "lucide-react";
 import Profile from "../../../images/Profile.jpg";
 import { useEffect } from "react";

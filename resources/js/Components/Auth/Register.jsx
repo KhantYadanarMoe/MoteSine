@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/Components/ui/input";
 import AuthBg from "../../../images/auth-bg.jpg";
-import { Button } from "@/components/ui/button";
+import { Button } from "@/Components/ui/button";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import Google from "../../../images/Google.png";

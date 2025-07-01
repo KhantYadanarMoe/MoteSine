@@ -5,6 +5,6 @@
 !.gitignore
 !resources/
 !resources/js/
-!resources/js/components/
-!resources/js/components/ui/
-!resources/js/components/ui/*.jsx
+!resources/js/Components/
+!resources/js/Components/ui/
+!resources/js/Components/ui/*.jsx

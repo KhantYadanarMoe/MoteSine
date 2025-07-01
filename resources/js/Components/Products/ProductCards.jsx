@@ -8,7 +8,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/Components/ui/pagination";
 import {
     AlertDialog,
     AlertDialogTrigger,
@@ -18,7 +18,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogCancel,
-} from "@/components/ui/alert-dialog.jsx";
+} from "@/Components/ui/alert-dialog.jsx";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";

@@ -7,7 +7,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/Components/ui/pagination";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";

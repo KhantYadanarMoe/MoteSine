@@ -25,8 +25,8 @@ import {
     Popover,
     PopoverContent,
     PopoverTrigger,
-} from "@/components/ui/popover";
-import { ScrollArea } from "@/components/ui/scroll-area";
+} from "@/Components/ui/popover";
+import { ScrollArea } from "@/Components/ui/scroll-area";
 import { useReservationSetting } from "@/contexts/ReservationSettingContext";
 import { Label } from "../ui/label";
 

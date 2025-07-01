@@ -8,7 +8,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/Components/ui/pagination";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { Input } from "../ui/input";

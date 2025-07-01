@@ -14,7 +14,7 @@ import {
     PaginationLink,
     PaginationNext,
     PaginationPrevious,
-} from "@/components/ui/pagination";
+} from "@/Components/ui/pagination";
 import { Button } from "../../Components/ui/button";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";

@@ -5,7 +5,7 @@ import {
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select";
+} from "@/Components/ui/select";
 import { Button } from "../ui/button";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";

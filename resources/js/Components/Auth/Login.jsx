@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
+import { Input } from "@/Components/ui/input";
+import { Button } from "@/Components/ui/button";
 import AuthBg from "../../../images/auth-bg.jpg";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";

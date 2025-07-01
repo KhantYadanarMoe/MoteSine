@@ -3,7 +3,7 @@ import {
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu.jsx";
+} from "@/Components/ui/dropdown-menu.jsx";
 import {
     Sheet,
     SheetClose,
@@ -13,7 +13,7 @@ import {
     SheetHeader,
     SheetTitle,
     SheetTrigger,
-} from "@/components/ui/sheet.jsx";
+} from "@/Components/ui/sheet.jsx";
 import { History, Hash, UserRound, Utensils, Ellipsis } from "lucide-react";
 import Profile from "../../../images/Profile.jpg";
 import { useState } from "react";

@@ -5,7 +5,7 @@ import {
     CarouselItem,
     CarouselNext,
     CarouselPrevious,
-} from "@/components/ui/carousel";
+} from "@/Components/ui/carousel";
 import { Heart, Star, ShoppingCart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
@@ -19,7 +19,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogCancel,
-} from "@/components/ui/alert-dialog.jsx";
+} from "@/Components/ui/alert-dialog.jsx";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
 
