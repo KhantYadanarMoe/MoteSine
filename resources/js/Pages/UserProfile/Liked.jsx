@@ -12,7 +12,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogCancel,
-} from "@/components/ui/alert-dialog.jsx";
+} from "@/Components/ui/alert-dialog.jsx";
 import axios from "axios";
 import { useCart } from "@/contexts/CartContext";
 import Empty from "../../../images/Empty.png";
