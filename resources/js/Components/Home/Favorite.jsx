@@ -19,7 +19,6 @@ import {
     AlertDialogTrigger,
 } from "../../Components/ui/alert-dialog";
 import { Heart, Star, ShoppingCart } from "lucide-react";
-import Mohinga from "../../../images/Mohinga.png";
 import { motion } from "framer-motion";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";

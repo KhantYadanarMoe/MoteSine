@@ -1,11 +1,11 @@
-# Use official PHP image with required extensions
-FROM php:8.2-cli
+# Base PHP image
+FROM php:8.2-fpm
 
-# Install system dependencies
+# Install dependencies
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip libzip-dev libonig-dev libxml2-dev \
-    npm nodejs \
-    && docker-php-ext-install pdo pdo_mysql zip
+    git curl zip unzip \
+    libzip-dev libpng-dev \
+    && docker-php-ext-install zip pdo pdo_mysql
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -13,18 +13,22 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www
 
-# Copy all project files
+# Copy project files
 COPY . .
 
-# Install PHP and JS dependencies
-RUN composer install --no-interaction --optimize-autoloader
-RUN npm install && npm run build
+# Install PHP dependencies
+RUN composer install --no-dev --optimize-autoloader
 
-# Generate app key
-RUN php artisan key:generate
+# Install Node and build frontend
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y nodejs && \
+    npm install && npm run build
+
+# Set Laravel permissions
+RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
 # Expose port
 EXPOSE 8000
 
-# Run Laravel server
+# Start Laravel server
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
