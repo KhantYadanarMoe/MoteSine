@@ -4,7 +4,7 @@ import Hero1 from "../../../images/hero-delivery.jpg";
 import Hero2 from "../../../images/hero-restaurant.jpg";
 import Hero3 from "../../../images/hero-food.jpg";
 import Flag from "../../../images/flag.jpg";
-import Spark from "../../../images/spark.png";
+import Spark from "../../../images/Spark.png";
 import HeroBg from "../../../images/hero-bg.jpg";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
