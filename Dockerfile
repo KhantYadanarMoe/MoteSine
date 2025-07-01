@@ -25,7 +25,7 @@ WORKDIR /var/www/resources
 RUN curl -fsSL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
 RUN bash nodesource_setup.sh
 RUN apt-get install -y nodejs
-RUN echo "Contents of ui folder:" && ls -al /var/www/resources/js/components/ui
+RUN echo "Contents of ui folder:" && ls -al /var/www/resources/js/Components/ui
 RUN npm install
 RUN npm run build
 
