@@ -28,7 +28,6 @@ import {
 } from "../../Components/ui/alert-dialog";
 import { motion } from "framer-motion";
 import { Switch } from "../../Components/ui/switch";
-import Product from "../../../images/product.png";
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Empty from "../../../images/Empty.png";
