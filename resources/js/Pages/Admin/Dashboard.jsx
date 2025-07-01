@@ -15,7 +15,7 @@ import {
     CartesianGrid,
     ResponsiveContainer,
 } from "recharts";
-import profile from "../../../images/profile.jpg";
+import Profile from "../../../images/Profile.jpg";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -474,7 +474,7 @@ export default function Dashboard() {
                                       </li>
                                       <li className="basis-[25%] flex gap-1 items-center">
                                           <img
-                                              src={profile}
+                                              src={Profile}
                                               // {order.user?.profileImage || Profile }
                                               alt="Profile"
                                               className="w-10 h-10 object-cover rounded-full"
@@ -728,7 +728,7 @@ export default function Dashboard() {
                                                   <div>
                                                       <div className="flex items-center gap-2">
                                                           <img
-                                                              src={profile}
+                                                              src={Profile}
                                                               alt=""
                                                               className="w-16 h-16 rounded-full"
                                                           />
