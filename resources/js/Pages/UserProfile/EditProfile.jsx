@@ -3,7 +3,7 @@ import { Button } from "../../Components/ui/button";
 import { motion } from "framer-motion";
 import { Input } from "../../Components/ui/input";
 import { Textarea } from "../../Components/ui/textarea";
-import { Label } from "../../Components/ui/Label";
+import { Label } from "../../Components/ui/label";
 import { useAuth } from "@/contexts/AuthContext";
 import axios from "axios";
 import {
