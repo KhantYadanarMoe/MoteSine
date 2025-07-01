@@ -35,7 +35,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import Profile from "../../../images/Profile.jpg";
 import { motion } from "framer-motion";
 import { useState } from "react";

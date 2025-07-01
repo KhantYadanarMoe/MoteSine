@@ -17,7 +17,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import { Label } from "@/Components/ui/label";
 import Loading from "@/Components/Loading";
 

@@ -22,7 +22,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import { Label } from "../ui/label";
 import { useRef } from "react";
 import { useEffect } from "react";

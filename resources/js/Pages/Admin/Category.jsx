@@ -37,7 +37,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "axios";

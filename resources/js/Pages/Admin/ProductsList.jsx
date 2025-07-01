@@ -25,7 +25,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import { motion } from "framer-motion";
 import { Switch } from "../../Components/ui/switch";
 import { Link } from "react-router-dom";

@@ -18,7 +18,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog.jsx";
 import { motion } from "framer-motion";
 import { Input } from "../ui/input";
 import { useEffect, useState } from "react";

@@ -16,7 +16,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import axios from "axios";
 import { useSetting } from "@/contexts/GeneralSettingContext";
 import { useAuth } from "@/contexts/AuthContext";

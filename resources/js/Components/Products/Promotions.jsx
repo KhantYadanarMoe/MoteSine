@@ -19,7 +19,7 @@ import {
     AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogCancel,
-} from "@/components/ui/alert-dialog";
+} from "@/components/ui/alert-dialog.jsx";
 import { useCart } from "@/contexts/CartContext";
 import dayjs from "dayjs";
 

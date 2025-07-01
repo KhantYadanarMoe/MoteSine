@@ -16,7 +16,7 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
     AlertDialogTrigger,
-} from "../../Components/ui/alert-dialog";
+} from "../../Components/ui/alert-dialog.jsx";
 import TimePicker from "../TimePicker";
 import DatePicker from "../DatePicker";
 import { format } from "date-fns";
