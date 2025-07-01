@@ -1,5 +1,5 @@
 import { Search, Star, Heart, ShoppingCart } from "lucide-react";
-import Mohinga from "../../../images/mohinga.png";
+import Mohinga from "../../../images/Mohinga.png";
 import { motion } from "framer-motion";
 import { Input } from "../../Components/ui/input";
 import { useState, useEffect } from "react";
