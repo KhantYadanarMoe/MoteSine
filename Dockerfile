@@ -13,7 +13,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 # Copy entire project at once — including resources/images
-COPY . .
+COPY . /var/www
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
