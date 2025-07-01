@@ -1,4 +1,4 @@
-import Profile from "../../../images/profile.jpg";
+import Profile from "../../../images/Profile.jpg";
 import { Mail, Phone, BadgeCheck } from "lucide-react";
 import { Input } from "../../Components/ui/input";
 import { motion } from "framer-motion";

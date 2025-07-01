@@ -8,7 +8,7 @@ import {
 import { motion } from "framer-motion";
 import { Card, CardContent } from "@/components/ui/card";
 import { Star } from "lucide-react";
-import Profile from "../../../images/profile.jpg";
+import Profile from "../../../images/Profile.jpg";
 import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
