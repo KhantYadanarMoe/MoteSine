@@ -15,7 +15,7 @@ import {
 } from "../../Components/ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { Ellipsis } from "lucide-react";
-import Profile from "../../../images/profile.jpg";
+import Profile from "../../../images/Profile.jpg";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import axios from "axios";
