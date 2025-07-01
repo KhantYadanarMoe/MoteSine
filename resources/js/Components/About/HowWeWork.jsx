@@ -1,7 +1,7 @@
 import Garden from "../../../images/Gardening.jpg";
 import Vegetables from "../../../images/fresh.jpg";
-import Cooking from "../../../images/cooking-1.jpg";
-import Serving from "../../../images/serving.jpg";
+import Cooking from "../../../images/Cooking-1.jpg";
+import Serving from "../../../images/Serving.jpg";
 import { Card, CardContent } from "@/components/ui/card";
 import {
     Carousel,
