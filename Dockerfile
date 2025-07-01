@@ -1,47 +1,41 @@
 FROM php:8.2-fpm
 
-# Install system dependencies
+# Install PHP extensions
 RUN apt-get update && apt-get install -y \
-    git curl zip unzip gnupg2 \
+    git curl zip unzip \
     libzip-dev libpng-dev \
-    build-essential python3 \
     && docker-php-ext-install zip pdo pdo_mysql
 
-# Install Composer globally
+# Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
+# Set working directory for backend
 WORKDIR /var/www
 
-# Copy project files into container
+# Copy entire project into container
 COPY . /var/www
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Install Node.js 18
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
-    apt-get install -y nodejs && \
-    node -v && npm -v
+# Switch to frontend directory (where package.json lives)
+WORKDIR /var/www/resources
 
-# Set working directory to frontend directory (adjust if needed)
-WORKDIR /var/www/resources/ui
-
-# Confirm UI directory contents
-RUN echo "Contents of UI folder:" && ls -al
-
-# Install frontend dependencies and build assets
-RUN npm install --legacy-peer-deps
+# Install Node.js, npm dependencies, and build frontend assets
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x -o nodesource_setup.sh
+RUN bash nodesource_setup.sh
+RUN apt-get install -y nodejs
+RUN echo "Contents of ui folder:" && ls -al /var/www/resources/js/components/ui
+RUN npm install
 RUN npm run build
 
-# Reset working directory to Laravel root
+
+# Switch back to backend directory
 WORKDIR /var/www
 
-# Set correct permissions for Laravel
+# Set permissions for Laravel storage and cache folders
 RUN chown -R www-data:www-data /var/www/storage /var/www/bootstrap/cache
 
-# Expose Laravel dev server port
+# Expose port and run PHP built-in server
 EXPOSE 8000
-
-# Start Laravel using Artisan serve
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
