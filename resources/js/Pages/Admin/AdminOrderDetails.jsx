@@ -1,6 +1,5 @@
 import { Progress } from "../../Components/ui/progress";
 import React from "react";
-import Mohinga from "../../../images/Mohinga.png";
 import profile from "../../../images/profile.jpg";
 import { ChevronRight, ReceiptText } from "lucide-react";
 import { motion } from "framer-motion";

@@ -13,7 +13,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www
 
 COPY . /var/www
-COPY ./resources/images /var/www/resources/images
+COPY resources /var/www/resources
 
 # Copy entire project before building
 COPY . .
