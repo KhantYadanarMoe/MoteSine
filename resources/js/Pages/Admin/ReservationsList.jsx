@@ -21,7 +21,7 @@ import {
     SheetTitle,
 } from "../../Components/ui/sheet";
 import { useState } from "react";
-import Profile from "../../../images/profile.jpg";
+import profile from "../../../images/profile.jpg";
 import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -333,7 +333,7 @@ export default function ReservationList() {
                                             <div>
                                                 <div className="flex items-center gap-2">
                                                     <img
-                                                        src={Profile}
+                                                        src={profile}
                                                         alt=""
                                                         className="w-16 h-16 rounded-full"
                                                     />
