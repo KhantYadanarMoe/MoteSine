@@ -1,6 +1,6 @@
 import { Progress } from "../../Components/ui/progress";
 import React from "react";
-import profileImg from "../../../images/profile.jpg";
+import Profile from "../../../images/Profile.jpg";
 import { ChevronRight, ReceiptText } from "lucide-react";
 import { motion } from "framer-motion";
 import { Link, useParams } from "react-router-dom";
@@ -336,7 +336,7 @@ export default function AdminOrderDetails() {
                     <h1 className="font-medium text-lg">Customer Details</h1>
                     <div className="flex gap-2 items-center mt-6">
                         <img
-                            src={profileImg}
+                            src={Profile}
                             alt="profile"
                             className="w-12 h-12 rounded-full object-cover"
                         />
