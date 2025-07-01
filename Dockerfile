@@ -22,8 +22,12 @@ RUN composer install --no-dev --optimize-autoloader
 WORKDIR /var/www/resources
 
 # Install Node.js, npm dependencies, and build frontend assets
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+
+
+    RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
     apt-get install -y nodejs && \
+    echo "Contents of ui folder:" && \
+    ls -al /var/www/resources/js/components/ui && \
     npm install && \
     npm run build
 
