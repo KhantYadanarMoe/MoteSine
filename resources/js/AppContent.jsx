@@ -1,7 +1,7 @@
 // AppContent.jsx
 import { RouterProvider } from "react-router-dom";
 import routes from "./routes";
-import Loading from "./components/Loading.jsx";
+import Loading from "./Components/Loading.jsx";
 import { useAuth } from "./contexts/AuthContext";
 import { useSetting as useGeneralSetting } from "./contexts/GeneralSettingContext";
 import { useReservationSetting } from "./contexts/ReservationSettingContext";
