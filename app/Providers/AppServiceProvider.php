@@ -22,6 +22,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        Schema::defaultStringLength(191);
         Vite::prefetch(concurrency: 3);
          if (env('APP_ENV') === 'production') {
         URL::forceScheme('https');

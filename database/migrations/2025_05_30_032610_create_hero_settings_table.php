@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('hero_settings', function (Blueprint $table) {
             $table->id();
             $table->string('header');
-            $table->string('body');
+            $table->text('body');
             $table->string('heroImg')->nullable(); 
             $table->timestamps();
         });
