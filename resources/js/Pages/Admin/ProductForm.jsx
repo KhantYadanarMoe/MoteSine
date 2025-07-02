@@ -63,7 +63,7 @@ export default function ProductForm() {
 
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
-        let res = await fetch("http://localhost:8000/api/product/" + id);
+        let res = await fetch("/api/product/" + id);
         let data = await res.json();
         setProductDetails(data.product);
     };

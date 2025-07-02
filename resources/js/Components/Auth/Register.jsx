@@ -49,13 +49,13 @@ export default function Register() {
 
         try {
             // 1. CSRF token required for Sanctum
-            await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+            await axios.get("/sanctum/csrf-cookie", {
                 withCredentials: true,
             });
 
             // 2. Register user
             await axios.post(
-                "http://localhost:8000/api/register",
+                "/api/register",
                 {
                     name: form.name,
                     email: form.email,
@@ -66,7 +66,7 @@ export default function Register() {
             );
 
             // 3. Optional - fetch authenticated user
-            const userRes = await axios.get("http://localhost:8000/api/user", {
+            const userRes = await axios.get("/api/user", {
                 withCredentials: true,
             });
             setUser(userRes.data);
@@ -229,7 +229,7 @@ export default function Register() {
                         >
                             Register
                         </Button>
-                        <a href="http://localhost:8000/auth/google">
+                        <a href="/auth/google">
                             <Button
                                 type="button"
                                 className="mt-3 bg-white text-black w-full border border-gray-700 hover:bg-gray-50"

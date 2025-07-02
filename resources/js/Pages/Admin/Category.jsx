@@ -190,7 +190,7 @@ export default function Category() {
 
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
-        let res = await fetch("http://localhost:8000/api/category/" + id);
+        let res = await fetch("/api/category/" + id);
         let data = await res.json();
         setCategoryDetails(data.category);
     };

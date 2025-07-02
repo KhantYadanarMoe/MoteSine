@@ -50,13 +50,13 @@ export default function Login() {
             setErrors({});
 
             // Step 1: Get CSRF cookie
-            await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+            await axios.get("/sanctum/csrf-cookie", {
                 withCredentials: true,
             });
 
             // Step 2: Send login request
             const res = await axios.post(
-                "http://localhost:8000/api/login",
+                "/api/login",
                 {
                     email: form.email,
                     password: form.password,
@@ -67,7 +67,7 @@ export default function Login() {
             );
 
             // Step 3: Optional - Fetch user info
-            const userRes = await axios.get("http://localhost:8000/api/user", {
+            const userRes = await axios.get("/api/user", {
                 withCredentials: true,
             });
             setUser(userRes.data);
@@ -188,7 +188,7 @@ export default function Login() {
                             Login
                         </Button>
 
-                        <a href="http://localhost:8000/auth/google">
+                        <a href="/auth/google">
                             <Button
                                 type="button"
                                 className="mt-3 bg-white text-black w-full border border-gray-700 hover:bg-gray-50"

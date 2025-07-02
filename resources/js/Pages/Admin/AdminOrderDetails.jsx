@@ -26,7 +26,7 @@ export default function AdminOrderDetails() {
 
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
-        let res = await fetch("http://localhost:8000/api/order/" + id);
+        let res = await fetch("/api/order/" + id);
         let data = await res.json();
         setOrderDetails(data.order);
     };

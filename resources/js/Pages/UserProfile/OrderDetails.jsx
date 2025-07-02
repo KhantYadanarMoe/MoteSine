@@ -22,7 +22,7 @@ export default function OrderDetails() {
     let getDetails = async (id) => {
         setLoading(true);
         try {
-            let res = await fetch("http://localhost:8000/api/order/" + id);
+            let res = await fetch("api/order/" + id);
             let data = await res.json();
             setOrderDetails(data.order);
         } catch (error) {

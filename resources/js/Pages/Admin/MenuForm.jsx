@@ -101,7 +101,7 @@ export default function MenuForm() {
 
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
-        let res = await fetch("http://localhost:8000/api/menu/" + id);
+        let res = await fetch("/api/menu/" + id);
         let data = await res.json();
         setMenuDetails(data.menu);
     };

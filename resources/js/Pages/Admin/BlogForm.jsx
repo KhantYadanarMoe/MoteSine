@@ -89,7 +89,7 @@ export default function BlogForm() {
 
     // fetch data to show prev data in input fields
     let getDetails = async (id) => {
-        let res = await fetch("http://localhost:8000/api/blog/" + id);
+        let res = await fetch("/api/blog/" + id);
         let data = await res.json();
         setBlogDetails(data.blog);
     };
