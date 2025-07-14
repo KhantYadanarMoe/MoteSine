@@ -60,9 +60,9 @@ export default function MenuCards({ selectedCategory }) {
             const data = res.data;
             const filteredMenus = data.menus.filter(
                 (menu) =>
-                    menu.visibility === 1 &&
+                    menu.visibility == 1 &&
                     menu.category &&
-                    menu.category.visibility === 1
+                    menu.category.visibility == 1
             );
             setMenus(filteredMenus);
         } catch (error) {

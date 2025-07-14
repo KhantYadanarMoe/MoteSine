@@ -34,7 +34,7 @@ export default function AllBlogs() {
             let res = await axios.get("/api/blogs");
             let data = res.data;
             const visibleBlogs = data.blogs.filter(
-                (blog) => blog.visibility === 1
+                (blog) => blog.visibility == 1
             );
             setBlogs(visibleBlogs);
         } catch (error) {

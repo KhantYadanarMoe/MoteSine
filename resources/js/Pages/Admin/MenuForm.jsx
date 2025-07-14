@@ -82,11 +82,8 @@ export default function MenuForm() {
             let data = response.data;
             let allCategories = data.categories;
 
-            const visibilityMap = JSON.parse(
-                localStorage.getItem("categoryVisibility") || "{}"
-            );
             const publishedCategories = allCategories.filter(
-                (c) => visibilityMap[c.id]
+                (c) => c.visibility === 1
             );
 
             setCategories(publishedCategories);
@@ -94,6 +91,8 @@ export default function MenuForm() {
             console.error("Error fetching categories data: ", error);
         }
     };
+
+    console.log("Fetched categories:", categories);
 
     useEffect(() => {
         getCategories();
@@ -287,6 +286,8 @@ export default function MenuForm() {
             </div>
         );
     }
+
+    console.log("Selected Category ID:", menuDetail?.category_id);
 
     return (
         <motion.div

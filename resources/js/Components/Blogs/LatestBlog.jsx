@@ -20,7 +20,7 @@ export default function LatestBlog() {
             let res = await axios.get("/api/blogs");
             let data = res.data;
             const visibleBlogs = data.blogs.filter(
-                (blog) => blog.visibility === 1
+                (blog) => blog.visibility == 1
             );
             setBlog(visibleBlogs[0] || null); // handle case if no visible blogs
         } catch (error) {

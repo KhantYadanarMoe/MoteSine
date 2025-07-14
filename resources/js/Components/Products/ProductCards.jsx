@@ -50,7 +50,7 @@ export default function ProductCards() {
             const today = dayjs();
 
             const visibleProducts = data.products.filter(
-                (product) => product.visibility === 1
+                (product) => product.visibility == 1
             );
 
             setProducts(visibleProducts);

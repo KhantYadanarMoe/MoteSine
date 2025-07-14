@@ -225,7 +225,7 @@ export default function JobApplications() {
                                 className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
                             >
                                 <li className="basis-[4%]">
-                                    {application.checked === 1 && (
+                                    {application.checked == 1 && (
                                         <CircleCheckBig
                                             size={24}
                                             className="text-green-600"

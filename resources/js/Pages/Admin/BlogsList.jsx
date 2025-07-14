@@ -204,7 +204,7 @@ export default function BlogsList() {
                                     {blog.title}
                                 </li>
                                 <li className="basis-[12%]">
-                                    {blog.visibility === 1 ? (
+                                    {blog.visibility == 1 ? (
                                         <span className="px-1 py-1 rounded-md bg-green-100 text-accentGreen text-sm">
                                             Publish
                                         </span>

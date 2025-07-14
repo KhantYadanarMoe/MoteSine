@@ -7,7 +7,7 @@ export default function BannedRedirect({ children }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!loading && user?.banned === 1) {
+        if (!loading && user?.banned == 1) {
             navigate("/banned", { replace: true });
         }
     }, [loading, user, navigate]);

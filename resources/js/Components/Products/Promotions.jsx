@@ -48,7 +48,7 @@ export default function Promotions() {
             const promotionProducts = data.products.filter((product) => {
                 return (
                     product.promotion &&
-                    product.visibility === 1 &&
+                    product.visibility == 1 &&
                     dayjs(product.startDate).isBefore(today) &&
                     dayjs(product.endDate).isAfter(today)
                 );

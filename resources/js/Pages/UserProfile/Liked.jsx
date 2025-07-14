@@ -47,7 +47,7 @@ export default function Liked() {
                 menusRes.data.menus
                     .filter(
                         (menu) =>
-                            menu.visibility === 1 &&
+                            menu.visibility == 1 &&
                             visibilityMap[menu.category.id]
                     )
                     .map((menu) => menu.id)

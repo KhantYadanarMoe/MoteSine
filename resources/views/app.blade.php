@@ -7,6 +7,7 @@
         <title>Mote Sine</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="/build/assets/app-BfKQHwM.css">
         @viteReactRefresh
         @vite('resources/js/app.jsx')
         <script src="https://cdn.tiny.cloud/1/bip7ep5e6b0pc6532enblabnd8eh8160arcae0p058nwb73e/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>

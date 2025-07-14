@@ -266,14 +266,14 @@ export default function MenuList() {
                                 <li className="basis-[8%]">
                                     <Checkbox
                                         id={`featured-${menu.id}`}
-                                        checked={menu.featured === 1}
+                                        checked={menu.featured == 1}
                                         readOnly
                                     />
                                 </li>
                                 <li className="basis-[8%]">
                                     <Switch
                                         id={`visibility-${menu.id}`}
-                                        checked={menu.visibility === 1}
+                                        checked={menu.visibility == 1}
                                         readOnly
                                     />
                                 </li>

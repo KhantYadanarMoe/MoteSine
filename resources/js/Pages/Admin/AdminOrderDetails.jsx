@@ -312,7 +312,7 @@ export default function AdminOrderDetails() {
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Delivery Charge - </p>
                             <p className=" text-black">
-                                {orderSetting.deliveryFee.toFixed(2)} ${" "}
+                                {orderSetting?.deliveryFee?.toFixed(2)} ${" "}
                             </p>
                         </div>
                         <div className="flex justify-between mb-4">
@@ -327,7 +327,7 @@ export default function AdminOrderDetails() {
                             <p className=" text-black">
                                 {subtotal +
                                     subtotal * 0.1 +
-                                    orderSetting.deliveryFee}{" "}
+                                    orderSetting?.deliveryFee}{" "}
                                 ${" "}
                             </p>
                         </div>

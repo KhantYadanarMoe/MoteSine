@@ -16,7 +16,7 @@ export default function Featured() {
     let getBlogs = async () => {
         let res = await axios.get("/api/blogs");
         let data = res.data;
-        const visibleBlogs = data.blogs.filter((blog) => blog.visibility === 1);
+        const visibleBlogs = data.blogs.filter((blog) => blog.visibility == 1);
         setBlogs(visibleBlogs);
     };
 

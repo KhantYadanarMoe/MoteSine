@@ -282,7 +282,7 @@ export default function ProductsList() {
                                 <li className="basis-[12%]">
                                     <Switch
                                         id={`visibility-${product.id}`}
-                                        checked={product.visibility === 1}
+                                        checked={product.visibility == 1}
                                         readOnly
                                     />
                                 </li>
