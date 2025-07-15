@@ -16,8 +16,12 @@ export default function MenuCategories({ onCategorySelect }) {
             let allCategories = data.categories;
 
             const publishedCategories = allCategories.filter(
-                (c) => c.visibility
+                (c) =>
+                    c.visibility === true ||
+                    c.visibility === 1 ||
+                    c.visibility === "1"
             );
+
             setCategories(publishedCategories);
         } catch (error) {
             console.error("Error fetching categories data: ", error);

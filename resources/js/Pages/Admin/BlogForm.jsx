@@ -260,15 +260,21 @@ export default function BlogForm() {
                                     or drag and drop an image
                                 </p>
 
-                                {imageUrl && !image && (
-                                    <div className="mt-4">
-                                        <img
-                                            src={`/storage/${imageUrl}`}
-                                            alt="Existing Cover"
-                                            className="max-w-[130px] max-h-[130px] rounded-lg"
-                                        />
-                                    </div>
-                                )}
+                                {typeof imageUrl === "string" &&
+                                    imageUrl.trim() !== "" &&
+                                    !image && (
+                                        <div className="mt-4">
+                                            <img
+                                                src={`/storage/${imageUrl}`}
+                                                alt="Existing Cover"
+                                                className="max-w-[130px] max-h-[130px] rounded-lg"
+                                                onError={(e) => {
+                                                    e.target.style.display =
+                                                        "none"; // hide broken image
+                                                }}
+                                            />
+                                        </div>
+                                    )}
 
                                 {image && (
                                     <div className="mt-4 relative max-w-[130px] max-h-[130px]">

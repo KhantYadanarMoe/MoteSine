@@ -146,7 +146,7 @@ export default function Category() {
 
             const visibilityMap = {};
             data.categories.forEach((cat) => {
-                visibilityMap[cat.id] = !!cat.visibility;
+                visibilityMap[cat.id] = !!+cat.visibility;
             });
 
             setVisibility(visibilityMap);
@@ -212,13 +212,6 @@ export default function Category() {
     }, [categoryDetail]);
 
     const [visibility, setVisibility] = useState({});
-
-    useEffect(() => {
-        const stored = JSON.parse(
-            localStorage.getItem("categoryVisibility") || "{}"
-        );
-        setVisibility(stored);
-    }, []);
 
     const toggleVisibility = (categoryId, checked) => {
         setVisibility((prev) => ({
@@ -429,7 +422,11 @@ export default function Category() {
                                 <li className="basis-[15%]">
                                     <Switch
                                         checked={
-                                            visibility[category.id] || false
+                                            visibility.hasOwnProperty(
+                                                category.id
+                                            )
+                                                ? visibility[category.id]
+                                                : false
                                         }
                                         onCheckedChange={(checked) =>
                                             toggleVisibility(

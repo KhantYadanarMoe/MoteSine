@@ -83,7 +83,7 @@ export default function MenuForm() {
             let allCategories = data.categories;
 
             const publishedCategories = allCategories.filter(
-                (c) => c.visibility === 1
+                (c) => c.visibility == 1
             );
 
             setCategories(publishedCategories);
