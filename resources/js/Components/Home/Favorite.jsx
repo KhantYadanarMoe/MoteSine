@@ -62,7 +62,9 @@ export default function Favorite() {
     };
 
     // check featured (1 or 0) to show only featured menu
-    const featuredMenus = menus.filter((menu) => menu.featured);
+    // const featuredMenus = menus.filter((menu) => menu.featured);
+
+    const featuredMenus = menus.filter((menu) => Number(menu.featured));
 
     // change to dynamic data after writing create category feature
     const categoryStyles = {

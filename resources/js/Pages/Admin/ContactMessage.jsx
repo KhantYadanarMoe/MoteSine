@@ -122,7 +122,7 @@ export default function ContactMessage() {
                         <div className="flex items-center justify-between">
                             <div className="flex gap-3 items-center">
                                 <h1 className="font-medium">{contact.name}</h1>
-                                {contact.marked ? (
+                                {Number(contact.marked) === 1 ? (
                                     <Flag
                                         size={16}
                                         className="text-yellow-400 fill-yellow-400"
@@ -158,11 +158,16 @@ export default function ContactMessage() {
                             </Button>
                             <Button
                                 onClick={() =>
-                                    markContact(contact.id, contact.marked)
+                                    markContact(
+                                        contact.id,
+                                        Number(contact.marked)
+                                    )
                                 }
                                 className="bg-accentYellow hover:bg-hoverYellow text-black"
                             >
-                                {contact.marked ? "Unmark" : "Mark"}
+                                {Number(contact.marked) === 1
+                                    ? "Unmark"
+                                    : "Mark"}
                             </Button>
                         </div>
                     </div>

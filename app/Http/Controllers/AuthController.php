@@ -187,7 +187,7 @@ class AuthController extends Controller
         $user->banned = $request->banned; // Set banned to 1
         $user->save();
 
-        return response()->json(['message' => 'User banned successfully']);
+       return response()->json(['message' => $user->banned ? 'User banned successfully' : 'User re-activated successfully', 'user' => $user]);
     }
 
     public function delete(User $user){

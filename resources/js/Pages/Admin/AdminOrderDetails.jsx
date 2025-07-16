@@ -42,7 +42,9 @@ export default function AdminOrderDetails() {
     }, [orderDetails]);
 
     const subtotal = orderDetails?.items?.reduce((acc, item) => {
-        return acc + item.quantity * parseFloat(item.price);
+        const qty = Number(item.quantity) || 0;
+        const price = parseFloat(item.price) || 0;
+        return acc + qty * price;
     }, 0);
 
     const STATUS_ORDER = [
@@ -249,7 +251,10 @@ export default function AdminOrderDetails() {
                                     {item.price}
                                 </li>
                                 <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
-                                    {(item.quantity * item.price).toFixed(2)} $
+                                    {Number(
+                                        item.quantity * item.price
+                                    )?.toFixed(2)}{" "}
+                                    $
                                 </li>
                             </ul>
                         ))}
@@ -302,7 +307,7 @@ export default function AdminOrderDetails() {
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Sub Total - </p>
                             <p className=" text-black">
-                                {subtotal?.toFixed(2)} ${" "}
+                                {Number(subtotal)?.toFixed(2)} ${" "}
                             </p>
                         </div>
                         <div className="flex justify-between mb-4">
@@ -312,22 +317,25 @@ export default function AdminOrderDetails() {
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Delivery Charge - </p>
                             <p className=" text-black">
-                                {orderSetting?.deliveryFee?.toFixed(2)} ${" "}
+                                {Number(orderSetting?.deliveryFee)?.toFixed(2)}{" "}
+                                ${" "}
                             </p>
                         </div>
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Tax (10%) - </p>
                             <p className=" text-black">
-                                {(subtotal * 0.1).toFixed(2)} ${" "}
+                                {Number(subtotal * 0.1)?.toFixed(2)} ${" "}
                             </p>
                         </div>
                         <hr className="border-t-gray-400 my-6" />
                         <div className="flex justify-between mb-4">
                             <p className=" text-gray-700">Total - </p>
                             <p className=" text-black">
-                                {subtotal +
-                                    subtotal * 0.1 +
-                                    orderSetting?.deliveryFee}{" "}
+                                {Number(
+                                    subtotal +
+                                        subtotal * 0.1 +
+                                        orderSetting?.deliveryFee
+                                ).toFixed(2)}{" "}
                                 ${" "}
                             </p>
                         </div>

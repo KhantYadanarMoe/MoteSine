@@ -85,10 +85,10 @@ export default function UsersList() {
             let res = await axios.post("/api/users/banned/" + id, {
                 banned: newStatus,
             });
+            const updatedUser = res.data.user;
+
             setUsers((prevUsers) =>
-                prevUsers.map((user) =>
-                    user.id === id ? { ...user, banned: newStatus } : user
-                )
+                prevUsers.map((user) => (user.id == id ? updatedUser : user))
             );
         } catch (error) {
             console.error("Failed:", error);
@@ -272,12 +272,14 @@ export default function UsersList() {
                                   <li className="basis-[11%]">
                                       <span
                                           className={`ml-3 text-xs md:text-sm rounded-sm px-1 py-1 ${
-                                              user.banned
+                                              Number(user.banned) === 1
                                                   ? "text-accentRed bg-gray-100"
                                                   : "text-accentGreen bg-green-100"
                                           }`}
                                       >
-                                          {user.banned ? "Banned" : "Active"}
+                                          {Number(user.banned) === 1
+                                              ? "Banned"
+                                              : "Active"}
                                       </span>
                                   </li>
                                   <li className="basis-[4%]">
@@ -295,16 +297,16 @@ export default function UsersList() {
                                                   onClick={() =>
                                                       banUser(
                                                           user.id,
-                                                          user.banned
+                                                          Number(user.banned)
                                                       )
                                                   }
                                                   className={
-                                                      user.banned
+                                                      Number(user.banned) === 1
                                                           ? "text-accentGreen"
                                                           : "text-accentYellow"
                                                   }
                                               >
-                                                  {user.banned
+                                                  {Number(user.banned) === 1
                                                       ? "Re-activate"
                                                       : "Ban"}
                                               </DropdownMenuItem>

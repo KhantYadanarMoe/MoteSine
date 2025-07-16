@@ -66,7 +66,7 @@ export default function ContactsList() {
             });
             setContacts((prevContacts) =>
                 prevContacts.map((contact) =>
-                    contact.id === id
+                    contact.id == id
                         ? { ...contact, marked: newMarked }
                         : contact
                 )
@@ -216,7 +216,7 @@ export default function ContactsList() {
                                             minute: "2-digit",
                                         })}
                                     </p>
-                                    {contact.marked ? (
+                                    {Number(contact.marked) === 1 ? (
                                         <Flag
                                             size={16}
                                             className="text-yellow-400 fill-yellow-400"
@@ -248,16 +248,16 @@ export default function ContactsList() {
                                             onClick={() =>
                                                 markContact(
                                                     contact.id,
-                                                    contact.marked
+                                                    Number(contact.marked)
                                                 )
                                             }
                                             className={
-                                                contact.marked
+                                                Number(contact.marked) === 1
                                                     ? "text-accentRed"
                                                     : "text-accentGreen"
                                             }
                                         >
-                                            {contact.marked
+                                            {Number(contact.marked) === 1
                                                 ? "Remove Mark"
                                                 : "Mark"}
                                         </DropdownMenuItem>

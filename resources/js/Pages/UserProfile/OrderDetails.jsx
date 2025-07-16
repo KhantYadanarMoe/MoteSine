@@ -226,7 +226,10 @@ export default function OrderDetails() {
                                     {item.price} $
                                 </li>
                                 <li className="basis-[32%] md:basis-[25%] ml-1 text-sm">
-                                    {(item.price * item.quantity).toFixed(2)} $
+                                    {Number(
+                                        item.price * item.quantity
+                                    )?.toFixed(2)}{" "}
+                                    $
                                 </li>
                             </ul>
                         ))}
@@ -235,7 +238,7 @@ export default function OrderDetails() {
                         <div className="flex items-center justify-between mt-2 py-3 px-3">
                             <h1 className="text-base">Subtotal - </h1>
                             <h1 className="font-medium mr-4">
-                                {subtotal?.toFixed(2)} $
+                                {Number(subtotal)?.toFixed(2)} $
                             </h1>
                         </div>
                     </div>
@@ -357,7 +360,7 @@ export default function OrderDetails() {
                                     Subtotal -{" "}
                                 </h1>
                                 <p className="text-sm">
-                                    {subtotal?.toFixed(2)} $
+                                    {Number(subtotal)?.toFixed(2)} $
                                 </p>
                             </div>
                             <div className="flex justify-between items-center mb-3">
@@ -365,13 +368,16 @@ export default function OrderDetails() {
                                     Delivery fee -
                                 </h1>
                                 <p className="text-sm">
-                                    {orderSetting.deliveryFee.toFixed(2)} $
+                                    {Number(orderSetting.deliveryFee)?.toFixed(
+                                        2
+                                    )}{" "}
+                                    $
                                 </p>
                             </div>
                             <div className="flex justify-between items-center mb-3">
                                 <h1 className="text-sm font-medium">Tax - </h1>
                                 <p className="text-sm">
-                                    {(subtotal * 0.1).toFixed(2)} $
+                                    {Number(subtotal * 0.1)?.toFixed(2)} $
                                 </p>
                             </div>
                         </div>
@@ -379,10 +385,10 @@ export default function OrderDetails() {
                         <div className="flex justify-between items-center my-3">
                             <h1 className="text-sm font-medium">Total - </h1>
                             <p className="text-sm">
-                                {(
+                                {Number(
                                     subtotal +
-                                    subtotal * 0.1 +
-                                    orderSetting.deliveryFee
+                                        subtotal * 0.1 +
+                                        orderSetting.deliveryFee
                                 ).toFixed(2)}{" "}
                                 $
                             </p>

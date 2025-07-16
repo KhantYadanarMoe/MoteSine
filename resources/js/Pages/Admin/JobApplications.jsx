@@ -97,7 +97,7 @@ export default function JobApplications() {
             });
             setApplications((prevApplications) =>
                 prevApplications.map((application) =>
-                    application.id === id
+                    application.id == id
                         ? { ...application, checked: newChecked }
                         : application
                 )
@@ -204,7 +204,7 @@ export default function JobApplications() {
                         Array.from({ length: 6 }).map((_, i) => (
                             <ApplicationSkeleton key={i} />
                         ))
-                    ) : applications.length === 0 ? (
+                    ) : applications.length == 0 ? (
                         <div className="absolute inset-0 z-10  bg-lightBackground flex flex-col items-center justify-center text-center font-medium text-accentRed h-full">
                             <img
                                 src={Empty}
@@ -225,7 +225,7 @@ export default function JobApplications() {
                                 className="flex items-center bg-white px-3 py-4 rounded-md shadow-md mb-2"
                             >
                                 <li className="basis-[4%]">
-                                    {application.checked == 1 && (
+                                    {Number(application.checked) === 1 && (
                                         <CircleCheckBig
                                             size={24}
                                             className="text-green-600"
@@ -270,12 +270,15 @@ export default function JobApplications() {
                                                 onClick={() =>
                                                     checked(
                                                         application.id,
-                                                        application.checked
+                                                        Number(
+                                                            application.checked
+                                                        )
                                                     )
                                                 }
                                                 className="text-accentGreen"
                                             >
-                                                {application.checked
+                                                {Number(application.checked) ===
+                                                1
                                                     ? "Unchecked"
                                                     : "Checked"}
                                             </DropdownMenuItem>

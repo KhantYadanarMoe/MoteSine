@@ -353,6 +353,7 @@ export default function PartnershipRejected() {
                                                                     target="_blank"
                                                                     rel="noopener noreferrer"
                                                                     className="text-blue-600 underline"
+                                                                    download
                                                                 >
                                                                     View
                                                                     Certificate

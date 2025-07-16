@@ -554,7 +554,11 @@ export default function MenuForm() {
                                 <Switch
                                     id="visibility"
                                     name="visibility"
-                                    checked={form.visibility}
+                                    checked={
+                                        form.visibility === true ||
+                                        form.visibility === "1" ||
+                                        form.visibility === 1
+                                    }
                                     onCheckedChange={(checked) =>
                                         handleCustomChange(
                                             "visibility",
