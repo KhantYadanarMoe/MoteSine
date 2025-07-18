@@ -39,17 +39,9 @@ export default function Liked() {
                 axios.get("/api/menus"),
             ]);
 
-            const visibilityMap = JSON.parse(
-                localStorage.getItem("categoryVisibility") || "{}"
-            );
-
             const visibleMenuIds = new Set(
                 menusRes.data.menus
-                    .filter(
-                        (menu) =>
-                            menu.visibility == 1 &&
-                            visibilityMap[menu.category.id]
-                    )
+                    .filter((menu) => menu.visibility == 1)
                     .map((menu) => menu.id)
             );
 
@@ -216,7 +208,7 @@ export default function Liked() {
                     ) : (
                         [...Array(3)].map((_, i) => <ProductSkeleton key={i} />)
                     )
-                ) : filteredFavorites.length == 0 ? (
+                ) : filteredFavorites.length === 0 ? (
                     <div className="lg:pt-24 lg:w-[68%] xl:w-[74%] lg:ml-[32%] xl:ml-[26%] pt-20  min-h-screen absolute inset-0 z-10  bg-white flex flex-col items-center justify-center text-center font-medium text-accentRed h-full">
                         <img
                             src={Empty}
@@ -427,7 +419,7 @@ export default function Liked() {
                                     </div>
                                     <div className="flex flex-col items-end gap-2">
                                         <div>
-                                            {item.product.stock == 0 && (
+                                            {item.product.stock === 0 && (
                                                 <span className="px-1 py-1 text-xs bg-red-100 text-accentRed rounded-md">
                                                     Out of Stock
                                                 </span>

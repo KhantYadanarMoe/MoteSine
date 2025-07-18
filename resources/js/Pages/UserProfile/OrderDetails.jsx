@@ -388,7 +388,7 @@ export default function OrderDetails() {
                                 {Number(
                                     subtotal +
                                         subtotal * 0.1 +
-                                        orderSetting.deliveryFee
+                                        Number(orderSetting.deliveryFee)
                                 ).toFixed(2)}{" "}
                                 $
                             </p>
