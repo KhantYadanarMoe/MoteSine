@@ -32,7 +32,7 @@ const Navbar = () => {
     };
 
     return (
-        <nav className="font-lato bg-white shadow-md px-3 py-2 md:py-3 md:px-8">
+        <nav className="fixed top-0 w-full z-50 font-lato bg-white shadow-md px-3 py-2 md:py-3 md:px-8">
             <div className="flex justify-between items-center">
                 <button
                     className="block md:hidden mr-12 text-gray-700 focus:outline-none"
