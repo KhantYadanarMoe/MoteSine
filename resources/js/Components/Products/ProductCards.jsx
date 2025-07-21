@@ -128,8 +128,8 @@ export default function ProductCards() {
         return wishlistItems.some(
             (item) =>
                 item.item_type === type &&
-                ((type === "product" && item.product.id === id) ||
-                    (type === "product" && item.product.id === id))
+                ((type === "product" && item.product.id == id) ||
+                    (type === "product" && item.product.id == id))
         );
     };
 
