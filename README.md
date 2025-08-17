@@ -40,11 +40,13 @@
 <h2>🛠️ Installation</h2>
 <p>To get a local copy up and running, follow these simple steps.</p>
 <pre><code>
-# Clone the repository
+#Clone the repository
 git clone https://github.com/KhantYadanarMoe/MoteSine.git
-# Navigate into the project directory
+
+#Navigate into the project directory
 cd MoteSine
-# Install dependencies
+
+#Install dependencies
 npm install 
 </code></pre>
 
