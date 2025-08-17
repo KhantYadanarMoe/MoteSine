@@ -42,7 +42,7 @@
 <pre><code>
 #Clone the repository
 git clone https://github.com/KhantYadanarMoe/MoteSine.git
-
+    
 #Navigate into the project directory
 cd MoteSine
 
