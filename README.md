@@ -39,16 +39,19 @@
 
 <h2>🛠️ Installation</h2>
 <p>To get a local copy up and running, follow these simple steps.</p>
-<pre><code>
-#Clone the repository
-git clone https://github.com/KhantYadanarMoe/MoteSine.git
+<pre>
+<code>
+<span># Clone the repository</span>
+<b>git clone</b> <mark>https://github.com/KhantYadanarMoe/MoteSine.git</mark>
 
-#Navigate into the project directory
-cd MoteSine
+<span># Navigate into the project directory</span>
+<b>cd</b> MoteSine
 
-#Install dependencies
-npm install 
-</code></pre>
+<span># Install dependencies</span>
+<b>npm install</b>
+</code>
+</pre>
+
 
 <h2>💻 Usage</h2>
 <p>Once installed, you can run the application locally.</p>
