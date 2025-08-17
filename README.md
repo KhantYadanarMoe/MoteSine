@@ -46,7 +46,7 @@
 <br/>
 <span># Navigate into the project directory</span>
 <b>cd</b> MoteSine
-
+<br/>
 <span># Install dependencies</span>
 <b>npm install</b>
 </code>
