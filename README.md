@@ -43,7 +43,7 @@
 <code>
 <span># Clone the repository</span>
 <b>git clone</b> <mark>https://github.com/KhantYadanarMoe/MoteSine.git</mark>
-
+<br/>
 <span># Navigate into the project directory</span>
 <b>cd</b> MoteSine
 
